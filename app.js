@@ -1,643 +1,765 @@
 
-/* =========================================================
-   VIDHWAAN ARGENTINA DIRECTORY
-   APP.JS — PRODUCTION VERSION
-   Vanilla JavaScript | PWA | Responsive
-========================================================= */
-
 "use strict";
 
 /* =========================================================
-   DOM ELEMENTS
-========================================================= */
+   VIDHWAAN — ARGENTINA DIGITAL DIRECTORY
+   File: app.js
+   Brand: VIDHWAAN — Village Based Global Technology Company
+   Data source: ./apps.json
+   ========================================================= */
 
-const installBtn = document.getElementById("installBtn");
-const appsGrid = document.getElementById("appsGrid");
-const featuredApp = document.getElementById("featuredApp");
-const notificationsFeed = document.getElementById("notificationsFeed");
-const governmentGrid = document.getElementById("governmentGrid");
-const tollGrid = document.getElementById("tollGrid");
-const videosGrid = document.getElementById("videosGrid");
+(() => {
+  const CONFIG = {
+    dataUrl: "./apps.json",
+    company: "VIDHWAAN",
+    tagline: "Village Based Global Technology Company",
+    sections: [
+      {
+        key: "vidhwaan-apps",
+        id: "appsSection",
+        title: "Aplicaciones de VIDHWAAN",
+        subtitle: "Descubra nuestras plataformas y herramientas digitales.",
+        gridId: "appsGrid"
+      },
+      {
+        key: "government-portals",
+        id: "governmentSection",
+        title: "Portales oficiales del Gobierno argentino",
+        subtitle:
+          "Acceda a portales oficiales y consulte los requisitos directamente con cada organismo.",
+        gridId: "governmentGrid"
+      },
+      {
+        key: "emergency-contacts",
+        id: "emergencySection",
+        title: "Emergencias y teléfonos útiles",
+        subtitle:
+          "En una emergencia, indique su ubicación exacta. La disponibilidad de algunos servicios depende de su jurisdicción.",
+        gridId: "tollGrid"
+      },
+      {
+        key: "vidhwaan-links",
+        id: "vidhwaanLinksSection",
+        title: "Red global de VIDHWAAN",
+        subtitle:
+          "Explore nuestras plataformas, servicios tecnológicos e iniciativas digitales.",
+        gridId: "vidhwaanLinksGrid"
+      },
+      {
+        key: "videos",
+        id: "videosSection",
+        title: "Videos",
+        subtitle:
+          "Conozca nuestras aplicaciones, plataformas y soluciones tecnológicas.",
+        gridId: "videosGrid"
+      }
+    ]
+  };
 
-/* =========================================================
-   SECURITY AND FORMATTING HELPERS
-========================================================= */
+  const $ = (selector, root = document) =>
+    root.querySelector(selector);
 
-function escapeHTML(value) {
-  return String(value ?? "").replace(/[&<>"']/g, character => ({
-    "&": "&amp;",
-    "<": "&lt;",
-    ">": "&gt;",
-    '"': "&quot;",
-    "'": "&#39;"
-  })[character]);
-}
+  const byId = id => document.getElementById(id);
 
-function safeURL(value) {
-  const input = String(value ?? "").trim();
+  const state = {
+    data: [],
+    installPrompt: null
+  };
 
-  if (!input) return "";
+  /* =======================================================
+     SAFE HELPERS
+     ======================================================= */
 
-  try {
-    const url = new URL(input, window.location.href);
+  function escapeHTML(value = "") {
+    return String(value).replace(/[&<>"']/g, char => ({
+      "&": "&amp;",
+      "<": "&lt;",
+      ">": "&gt;",
+      '"': "&quot;",
+      "'": "&#39;"
+    })[char]);
+  }
 
-    if (!["https:", "http:"].includes(url.protocol)) {
+  function safeURL(value) {
+    if (typeof value !== "string" || !value.trim()) {
       return "";
     }
 
-    return url.href;
-  } catch {
-    return "";
-  }
-}
+    try {
+      const url = new URL(value, window.location.href);
 
-function safeImageURL(value) {
-  const url = safeURL(value);
+      if (
+        url.protocol !== "https:" &&
+        url.protocol !== "http:"
+      ) {
+        return "";
+      }
 
-  if (!url) return "../icons/icon-192.png";
-
-  return url;
-}
-
-function safePhone(value) {
-  const phone = String(value ?? "").trim();
-
-  if (!/^[+\d\s().-]{3,30}$/.test(phone)) {
-    return "";
+      return url.href;
+    } catch {
+      return "";
+    }
   }
 
-  return phone.replace(/[^\d+]/g, "");
-}
+  function safeImageURL(value) {
+    if (typeof value !== "string" || !value.trim()) {
+      return "";
+    }
 
-function renderButton(url, text, className = "launchButton") {
-  const destination = safeURL(url);
+    try {
+      const url = new URL(value, window.location.href);
 
-  if (!destination) return "";
+      if (
+        url.protocol !== "https:" &&
+        url.protocol !== "http:"
+      ) {
+        return "";
+      }
 
-  return `
-    <div class="cardButtons">
-      <a
-        class="${className}"
-        href="${escapeHTML(destination)}"
-        target="_blank"
-        rel="noopener noreferrer"
-      >${escapeHTML(text)}</a>
-    </div>
-  `;
-}
+      return url.href;
+    } catch {
+      return "";
+    }
+  }
 
-/* =========================================================
-   CARD RENDERERS
-========================================================= */
+  function safePhone(value) {
+    const phone = String(value || "").replace(/[^\d+]/g, "");
 
-const render = (() => {
-  function standardCard(item, buttonText) {
-    const name = escapeHTML(item.name || item.title || "Recurso");
-    const category = escapeHTML(item.category || "Información");
-    const description = escapeHTML(item.description || "");
-    const icon = escapeHTML(safeImageURL(item.icon));
-    const url = safeURL(item.url);
+    if (!/^\+?\d{2,20}$/.test(phone)) {
+      return "";
+    }
 
-    return `
-      <article class="appCard">
-        <div class="appCardGlow"></div>
+    return phone;
+  }
 
+  function imageMarkup(item, className = "appIcon") {
+    const icon = safeImageURL(item.icon);
+    const name = escapeHTML(item.name || item.title || CONFIG.company);
+
+    if (icon) {
+      return `
         <img
-          src="${icon}"
+          class="${className}"
+          src="${escapeHTML(icon)}"
           alt="${name}"
-          class="appIcon"
           loading="lazy"
           decoding="async"
+          referrerpolicy="no-referrer"
         >
+      `;
+    }
+
+    return `
+      <div class="directoryIconFallback" aria-hidden="true">
+        ${escapeHTML(item.emoji || "✦")}
+      </div>
+    `;
+  }
+
+  function externalLink(url, label, className = "openCardBtn") {
+    const safe = safeURL(url);
+
+    if (!safe) {
+      return "";
+    }
+
+    return `
+      <a
+        class="${escapeHTML(className)}"
+        href="${escapeHTML(safe)}"
+        target="_blank"
+        rel="noopener noreferrer"
+      >${escapeHTML(label)}</a>
+    `;
+  }
+
+  /* =======================================================
+     CARD RENDERERS
+     ======================================================= */
+
+  function renderApp(item) {
+    const name = escapeHTML(item.name || "Aplicación");
+    const category = escapeHTML(item.category || "VIDHWAAN");
+    const description = escapeHTML(item.description || "");
+    const badge = item.badge
+      ? `<span class="appBadge">${escapeHTML(item.badge)}</span>`
+      : "";
+
+    const link = externalLink(item.url, "Abrir plataforma");
+
+    return `
+      <article class="appCard directoryCard">
+        <div class="appCardGlow" aria-hidden="true"></div>
+
+        <div class="directoryCardIdentity">
+          ${imageMarkup(item)}
+        </div>
 
         <div class="appInfo">
           <div class="appTag">${category}</div>
+          ${badge}
           <h3>${name}</h3>
           <p>${description}</p>
 
-          ${renderButton(url, buttonText, "openCardBtn")}
+          <div class="cardButtons">
+            ${link || '<span class="linkUnavailable">Enlace no disponible</span>'}
+          </div>
         </div>
       </article>
     `;
   }
 
-  return {
-    app(item) {
-      return standardCard(item, "Abrir aplicación");
-    },
+  function renderGovernment(item) {
+    const name = escapeHTML(item.name || "Portal gubernamental");
+    const category = escapeHTML(item.category || "Servicio público");
+    const description = escapeHTML(item.description || "");
+    const badge = item.badge
+      ? `<span class="appBadge">${escapeHTML(item.badge)}</span>`
+      : "";
 
-    government(item) {
-      return standardCard(item, "Abrir sitio oficial");
-    },
+    const link = externalLink(item.url, "Visitar sitio oficial");
 
-    toll(item) {
-      const title = escapeHTML(item.title || item.name || "Teléfono útil");
-      const description = escapeHTML(item.description || "");
-      const category = escapeHTML(item.icon || "TELÉFONO");
-      const number = safePhone(item.number);
+    return `
+      <article class="appCard governmentCard directoryCard">
+        <div class="appCardGlow" aria-hidden="true"></div>
 
-      const callButton = number
-        ? `
+        <div class="directoryCardIdentity">
+          ${imageMarkup(item, "appIcon governmentIcon")}
+        </div>
+
+        <div class="appInfo">
+          <div class="appTag">${category}</div>
+          ${badge}
+          <h3>${name}</h3>
+          <p>${description}</p>
+
           <div class="cardButtons">
-            <a class="launchButton" href="tel:${escapeHTML(number)}">
-              Llamar ${escapeHTML(item.number)}
-            </a>
+            ${link || '<span class="linkUnavailable">Enlace no disponible</span>'}
           </div>
-        `
-        : "";
+        </div>
+      </article>
+    `;
+  }
 
-      return `
-        <article class="appCard">
-          <div class="appCardGlow"></div>
+  function renderEmergency(item) {
+    const title = escapeHTML(item.title || "Contacto de emergencia");
+    const number = String(item.number || "");
+    const phone = safePhone(number);
+    const description = escapeHTML(item.description || "");
+    const category = escapeHTML(item.category || "Emergencias");
+    const icon = escapeHTML(item.icon || "☎");
 
-          <div class="appInfo">
-            <div class="appTag">${category}</div>
-            <h3>${title}</h3>
-            <p>${description}</p>
-            ${callButton}
-          </div>
-        </article>
-      `;
-    },
+    const callAction = phone
+      ? `
+        <a
+          class="launchButton emergencyCallBtn"
+          href="tel:${escapeHTML(phone)}"
+          aria-label="Llamar al ${escapeHTML(number)}: ${title}"
+        >☎ Llamar ${escapeHTML(number)}</a>
+      `
+      : "";
 
-    featured(item) {
-      const name = escapeHTML(item.name || item.title || "Experiencia destacada");
-      const description = escapeHTML(item.description || "");
-      const badge = escapeHTML(item.badge || "DESTACADO");
-      const icon = escapeHTML(safeImageURL(item.icon));
-      const url = safeURL(item.url);
+    return `
+      <article class="appCard emergencyCard directoryCard">
+        <div class="appCardGlow" aria-hidden="true"></div>
 
-      return `
-        <article class="featuredCard">
-          <div class="featuredGlow"></div>
+        <div class="appInfo">
+          <div class="emergencyIcon" aria-hidden="true">${icon}</div>
+          <div class="appTag">${category}</div>
+          <h3>${title}</h3>
 
-          <div class="featuredImageWrap">
-            <img
-              src="${icon}"
-              alt="${name}"
-              loading="eager"
-              decoding="async"
-            >
+          <div class="emergencyNumber">
+            ${escapeHTML(number)}
           </div>
 
-          <div class="featuredContent">
-            <div class="featuredBadge">${badge}</div>
-            <h3>${name}</h3>
-            <p>${description}</p>
+          <p>${description}</p>
 
-            ${renderButton(url, "Descubrir experiencia")}
+          <div class="cardButtons">
+            ${callAction}
           </div>
-        </article>
-      `;
-    },
+        </div>
+      </article>
+    `;
+  }
 
-    notification(item) {
-      const title = escapeHTML(item.title || "Novedad");
-      const description = escapeHTML(item.description || "");
-      const badge = escapeHTML(item.badge || "NOVEDAD");
-      const time = escapeHTML(item.time || "");
-      const url = safeURL(item.url);
+  function renderVidhwaanLink(item) {
+    const title = escapeHTML(item.title || "VIDHWAAN");
+    const badge = escapeHTML(item.badge || "GLOBAL TECHNOLOGY");
+    const time = escapeHTML(item.time || "");
+    const description = escapeHTML(item.description || "");
+    const link = externalLink(item.url, "Explorar plataforma");
 
-      const tag = url
-        ? "a"
-        : "article";
+    return `
+      <article class="appCard vidhwaanLinkCard directoryCard">
+        <div class="appCardGlow" aria-hidden="true"></div>
 
-      const attributes = url
-        ? `href="${escapeHTML(url)}" target="_blank" rel="noopener noreferrer"`
-        : "";
-
-      return `
-        <${tag} class="notificationCard" ${attributes}>
-          <div class="notificationTop">
-            <div class="notificationBadge">${badge}</div>
-            <div class="notificationTime">${time}</div>
-          </div>
-
+        <div class="appInfo">
+          <div class="appTag">${badge}</div>
+          ${time ? `<div class="linkEyebrow">${time}</div>` : ""}
           <h3>${title}</h3>
           <p>${description}</p>
-        </${tag}>
-      `;
-    },
 
-    video(item) {
-      const originalURL = String(item.youtube || item.url || "").trim();
+          <div class="cardButtons">
+            ${link || '<span class="linkUnavailable">Enlace no disponible</span>'}
+          </div>
+        </div>
+      </article>
+    `;
+  }
 
-      if (!originalURL) return "";
+  /* =======================================================
+     YOUTUBE VIDEO SUPPORT
+     ======================================================= */
 
-      let parsedURL;
+  function getVideoDetails(item) {
+    const raw = String(item.youtube || item.url || "").trim();
 
-      try {
-        parsedURL = new URL(originalURL);
-      } catch {
-        return "";
-      }
+    if (!raw) {
+      return null;
+    }
 
-      const hostname = parsedURL.hostname.toLowerCase();
-      const allowedHosts = [
+    try {
+      const url = new URL(raw);
+      const host = url.hostname.toLowerCase();
+      const parts = url.pathname.split("/").filter(Boolean);
+
+      const validHost = [
         "youtube.com",
         "www.youtube.com",
         "m.youtube.com",
         "youtu.be",
         "www.youtu.be"
-      ];
+      ].includes(host);
 
-      if (!allowedHosts.includes(hostname)) {
-        return "";
+      if (!validHost) {
+        return null;
       }
 
-      let videoID = "";
+      let videoId = "";
       let isShort = false;
 
-      if (hostname.includes("youtu.be")) {
-        videoID = parsedURL.pathname.split("/").filter(Boolean)[0] || "";
-      } else {
-        const parts = parsedURL.pathname.split("/").filter(Boolean);
-
-        if (parts[0] === "shorts" && parts[1]) {
-          videoID = parts[1];
-          isShort = true;
-        } else if (parts[0] === "embed" && parts[1]) {
-          videoID = parts[1];
-        } else if (parsedURL.pathname === "/watch") {
-          videoID = parsedURL.searchParams.get("v") || "";
-        } else if (parts[0] === "live" && parts[1]) {
-          videoID = parts[1];
-        }
+      if (host.includes("youtu.be")) {
+        videoId = parts[0] || "";
+      } else if (parts[0] === "shorts" && parts[1]) {
+        videoId = parts[1];
+        isShort = true;
+      } else if (parts[0] === "embed" && parts[1]) {
+        videoId = parts[1];
+      } else if (url.pathname === "/watch") {
+        videoId = url.searchParams.get("v") || "";
       }
 
-      videoID = videoID.split("?")[0].split("&")[0].trim();
-
-      if (!/^[a-zA-Z0-9_-]{11}$/.test(videoID)) {
-        return "";
+      if (!/^[A-Za-z0-9_-]{6,20}$/.test(videoId)) {
+        return null;
       }
 
-      const title = escapeHTML(item.title || "Video de Vidhwaan");
-      const description = escapeHTML(item.description || "");
-      const safeID = encodeURIComponent(videoID);
-      const embedURL =
-        `https://www.youtube-nocookie.com/embed/${safeID}` +
-        "?autoplay=1&playsinline=1&rel=0";
+      if (item.orientation === "portrait") isShort = true;
+      if (item.orientation === "landscape") isShort = false;
 
-      const thumbnail =
-        `https://i.ytimg.com/vi/${safeID}/hqdefault.jpg`;
+      return {
+        id: videoId,
+        isShort,
+        embed:
+          "https://www.youtube-nocookie.com/embed/" +
+          encodeURIComponent(videoId) +
+          "?autoplay=1&playsinline=1&rel=0",
+        thumbnail:
+          "https://i.ytimg.com/vi/" +
+          encodeURIComponent(videoId) +
+          "/hqdefault.jpg"
+      };
+    } catch {
+      return null;
+    }
+  }
 
-      return `
-        <article
-          class="videoCard ${isShort ? "videoCardShort" : "videoCardNormal"}"
-          data-video-src="${escapeHTML(embedURL)}"
-        >
-          <div class="videoPlayerWrap">
-            <button
-              class="videoPoster"
-              type="button"
-              aria-label="Reproducir ${title}"
+  function renderVideo(item) {
+    const video = getVideoDetails(item);
+
+    if (!video) {
+      return "";
+    }
+
+    const title = escapeHTML(item.title || "Video de VIDHWAAN");
+    const description = escapeHTML(item.description || "");
+    const orientationClass = video.isShort
+      ? "videoCardShort"
+      : "videoCardNormal";
+
+    return `
+      <article
+        class="videoCard ${orientationClass}"
+        data-video-id="${escapeHTML(video.id)}"
+        data-video-src="${escapeHTML(video.embed)}"
+      >
+        <div class="videoPlayerWrap">
+          <button
+            class="videoPoster"
+            type="button"
+            aria-label="Reproducir ${title}"
+          >
+            <img
+              src="${escapeHTML(video.thumbnail)}"
+              alt=""
+              class="videoThumbnail"
+              loading="lazy"
+              decoding="async"
             >
-              <img
-                src="${thumbnail}"
-                alt=""
-                class="videoThumbnail"
-                loading="lazy"
-                decoding="async"
-              >
+            <span class="videoPlayButton" aria-hidden="true">▶</span>
+          </button>
+        </div>
 
-              <span class="videoPlayButton" aria-hidden="true">▶</span>
-            </button>
-          </div>
+        <div class="videoContent">
+          <h3>${title}</h3>
+          ${description ? `<p>${description}</p>` : ""}
+        </div>
+      </article>
+    `;
+  }
 
-          <div class="videoContent">
-            <h3>${title}</h3>
-            ${description ? `<p>${description}</p>` : ""}
-          </div>
-        </article>
+  /* =======================================================
+     SECTION SETUP AND ORDER
+     ======================================================= */
+
+  function createSection(section) {
+    const element = document.createElement("section");
+    element.id = section.id;
+    element.className =
+      "sectionBlock directoryDynamicSection " +
+      section.key.replace(/[^a-z0-9-]/gi, "");
+
+    element.innerHTML = `
+      <div class="sectionTitleWrap">
+        <h2>${escapeHTML(section.title)}</h2>
+      </div>
+      <p class="sectionDescription">
+        ${escapeHTML(section.subtitle)}
+      </p>
+      <div id="${escapeHTML(section.gridId)}"></div>
+    `;
+
+    return element;
+  }
+
+  function prepareSections() {
+    const appRoot = byId("app") || $("main");
+
+    if (!appRoot) {
+      throw new Error("No se encontró el contenedor principal de la aplicación.");
+    }
+
+    let footer = byId("footer");
+
+    if (!footer) {
+      footer = document.createElement("footer");
+      footer.id = "footer";
+      footer.innerHTML = `
+        <p>${CONFIG.company} — ${CONFIG.tagline}</p>
       `;
-    }
-  };
-})();
-
-/* =========================================================
-   LOAD LOCALITY DATA
-   Each generated locality has its own apps.json.
-========================================================= */
-
-async function loadData() {
-  try {
-    const response = await fetch("./apps.json", {
-      cache: "no-store"
-    });
-
-    if (!response.ok) {
-      throw new Error(`apps.json returned HTTP ${response.status}`);
+      appRoot.appendChild(footer);
     }
 
-    const data = await response.json();
+    const sections = {};
 
-    if (!Array.isArray(data)) {
-      throw new Error("apps.json must contain a JSON array.");
+    for (const config of CONFIG.sections) {
+      let element = byId(config.id);
+
+      if (!element) {
+        element = createSection(config);
+      }
+
+      sections[config.key] = element;
     }
 
-    let featuredHTML = "";
-    let appsHTML = "";
-    let governmentHTML = "";
-    let tollHTML = "";
-    let notificationsHTML = "";
-    let videosHTML = "";
+    /*
+     * The current template may contain an older notifications
+     * section. It is not part of the requested five sections.
+     */
+    const oldNotifications = byId("notificationsSection");
+
+    if (oldNotifications) {
+      oldNotifications.hidden = true;
+    }
+
+    /*
+     * Reorder the five content sections without replacing the
+     * existing hero, Vidhwaan Digital Office, or footer.
+     */
+    for (const config of CONFIG.sections) {
+      const section = sections[config.key];
+
+      if (section.parentElement !== appRoot) {
+        appRoot.insertBefore(section, footer);
+      } else {
+        appRoot.insertBefore(section, footer);
+      }
+    }
+
+    /*
+     * Videos must be the final content section before the footer.
+     */
+    appRoot.insertBefore(sections.videos, footer);
+
+    return sections;
+  }
+
+  /* =======================================================
+     DATA VALIDATION AND RENDERING
+     ======================================================= */
+
+  function classify(item) {
+    if (item.section) {
+      return item.section;
+    }
+
+    /*
+     * Compatibility with older apps.json files.
+     */
+    if (item.type === "video") return "videos";
+    if (item.number !== undefined) return "emergency-contacts";
+    if (item.time !== undefined) return "vidhwaan-links";
+    if (item.featured !== undefined) return "vidhwaan-apps";
+
+    return "government-portals";
+  }
+
+  function renderIntoSections(data, sections) {
+    const groups = {
+      "vidhwaan-apps": [],
+      "government-portals": [],
+      "emergency-contacts": [],
+      "vidhwaan-links": [],
+      "videos": []
+    };
 
     for (const item of data) {
-      if (!item || typeof item !== "object" || Array.isArray(item)) {
+      if (!item || typeof item !== "object") {
         continue;
       }
 
-      /* VIDEOS */
-      if (item.type === "video") {
-        videosHTML += render.video(item);
+      const key = classify(item);
+
+      if (groups[key]) {
+        groups[key].push(item);
+      }
+    }
+
+    const renderers = {
+      "vidhwaan-apps": renderApp,
+      "government-portals": renderGovernment,
+      "emergency-contacts": renderEmergency,
+      "vidhwaan-links": renderVidhwaanLink,
+      "videos": renderVideo
+    };
+
+    for (const config of CONFIG.sections) {
+      const section = sections[config.key];
+      const grid = byId(config.gridId);
+
+      if (!section || !grid) {
         continue;
       }
 
-      /* NOTIFICATIONS */
-      if (item.time !== undefined) {
-        notificationsHTML += render.notification(item);
-        continue;
-      }
+      const items = groups[config.key] || [];
+      const renderer = renderers[config.key];
 
-      /* EMERGENCY AND IMPORTANT NUMBERS */
-      if (item.number !== undefined) {
-        tollHTML += render.toll(item);
-        continue;
-      }
+      grid.innerHTML = items.map(renderer).join("");
 
-      /* APPLICATIONS */
-      if (item.featured !== undefined) {
-        appsHTML += render.app(item);
+      /*
+       * Hide sections without content instead of displaying
+       * empty cards or blank headings.
+       */
+      section.hidden = items.length === 0;
+    }
+  }
 
-        if (item.featured === true) {
-          featuredHTML = render.featured(item);
+  async function loadData() {
+    const sections = prepareSections();
+
+    try {
+      const response = await fetch(CONFIG.dataUrl, {
+        cache: "no-store",
+        headers: {
+          Accept: "application/json"
         }
+      });
 
-        continue;
+      if (!response.ok) {
+        throw new Error(`apps.json respondió con HTTP ${response.status}`);
       }
 
-      /* GOVERNMENT AND OTHER SERVICES */
-      governmentHTML += render.government(item);
-    }
+      const data = await response.json();
 
-    if (featuredApp) {
-      featuredApp.innerHTML = featuredHTML;
-    }
+      if (!Array.isArray(data)) {
+        throw new Error("apps.json debe contener un array JSON.");
+      }
 
-    if (appsGrid) {
-      appsGrid.innerHTML = appsHTML;
-    }
+      state.data = data;
+      renderIntoSections(data, sections);
 
-    if (governmentGrid) {
-      governmentGrid.innerHTML = governmentHTML;
-    }
+      document.documentElement.classList.add("directoryReady");
+    } catch (error) {
+      console.error("Error al cargar el directorio de VIDHWAAN:", error);
 
-    if (tollGrid) {
-      tollGrid.innerHTML = tollHTML;
-    }
+      for (const config of CONFIG.sections) {
+        const grid = byId(config.gridId);
 
-    if (notificationsFeed) {
-      notificationsFeed.innerHTML = notificationsHTML;
-    }
-
-    if (videosGrid) {
-      videosGrid.innerHTML = videosHTML;
-    }
-
-    /* Hide section headings if no cards were returned. */
-    toggleEmptySection("featuredSection", featuredHTML);
-    toggleEmptySection("appsSection", appsHTML);
-    toggleEmptySection("governmentSection", governmentHTML);
-    toggleEmptySection("emergencySection", tollHTML);
-    toggleEmptySection("notificationsSection", notificationsHTML);
-    toggleEmptySection("videosSection", videosHTML);
-  } catch (error) {
-    console.error("Vidhwaan Argentina data loading failed:", error);
-
-    const containers = [
-      appsGrid,
-      governmentGrid,
-      tollGrid,
-      notificationsFeed,
-      videosGrid
-    ];
-
-    for (const container of containers) {
-      if (container) {
-        container.innerHTML = `
-          <p class="errorMessage">
-            No se pudo cargar la información. Inténtelo de nuevo más tarde.
-          </p>
-        `;
+        if (grid) {
+          grid.innerHTML = `
+            <div class="directoryError" role="status">
+              <h3>No se pudo cargar esta sección</h3>
+              <p>Compruebe su conexión e inténtelo de nuevo.</p>
+              <button class="launchButton" type="button" data-retry-load>
+                Reintentar
+              </button>
+            </div>
+          `;
+        }
       }
     }
   }
-}
 
-function toggleEmptySection(sectionID, content) {
-  const section = document.getElementById(sectionID);
+  /* =======================================================
+     CLICK HANDLERS
+     ======================================================= */
 
-  if (!section) return;
+  document.addEventListener("click", event => {
+    const retry = event.target.closest("[data-retry-load]");
 
-  section.hidden = !content.trim();
-}
-
-/* =========================================================
-   YOUTUBE PLAYER
-   Load the iframe only after a visitor presses Play.
-========================================================= */
-
-document.addEventListener("click", event => {
-  const poster = event.target.closest(".videoPoster");
-
-  if (!poster) return;
-
-  const card = poster.closest(".videoCard");
-  const playerWrap = card?.querySelector(".videoPlayerWrap");
-  const videoSrc = card?.dataset.videoSrc;
-
-  if (!playerWrap || !videoSrc) return;
-
-  let url;
-
-  try {
-    url = new URL(videoSrc);
-  } catch {
-    return;
-  }
-
-  if (url.hostname !== "www.youtube-nocookie.com") {
-    return;
-  }
-
-  const iframe = document.createElement("iframe");
-
-  iframe.className = "videoPlayer";
-  iframe.src = url.href;
-  iframe.title = "Video de Vidhwaan en YouTube";
-  iframe.loading = "lazy";
-  iframe.allow =
-    "accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share";
-  iframe.allowFullscreen = true;
-  iframe.referrerPolicy = "strict-origin-when-cross-origin";
-
-  playerWrap.replaceChildren(iframe);
-});
-
-/* =========================================================
-   GLOBAL URL AND PHONE HANDLING
-========================================================= */
-
-document.addEventListener("click", event => {
-  const target = event.target;
-
-  if (!(target instanceof Element)) return;
-
-  const element = target.closest("[data-url], [data-phone]");
-
-  if (!element) return;
-
-  /* Links and buttons with their own native action should work normally. */
-  if (target.closest("a, button")) return;
-
-  const url = safeURL(element.dataset.url);
-
-  if (url) {
-    window.location.assign(url);
-    return;
-  }
-
-  const phone = safePhone(element.dataset.phone);
-
-  if (phone) {
-    window.location.href = `tel:${phone}`;
-  }
-});
-
-/* =========================================================
-   PWA INSTALLATION
-========================================================= */
-
-let deferredInstallPrompt = null;
-
-function isPWAInstalled() {
-  return (
-    window.matchMedia("(display-mode: standalone)").matches ||
-    window.navigator.standalone === true
-  );
-}
-
-function hideInstallButton() {
-  if (installBtn) {
-    installBtn.classList.remove("showInstall");
-  }
-}
-
-window.addEventListener("beforeinstallprompt", event => {
-  event.preventDefault();
-  deferredInstallPrompt = event;
-
-  if (installBtn && !isPWAInstalled()) {
-    installBtn.classList.add("showInstall");
-  }
-});
-
-if (installBtn) {
-  installBtn.addEventListener("click", async () => {
-    if (!deferredInstallPrompt) {
+    if (retry) {
+      loadData();
       return;
     }
 
-    const promptEvent = deferredInstallPrompt;
-    deferredInstallPrompt = null;
+    const poster = event.target.closest(".videoPoster");
 
-    try {
-      await promptEvent.prompt();
+    if (!poster) {
+      return;
+    }
 
-      const result = await promptEvent.userChoice;
+    const card = poster.closest(".videoCard");
+    const playerWrap = card && $(".videoPlayerWrap", card);
+    const videoSrc = card && card.dataset.videoSrc;
 
-      if (result?.outcome === "accepted") {
-        hideInstallButton();
-      }
-    } catch (error) {
-      console.error("PWA installation failed:", error);
+    if (!playerWrap || !videoSrc) {
+      return;
+    }
+
+    const iframe = document.createElement("iframe");
+    iframe.className = "videoPlayer";
+    iframe.src = videoSrc;
+    iframe.title = "Video de VIDHWAAN";
+    iframe.loading = "lazy";
+    iframe.allow =
+      "accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share";
+    iframe.allowFullscreen = true;
+    iframe.referrerPolicy = "strict-origin-when-cross-origin";
+
+    playerWrap.replaceChildren(iframe);
+  });
+
+  /* =======================================================
+     IMAGE FALLBACK
+     ======================================================= */
+
+  document.addEventListener("error", event => {
+    const image = event.target;
+
+    if (
+      !image ||
+      image.tagName !== "IMG" ||
+      image.classList.contains("videoThumbnail") ||
+      image.dataset.fallback
+    ) {
+      return;
+    }
+
+    image.dataset.fallback = "1";
+    image.hidden = true;
+
+    const fallback = document.createElement("span");
+    fallback.className = "directoryIconFallback";
+    fallback.setAttribute("aria-hidden", "true");
+    fallback.textContent = "✦";
+
+    image.insertAdjacentElement("afterend", fallback);
+  }, true);
+
+  /* =======================================================
+     PWA INSTALL EXPERIENCE
+     ======================================================= */
+
+  const installBtn = byId("installBtn");
+
+  function isInstalled() {
+    return (
+      window.matchMedia("(display-mode: standalone)").matches ||
+      window.navigator.standalone === true
+    );
+  }
+
+  function hideInstallButton() {
+    if (installBtn) {
+      installBtn.classList.remove("showInstall");
+      installBtn.hidden = true;
+    }
+  }
+
+  if (isInstalled()) {
+    hideInstallButton();
+  }
+
+  window.addEventListener("beforeinstallprompt", event => {
+    event.preventDefault();
+    state.installPrompt = event;
+
+    if (installBtn && !isInstalled()) {
+      installBtn.hidden = false;
+      installBtn.classList.add("showInstall");
     }
   });
-}
 
-window.addEventListener("appinstalled", () => {
-  deferredInstallPrompt = null;
-  hideInstallButton();
-});
+  if (installBtn) {
+    installBtn.addEventListener("click", async () => {
+      if (!state.installPrompt) {
+        /*
+         * Some browsers do not expose a programmatic install
+         * prompt. Do not pretend the installation succeeded.
+         */
+        return;
+      }
 
-if (isPWAInstalled()) {
-  hideInstallButton();
-}
+      const promptEvent = state.installPrompt;
+      state.installPrompt = null;
 
-/* =========================================================
-   IMAGE FALLBACK
-========================================================= */
+      try {
+        await promptEvent.prompt();
 
-document.addEventListener("error", event => {
-  const image = event.target;
+        const choice = await promptEvent.userChoice;
 
-  if (
-    !(image instanceof HTMLImageElement) ||
-    image.dataset.fallback ||
-    image.classList.contains("videoThumbnail")
-  ) {
-    return;
-  }
-
-  image.dataset.fallback = "1";
-  image.src = "../icons/icon-192.png";
-}, true);
-
-/* =========================================================
-   KEYBOARD ACCESSIBILITY
-========================================================= */
-
-document.addEventListener("keydown", event => {
-  if (event.key !== "Enter" && event.key !== " ") return;
-
-  const target = event.target;
-
-  if (!(target instanceof Element)) return;
-
-  const element = target.closest("[data-url], [data-phone]");
-
-  if (!element || target.closest("button, a")) return;
-
-  event.preventDefault();
-
-  const url = safeURL(element.dataset.url);
-
-  if (url) {
-    window.location.assign(url);
-    return;
-  }
-
-  const phone = safePhone(element.dataset.phone);
-
-  if (phone) {
-    window.location.href = `tel:${phone}`;
-  }
-});
-
-/* =========================================================
-   SERVICE WORKER
-========================================================= */
-
-if ("serviceWorker" in navigator) {
-  window.addEventListener("load", () => {
-    navigator.serviceWorker.register("./sw.js").catch(error => {
-      console.error("Service worker registration failed:", error);
+        if (choice && choice.outcome === "accepted") {
+          hideInstallButton();
+        }
+      } catch (error) {
+        console.error("No se pudo abrir la instalación PWA:", error);
+      }
     });
-  }, { once: true });
-}
+  }
 
-/* =========================================================
-   START APPLICATION
-========================================================= */
+  window.addEventListener("appinstalled", () => {
+    state.installPrompt = null;
+    hideInstallButton();
+  });
 
-loadData();
+  /* =======================================================
+     STARTUP
+     ======================================================= */
+
+  if (document.readyState === "loading") {
+    document.addEventListener("DOMContentLoaded", loadData, {
+      once: true
+    });
+  } else {
+    loadData();
+  }
+})();
