@@ -1,3 +1,4 @@
+
 name: Generate Argentina Locality Pages
 
 on:
@@ -8,9 +9,13 @@ on:
       - main
     paths:
       - argentina.json
+      - apps.json
       - template.html
       - manifest.json
       - sw.js
+      - app.js
+      - main.css
+      - icons/**
       - .github/workflows/villages.yml
 
 permissions:
@@ -35,46 +40,69 @@ jobs:
         with:
           node-version: 22
 
-      - name: Validate Argentina Dataset
+      - name: Validate Argentina Dataset and Source Files
+        shell: node {0}
         run: |
-          node <<'NODE'
           const fs = require("fs");
 
-          if (!fs.existsSync("argentina.json")) {
-            throw new Error("argentina.json was not found.");
+          const requiredFiles = [
+            "argentina.json",
+            "apps.json",
+            "template.html",
+            "manifest.json",
+            "sw.js",
+            "app.js",
+            "main.css"
+          ];
+
+          for (const file of requiredFiles) {
+            if (!fs.existsSync(file)) {
+              throw new Error(`Required file is missing: ${file}`);
+            }
           }
 
-          const data = JSON.parse(
+          const localities = JSON.parse(
             fs.readFileSync("argentina.json", "utf8")
           );
 
-          if (!Array.isArray(data)) {
-            throw new Error("argentina.json must contain a JSON array.");
+          const apps = JSON.parse(
+            fs.readFileSync("apps.json", "utf8")
+          );
+
+          if (!Array.isArray(localities) || localities.length === 0) {
+            throw new Error(
+              "argentina.json must contain a non-empty array."
+            );
           }
 
-          if (data.length === 0) {
-            throw new Error("argentina.json contains no localities.");
+          if (!Array.isArray(apps)) {
+            throw new Error("apps.json must contain a JSON array.");
           }
 
-          const required = [
+          const requiredFields = [
             "locality",
             "province",
             "localityCode"
           ];
 
-          const missing = required.filter(
-            key => !(key in data[0])
-          );
+          for (let i = 0; i < localities.length; i++) {
+            const record = localities[i];
 
-          if (missing.length) {
-            throw new Error(
-              "Unexpected Argentina JSON schema. Missing fields: " +
-              missing.join(", ")
-            );
+            for (const field of requiredFields) {
+              if (
+                record[field] === undefined ||
+                record[field] === null ||
+                String(record[field]).trim() === ""
+              ) {
+                throw new Error(
+                  `Record ${i + 1} is missing "${field}".`
+                );
+              }
+            }
           }
 
-          console.log(`Validated ${data.length} Argentina records.`);
-          NODE
+          console.log(`Validated ${localities.length} Argentina records.`);
+          console.log(`Validated ${apps.length} app/service records.`);
 
       - name: Generate Argentina Locality Pages
         shell: node {0}
@@ -88,20 +116,13 @@ jobs:
             fs.readFileSync("argentina.json", "utf8")
           );
 
-          const template = fs.readFileSync(
-            "template.html",
-            "utf8"
-          );
+          // Read the source dataset once and copy it into every locality.
+          const appsJson = fs.readFileSync("apps.json", "utf8");
+          JSON.parse(appsJson);
 
-          const manifestTemplate = fs.readFileSync(
-            "manifest.json",
-            "utf8"
-          );
-
-          const swTemplate = fs.readFileSync(
-            "sw.js",
-            "utf8"
-          );
+          const template = fs.readFileSync("template.html", "utf8");
+          const manifestTemplate = fs.readFileSync("manifest.json", "utf8");
+          const swTemplate = fs.readFileSync("sw.js", "utf8");
 
           function clean(value) {
             if (value === null || value === undefined) {
@@ -129,10 +150,10 @@ jobs:
               .replace(/'/g, "&#39;");
           }
 
-          function replaceTokens(text, values) {
-            let output = text;
+          function replaceTokens(content, tokens) {
+            let output = content;
 
-            for (const [key, value] of Object.entries(values)) {
+            for (const [key, value] of Object.entries(tokens)) {
               output = output.replaceAll(
                 `{{${key}}}`,
                 String(value)
@@ -148,26 +169,20 @@ jobs:
             const department = clean(record.department);
             const localityCode = clean(record.localityCode);
 
-            if (!locality) {
+            if (!locality || !province || !localityCode) {
               throw new Error(
-                `Record ${index + 1} has no locality name.`
-              );
-            }
-
-            if (!localityCode) {
-              throw new Error(
-                `Record ${index + 1} (${locality}) has no localityCode.`
-              );
-            }
-
-            if (!province) {
-              throw new Error(
-                `Record ${index + 1} (${locality}) has no province.`
+                `Invalid locality record at position ${index + 1}.`
               );
             }
 
             const localitySlug = slugify(locality);
-            const folder = `${localitySlug}-${slugify(localityCode)}`;
+            const codeSlug = slugify(localityCode);
+
+            if (!localitySlug || !codeSlug) {
+              throw new Error(
+                `Cannot create a folder for record ${index + 1}.`
+              );
+            }
 
             return {
               locality,
@@ -175,10 +190,13 @@ jobs:
               department,
               localityCode,
               localitySlug,
-              folder,
-              localityType: clean(record.localityType) || "No especificado",
-              agglomeration: clean(record.agglomeration) || "No especificada",
-              localGovernment: clean(record.localGovernment) || "No especificado",
+              folder: `${localitySlug}-${codeSlug}`,
+              localityType:
+                clean(record.localityType) || "No especificado",
+              agglomeration:
+                clean(record.agglomeration) || "No especificada",
+              localGovernment:
+                clean(record.localGovernment) || "No especificado",
               localGovernmentCategory:
                 clean(record.localGovernmentCategory) || "No especificada",
               jurisdictionCode: clean(record.jurisdictionCode),
@@ -197,121 +215,242 @@ jobs:
               LOCALITY_SLUG: item.localitySlug,
               LOCALITY_CODE: escapeHtml(item.localityCode),
               PROVINCE_NAME: escapeHtml(item.province),
-              DEPARTMENT_NAME: escapeHtml(item.department || "No especificado"),
+              DEPARTMENT_NAME:
+                escapeHtml(item.department || "No especificado"),
               LOCALITY_TYPE: escapeHtml(item.localityType),
               AGGLOMERATION_NAME: escapeHtml(item.agglomeration),
-              LOCAL_GOVERNMENT_NAME: escapeHtml(item.localGovernment),
+              LOCAL_GOVERNMENT_NAME:
+                escapeHtml(item.localGovernment),
               LOCAL_GOVERNMENT_CATEGORY:
                 escapeHtml(item.localGovernmentCategory),
-
               LOCALITY_FOLDER: item.folder,
               LOCALITY_CANONICAL_URL: canonical,
 
-              // Legacy tokens for manifest/service-worker templates
+              // Legacy template tokens.
               VILLAGE_NAME: escapeHtml(item.locality),
-              VILLAGE_NAME_UPPER: escapeHtml(item.locality.toUpperCase()),
+              VILLAGE_NAME_UPPER:
+                escapeHtml(item.locality.toUpperCase()),
               PINCODE: escapeHtml(item.localityCode),
               VILLAGE_FOLDER: item.folder
             };
           }
 
-          const keep = new Set([
-            ".git",
-            ".github",
-            "icons",
-            "template.html",
-            "manifest.json",
-            "sw.js",
-            "argentina.json",
-            "index.html",
-            "search.js",
-            "styles.css",
-            "README.md",
-            ".gitignore",
-            "CNAME"
-          ]);
+          // Prepare every folder name before generating any files.
+          const items = localities.map(getLocality);
+          const currentFolders = new Set();
 
-          // Remove old generated locality directories while preserving
-          // the source files required by this workflow.
-          for (const item of fs.readdirSync(root)) {
-            if (keep.has(item)) continue;
+          for (const item of items) {
+            if (currentFolders.has(item.folder)) {
+              throw new Error(
+                `Duplicate locality folder: ${item.folder}`
+              );
+            }
 
-            const fullPath = path.join(root, item);
+            currentFolders.add(item.folder);
+          }
 
-            if (!fs.existsSync(fullPath)) continue;
+          // Remove obsolete generated locality folders only.
+          // Never delete unrelated project directories.
+          let removed = 0;
 
-            const stat = fs.lstatSync(fullPath);
+          for (const name of fs.readdirSync(root)) {
+            const fullPath = path.join(root, name);
 
-            if (stat.isDirectory()) {
+            if (currentFolders.has(name)) continue;
+
+            let stat;
+
+            try {
+              stat = fs.lstatSync(fullPath);
+            } catch {
+              continue;
+            }
+
+            if (!stat.isDirectory()) continue;
+
+            const indexPath = path.join(fullPath, "index.html");
+            const manifestPath = path.join(fullPath, "manifest.json");
+            const swPath = path.join(fullPath, "sw.js");
+
+            if (
+              !fs.existsSync(indexPath) ||
+              !fs.existsSync(manifestPath) ||
+              !fs.existsSync(swPath)
+            ) {
+              continue;
+            }
+
+            const oldHtml = fs.readFileSync(indexPath, "utf8");
+
+            const isGeneratedLocality =
+              oldHtml.includes("https://argentina.vidhwaan.com/") ||
+              oldHtml.includes("{{LOCALITY_NAME}}");
+
+            if (isGeneratedLocality) {
               fs.rmSync(fullPath, {
                 recursive: true,
                 force: true
               });
+
+              removed++;
             }
           }
 
-          // Remove the obsolete marketplace page from the repository.
-          if (fs.existsSync("market.html")) {
-            fs.rmSync("market.html", { force: true });
-          }
+          console.log(`Removed ${removed} obsolete locality folders.`);
 
-          const createdFolders = new Set();
+          let generated = 0;
 
-          for (let index = 0; index < localities.length; index++) {
-            const item = getLocality(localities[index], index);
-            const tokens = makeTokens(item);
-
-            if (createdFolders.has(item.folder)) {
-              throw new Error(
-                `Duplicate locality folder detected: ${item.folder}`
-              );
-            }
-
-            createdFolders.add(item.folder);
-
+          for (const item of items) {
             const directory = path.join(root, item.folder);
+            const tokens = makeTokens(item);
 
             fs.mkdirSync(directory, { recursive: true });
 
+            const outputs = {
+              "index.html": replaceTokens(template, tokens),
+              "manifest.json": replaceTokens(manifestTemplate, tokens),
+              "sw.js": replaceTokens(swTemplate, tokens)
+            };
+
+            for (const [fileName, content] of Object.entries(outputs)) {
+              if (content.includes("{{")) {
+                throw new Error(
+                  `Unreplaced template token in ${item.folder}/${fileName}`
+                );
+              }
+
+              fs.writeFileSync(
+                path.join(directory, fileName),
+                content,
+                "utf8"
+              );
+            }
+
+            // CRITICAL: Copy apps.json into every locality folder.
             fs.writeFileSync(
-              path.join(directory, "index.html"),
-              replaceTokens(template, tokens),
+              path.join(directory, "apps.json"),
+              appsJson,
               "utf8"
             );
 
-            fs.writeFileSync(
-              path.join(directory, "manifest.json"),
-              replaceTokens(manifestTemplate, tokens),
-              "utf8"
-            );
+            generated++;
 
-            fs.writeFileSync(
-              path.join(directory, "sw.js"),
-              replaceTokens(swTemplate, tokens),
-              "utf8"
-            );
-
-            if (index > 0 && index % 5000 === 0) {
+            if (generated % 500 === 0) {
               console.log(
-                `Generated ${index} of ${localities.length} locality pages...`
+                `Generated ${generated} of ${items.length} locality folders...`
               );
             }
           }
 
           console.log(
-            `Successfully generated ${createdFolders.size} Argentina locality pages.`
+            `Successfully generated ${generated} Argentina locality pages.`
           );
 
-      - name: Commit Changes
+      - name: Verify Every Locality Folder
+        shell: node {0}
         run: |
-          git config user.name "github-actions"
-          git config user.email "github-actions@github.com"
+          const fs = require("fs");
+          const path = require("path");
+
+          const localities = JSON.parse(
+            fs.readFileSync("argentina.json", "utf8")
+          );
+
+          const sourceApps = fs.readFileSync("apps.json", "utf8");
+
+          function slugify(value) {
+            return String(value)
+              .trim()
+              .normalize("NFD")
+              .replace(/[\u0300-\u036f]/g, "")
+              .toLowerCase()
+              .replace(/[^a-z0-9]+/g, "-")
+              .replace(/^-+|-+$/g, "");
+          }
+
+          const requiredFiles = [
+            "index.html",
+            "manifest.json",
+            "sw.js",
+            "apps.json"
+          ];
+
+          let verified = 0;
+
+          for (let i = 0; i < localities.length; i++) {
+            const record = localities[i];
+
+            const folder =
+              `${slugify(record.locality)}-${slugify(record.localityCode)}`;
+
+            const directory = path.join(process.cwd(), folder);
+
+            for (const fileName of requiredFiles) {
+              const fullPath = path.join(directory, fileName);
+
+              if (!fs.existsSync(fullPath)) {
+                throw new Error(`Missing generated file: ${fullPath}`);
+              }
+            }
+
+            const html = fs.readFileSync(
+              path.join(directory, "index.html"),
+              "utf8"
+            );
+
+            if (html.includes("{{")) {
+              throw new Error(
+                `Unreplaced template token in ${folder}/index.html`
+              );
+            }
+
+            const copiedApps = fs.readFileSync(
+              path.join(directory, "apps.json"),
+              "utf8"
+            );
+
+            // Confirm the locality has the same dataset as the root file.
+            if (copiedApps !== sourceApps) {
+              throw new Error(
+                `apps.json does not match the root dataset in ${folder}.`
+              );
+            }
+
+            const parsedApps = JSON.parse(copiedApps);
+
+            if (!Array.isArray(parsedApps)) {
+              throw new Error(
+                `Invalid apps.json array in ${folder}.`
+              );
+            }
+
+            JSON.parse(
+              fs.readFileSync(
+                path.join(directory, "manifest.json"),
+                "utf8"
+              )
+            );
+
+            verified++;
+          }
+
+          console.log(
+            `SUCCESS: Verified all ${verified} locality folders.`
+          );
+          console.log(
+            "Every locality contains index.html, manifest.json, sw.js and apps.json."
+          );
+
+      - name: Commit Generated Files
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
 
           git add -A
 
           if git diff --cached --quiet; then
             echo "No generated changes to commit."
           else
-            git commit -m "Generate Argentina locality pages"
+            git commit -m "Generate Argentina locality pages and apps data"
             git push
           fi
