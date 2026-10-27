@@ -1,352 +1,532 @@
 
-/* =========================================================
-   ARGENTINA LOCALITIES — SEARCH.JS
-   Vidhwaan Village Based Global Technology Company
-========================================================= */
-
 "use strict";
 
-/* ELEMENTS */
-const form = document.getElementById("searchForm");
-const input = document.getElementById("searchInput");
-const button = document.getElementById("searchButton");
-const results = document.getElementById("results");
-const status = document.getElementById("statusArea");
-const empty = document.getElementById("emptyState");
+/* =========================================================
+   VIDHWAAN — ARGENTINA LOCALITIES SEARCH PORTAL
+   Locality search + Cookies Policy popup
+========================================================= */
 
-/* DATA */
-let localities = [];
+(() => {
+  const DATA_URL = "/argentina.json";
+  const MAX_RESULTS = 50;
+  const MIN_QUERY_LENGTH = 2;
 
-/* NORMALIZE SEARCH TEXT */
-function normalizeText(value = "") {
-  return String(value)
-    .normalize("NFD")
-    .replace(/[\u0300-\u036f]/g, "")
-    .toLocaleLowerCase("es")
-    .trim();
-}
+  const $ = (id) => document.getElementById(id);
 
-/* ESCAPE HTML */
-function escapeHTML(value = "") {
-  return String(value).replace(/[&<>"']/g, character => ({
-    "&": "&amp;",
-    "<": "&lt;",
-    ">": "&gt;",
-    '"': "&quot;",
-    "'": "&#39;"
-  })[character]);
-}
+  const form = $("searchForm");
+  const input = $("searchInput");
+  const searchButton = $("searchButton");
+  const statusArea = $("statusArea");
+  const resultsContainer = $("results");
+  const emptyState = $("emptyState");
 
-/* LOAD ARGENTINA JSON */
-async function loadLocalities() {
-  try {
-    const response = await fetch("./argentina.json", {
-      cache: "no-store"
+  let localityData = [];
+  let loadingPromise = null;
+  let previousActiveElement = null;
+
+  /* =======================================================
+     GENERAL UTILITIES
+  ======================================================= */
+
+  function setStatus(message) {
+    if (statusArea) statusArea.textContent = message;
+  }
+
+  function normalize(value) {
+    return String(value ?? "")
+      .normalize("NFD")
+      .replace(/[\u0300-\u036f]/g, "")
+      .toLocaleLowerCase("en")
+      .trim();
+  }
+
+  function escapeHTML(value) {
+    return String(value ?? "").replace(/[&<>"']/g, (char) => ({
+      "&": "&amp;",
+      "<": "&lt;",
+      ">": "&gt;",
+      '"': "&quot;",
+      "'": "&#39;"
+    })[char]);
+  }
+
+  function getField(item, keys) {
+    for (const key of keys) {
+      const value = item?.[key];
+
+      if (value !== undefined && value !== null && value !== "") {
+        if (typeof value === "string" || typeof value === "number") {
+          return String(value);
+        }
+      }
+    }
+
+    return "";
+  }
+
+  function getLocality(item) {
+    return getField(item, [
+      "locality",
+      "locality_name",
+      "localityName",
+      "name",
+      "nombre",
+      "localidad",
+      "city",
+      "town",
+      "settlement"
+    ]);
+  }
+
+  function getProvince(item) {
+    return getField(item, [
+      "province",
+      "province_name",
+      "provinceName",
+      "provincia",
+      "state"
+    ]);
+  }
+
+  function getDepartment(item) {
+    return getField(item, [
+      "department",
+      "department_name",
+      "departmentName",
+      "departamento",
+      "district"
+    ]);
+  }
+
+  function getAgglomeration(item) {
+    return getField(item, [
+      "agglomeration",
+      "agglomeration_name",
+      "aglomeracion",
+      "urban_area"
+    ]);
+  }
+
+  function getCode(item) {
+    return getField(item, [
+      "code",
+      "locality_code",
+      "localityCode",
+      "id",
+      "codigo",
+      "census_code"
+    ]);
+  }
+
+  function getDescription(item) {
+    return getField(item, [
+      "description",
+      "descripcion",
+      "summary"
+    ]);
+  }
+
+  function getSearchableText(item) {
+    return normalize([
+      getLocality(item),
+      getProvince(item),
+      getDepartment(item),
+      getAgglomeration(item),
+      getCode(item),
+      getDescription(item)
+    ].join(" "));
+  }
+
+  function hideResults() {
+    if (resultsContainer) {
+      resultsContainer.hidden = true;
+      resultsContainer.replaceChildren();
+    }
+
+    if (emptyState) emptyState.hidden = true;
+  }
+
+  /* =======================================================
+     DATA LOADING
+  ======================================================= */
+
+  function extractRecords(payload) {
+    if (Array.isArray(payload)) return payload;
+
+    if (payload && typeof payload === "object") {
+      for (const key of [
+        "localities",
+        "localitiesData",
+        "localidades",
+        "villages",
+        "results",
+        "data",
+        "items"
+      ]) {
+        if (Array.isArray(payload[key])) return payload[key];
+      }
+    }
+
+    throw new Error(
+      "The locality dataset has an unsupported structure."
+    );
+  }
+
+  async function loadLocalities() {
+    if (localityData.length) return localityData;
+    if (loadingPromise) return loadingPromise;
+
+    loadingPromise = (async () => {
+      setStatus("Loading the Argentina locality directory...");
+
+      if (searchButton) searchButton.disabled = true;
+
+      try {
+        const response = await fetch(DATA_URL, {
+          cache: "no-store",
+          headers: { Accept: "application/json" }
+        });
+
+        if (!response.ok) {
+          throw new Error(
+            `Could not load the locality dataset (${response.status}).`
+          );
+        }
+
+        const payload = await response.json();
+        localityData = extractRecords(payload).filter(
+          (item) => item && typeof item === "object"
+        );
+
+        setStatus(
+          `Directory ready. ${localityData.length.toLocaleString()} records loaded.`
+        );
+
+        return localityData;
+      } catch (error) {
+        console.error("Locality directory loading failed:", error);
+
+        setStatus(
+          "The locality directory could not be loaded. Please refresh and try again."
+        );
+
+        throw error;
+      } finally {
+        if (searchButton) searchButton.disabled = false;
+        loadingPromise = null;
+      }
+    })();
+
+    return loadingPromise;
+  }
+
+  /* =======================================================
+     RESULT LINKS
+     Only accept safe same-site paths or HTTPS URLs.
+  ======================================================= */
+
+  function getResultURL(item) {
+    const suppliedURL = getField(item, [
+      "url",
+      "href",
+      "page",
+      "path",
+      "locality_url"
+    ]);
+
+    if (!suppliedURL) return "";
+
+    try {
+      const parsed = new URL(suppliedURL, window.location.origin);
+
+      if (
+        parsed.protocol !== "https:" &&
+        parsed.origin !== window.location.origin
+      ) {
+        return "";
+      }
+
+      if (parsed.protocol !== "https:" &&
+          parsed.protocol !== "http:") {
+        return "";
+      }
+
+      if (
+        parsed.origin !== window.location.origin &&
+        parsed.protocol !== "https:"
+      ) {
+        return "";
+      }
+
+      return parsed.href;
+    } catch {
+      return "";
+    }
+  }
+
+  /* =======================================================
+     RESULT RENDERING
+  ======================================================= */
+
+  function createResult(item) {
+    const locality = getLocality(item) || "Unnamed locality";
+    const province = getProvince(item);
+    const department = getDepartment(item);
+    const agglomeration = getAgglomeration(item);
+    const code = getCode(item);
+    const description = getDescription(item);
+    const url = getResultURL(item);
+
+    const card = document.createElement(url ? "a" : "article");
+    card.className = "resultItem fadeIn";
+
+    if (url) {
+      card.href = url;
+      card.setAttribute("aria-label", `Open locality: ${locality}`);
+    }
+
+    const title = document.createElement("div");
+    title.className = "resultTitle";
+    title.textContent = locality;
+    card.appendChild(title);
+
+    const metaParts = [];
+
+    if (province) metaParts.push(["Province", province]);
+    if (department) metaParts.push(["Department", department]);
+    if (agglomeration) metaParts.push(["Agglomeration", agglomeration]);
+    if (code) metaParts.push(["Code", code]);
+
+    if (metaParts.length) {
+      const meta = document.createElement("div");
+      meta.className = "resultMeta";
+
+      metaParts.forEach(([label, value], index) => {
+        if (index) meta.appendChild(document.createTextNode(" · "));
+
+        const strong = document.createElement("strong");
+        strong.textContent = `${label}: `;
+        meta.appendChild(strong);
+        meta.appendChild(document.createTextNode(value));
+      });
+
+      card.appendChild(meta);
+    }
+
+    if (description) {
+      const descriptionElement = document.createElement("p");
+      descriptionElement.className = "resultDescription";
+      descriptionElement.textContent = description;
+      card.appendChild(descriptionElement);
+    }
+
+    return card;
+  }
+
+  function renderResults(items, query) {
+    if (!resultsContainer) return;
+
+    resultsContainer.replaceChildren();
+
+    if (!items.length) {
+      resultsContainer.hidden = true;
+
+      if (emptyState) emptyState.hidden = false;
+
+      setStatus(`No matching localities found for "${query}".`);
+      return;
+    }
+
+    if (emptyState) emptyState.hidden = true;
+
+    const count = document.createElement("p");
+    count.className = "resultCount";
+    count.textContent =
+      `${items.length} matching ${items.length === 1 ? "locality" : "localities"}` +
+      (items.length === MAX_RESULTS ? " (showing the first 50)" : "");
+
+    resultsContainer.appendChild(count);
+
+    const fragment = document.createDocumentFragment();
+
+    items.forEach((item) => {
+      fragment.appendChild(createResult(item));
     });
 
-    if (!response.ok) {
-      throw new Error(`HTTP ${response.status}`);
-    }
+    resultsContainer.appendChild(fragment);
+    resultsContainer.hidden = false;
 
-    const data = await response.json();
-
-    if (!Array.isArray(data)) {
-      throw new Error("The JSON root must be an array.");
-    }
-
-    localities = data.filter(item =>
-      item &&
-      item.province &&
-      item.department &&
-      item.locality &&
-      item.localityCode
+    setStatus(
+      `Found ${items.length} matching ${items.length === 1 ? "locality" : "localities"}.`
     );
-
-    console.log(
-      `Loaded ${localities.length} Argentina localities.`
-    );
-
-    return true;
-  } catch (error) {
-    console.error("Unable to load Argentina JSON:", error);
-
-    status.textContent =
-      "Unable to load the Argentina locality database. Please try again later.";
-
-    return false;
-  }
-}
-
-/* UNIQUE LOCALITY PAGE FOLDER
-   Example: buenosaires-25demayo-06854100
-   The official locality code prevents name collisions.
-*/
-function folderName(item) {
-  const slug = normalizeText(item.locality)
-    .replace(/[^a-z0-9]+/g, "-")
-    .replace(/^-+|-+$/g, "");
-
-  return `${slug}-${item.localityCode}`;
-}
-
-/* SEARCHABLE FIELDS */
-function searchableFields(item) {
-  return [
-    item.locality,
-    item.department,
-    item.province,
-    item.agglomeration,
-    item.localGovernment,
-    item.localGovernmentCategory,
-    item.localityType,
-    item.localityCode,
-    item.departmentCode,
-    item.jurisdictionCode,
-    item.localGovernmentCode,
-    item.agglomerationCode
-  ]
-    .filter(Boolean)
-    .map(normalizeText);
-}
-
-/* RELEVANCE SCORE */
-function scoreLocality(item, query) {
-  const locality = normalizeText(item.locality);
-  const department = normalizeText(item.department);
-  const province = normalizeText(item.province);
-  const code = String(item.localityCode || "");
-
-  if (locality === query) return 1000;
-  if (locality.startsWith(query)) return 850;
-  if (locality.includes(query)) return 700;
-
-  if (department === query) return 600;
-  if (department.startsWith(query)) return 500;
-  if (department.includes(query)) return 400;
-
-  if (province === query) return 350;
-  if (province.startsWith(query)) return 300;
-  if (province.includes(query)) return 250;
-
-  if (code === query) return 900;
-  if (code.startsWith(query)) return 450;
-
-  if (searchableFields(item).some(field => field.includes(query))) {
-    return 200;
   }
 
-  return 0;
-}
+  /* =======================================================
+     SEARCH
+  ======================================================= */
 
-/* HIGHLIGHT MATCHES SAFELY */
-function highlightText(value, query) {
-  const text = String(value || "");
-  const normalized = normalizeText(text);
-  const normalizedQuery = normalizeText(query);
+  async function performSearch() {
+    const query = input?.value.trim() ?? "";
+    const normalizedQuery = normalize(query);
 
-  if (!normalizedQuery) return escapeHTML(text);
+    hideResults();
 
-  const index = normalized.indexOf(normalizedQuery);
+    if (query.length < MIN_QUERY_LENGTH) {
+      setStatus(`Enter at least ${MIN_QUERY_LENGTH} characters to search.`);
+      input?.focus();
+      return;
+    }
 
-  if (index < 0) return escapeHTML(text);
+    try {
+      const records = await loadLocalities();
 
-  /*
-    Accent-insensitive matching can change character offsets.
-    Highlight only when the normalized and original offsets agree.
-  */
-  const before = text.slice(0, index);
-  const match = text.slice(index, index + query.length);
+      setStatus("Searching the locality directory...");
 
-  if (normalizeText(before + match).length !==
-      normalizeText(before).length + normalizedQuery.length) {
-    return escapeHTML(text);
-  }
+      const matches = [];
 
-  return (
-    escapeHTML(before) +
-    "<mark>" + escapeHTML(match) + "</mark>" +
-    escapeHTML(text.slice(index + match.length))
-  );
-}
+      for (const item of records) {
+        if (getSearchableText(item).includes(normalizedQuery)) {
+          matches.push(item);
 
-/* RESULT CARD */
-function createResult(item, query) {
-  const folder = folderName(item);
-  const locality = highlightText(item.locality, query);
+          if (matches.length >= MAX_RESULTS) break;
+        }
+      }
 
-  const details = [
-    item.department,
-    item.province
-  ].filter(Boolean).map(escapeHTML);
-
-  const agglomeration = item.agglomeration
-    ? `<div><strong>Aglomeración:</strong> ${escapeHTML(item.agglomeration)}</div>`
-    : "";
-
-  const government = item.localGovernment
-    ? `<div><strong>Gobierno local:</strong> ${escapeHTML(item.localGovernment)}</div>`
-    : "";
-
-  return `
-    <article
-      class="resultItem fadeIn"
-      tabindex="0"
-      role="link"
-      aria-label="${escapeHTML(item.locality)}, ${escapeHTML(item.department)}, ${escapeHTML(item.province)}"
-      data-url="/${encodeURIComponent(folder)}/"
-    >
-      <h2 class="resultTitle">${locality}</h2>
-
-      <div class="resultMeta">
-        ${details.join(" • ")}
-      </div>
-
-      <p class="resultDescription">
-        Localidad de ${escapeHTML(item.locality)}, departamento
-        ${escapeHTML(item.department)}, provincia de
-        ${escapeHTML(item.province)}, Argentina.
-      </p>
-
-      <div class="resultMeta">
-        <strong>Código de localidad:</strong>
-        ${escapeHTML(item.localityCode)}
-      </div>
-
-      ${agglomeration}
-      ${government}
-    </article>
-  `;
-}
-
-/* RENDER RESULTS */
-function renderResults(found, query) {
-  if (!found.length) {
-    results.hidden = true;
-    results.innerHTML = "";
-    empty.hidden = false;
-    status.textContent = "No se encontraron localidades coincidentes.";
-    return;
-  }
-
-  empty.hidden = true;
-  results.hidden = false;
-
-  status.textContent =
-    `Se encontraron ${found.length} resultados.`;
-
-  results.innerHTML = `
-    <div class="resultCount">Resultados de búsqueda</div>
-    ${found.map(item => createResult(item, query)).join("")}
-  `;
-}
-
-/* SEARCH */
-function searchLocalities(text) {
-  const query = normalizeText(text);
-
-  if (query.length < 2) {
-    results.hidden = true;
-    empty.hidden = true;
-    status.textContent =
-      "Ingrese al menos 2 caracteres para buscar.";
-    return;
-  }
-
-  if (!localities.length) {
-    status.textContent =
-      "La base de datos todavía no está disponible.";
-    return;
-  }
-
-  const found = localities
-    .map(item => ({
-      item,
-      score: scoreLocality(item, query)
-    }))
-    .filter(result => result.score > 0)
-    .sort((a, b) =>
-      b.score - a.score ||
-      String(a.item.locality).localeCompare(
-        String(b.item.locality),
-        "es"
-      )
-    )
-    .slice(0, 50)
-    .map(result => result.item);
-
-  renderResults(found, query);
-}
-
-/* OPEN RESULT */
-function openResult(event) {
-  const card = event.target.closest(".resultItem");
-  if (!card || !results.contains(card)) return;
-
-  window.location.href = card.dataset.url;
-}
-
-results.addEventListener("click", openResult);
-
-results.addEventListener("keydown", event => {
-  if (event.key !== "Enter" && event.key !== " ") return;
-
-  const card = event.target.closest(".resultItem");
-  if (!card || !results.contains(card)) return;
-
-  event.preventDefault();
-  window.location.href = card.dataset.url;
-});
-
-/* FORM SUBMISSION */
-form.addEventListener("submit", event => {
-  event.preventDefault();
-  searchLocalities(input.value);
-});
-
-/* SEARCH BUTTON */
-button.addEventListener("click", event => {
-  event.preventDefault();
-  searchLocalities(input.value);
-});
-
-/* URL SEARCH: ?q=Buenos+Aires */
-window.addEventListener("load", () => {
-  const query = new URLSearchParams(window.location.search).get("q");
-
-  if (query) {
-    input.value = query;
-    if (localities.length) searchLocalities(query);
-  }
-});
-
-/* INITIALIZE */
-async function init() {
-  results.hidden = true;
-  empty.hidden = true;
-  button.disabled = true;
-  input.disabled = true;
-  status.textContent = "Cargando la base de datos de Argentina...";
-
-  const loaded = await loadLocalities();
-
-  button.disabled = false;
-  input.disabled = false;
-
-  if (loaded) {
-    status.textContent =
-      `Base de datos cargada: ${localities.length.toLocaleString("es-AR")} localidades.`;
-
-    const query = new URLSearchParams(window.location.search).get("q");
-
-    if (query) {
-      input.value = query;
-      searchLocalities(query);
+      renderResults(matches, query);
+    } catch {
+      setStatus(
+        "We could not complete your search. Please refresh the page and try again."
+      );
     }
   }
 
-  console.log("%cARGENTINA LOCALITIES", 
-    "color:#c9a227;font-size:18px;font-weight:bold;");
-  console.log("Powered by VIDHWAAN");
-}
+  if (form) {
+    form.addEventListener("submit", (event) => {
+      event.preventDefault();
+      performSearch();
+    });
+  }
 
-init();
+  /* =======================================================
+     COOKIES POLICY POPUP
+  ======================================================= */
+
+  const policyModal = $("cookiePolicyModal");
+  const policyDialog = policyModal?.querySelector(".policyDialog");
+  const openPolicyButton = $("openCookiePolicy");
+  const closePolicyButton = $("closeCookiePolicy");
+  const closePolicyFooterButton = $("closeCookiePolicyFooter");
+
+  let policyWasOpen = false;
+
+  function openCookiePolicy() {
+    if (!policyModal || !policyDialog) return;
+
+    previousActiveElement = document.activeElement;
+    policyWasOpen = true;
+
+    policyModal.hidden = false;
+    document.body.classList.add("policyOpen");
+
+    closePolicyButton?.focus();
+  }
+
+  function closeCookiePolicy() {
+    if (!policyModal || policyModal.hidden) return;
+
+    policyModal.hidden = true;
+    document.body.classList.remove("policyOpen");
+
+    if (
+      previousActiveElement &&
+      typeof previousActiveElement.focus === "function"
+    ) {
+      previousActiveElement.focus();
+    } else {
+      openPolicyButton?.focus();
+    }
+
+    policyWasOpen = false;
+  }
+
+  openPolicyButton?.addEventListener("click", openCookiePolicy);
+  closePolicyButton?.addEventListener("click", closeCookiePolicy);
+  closePolicyFooterButton?.addEventListener("click", closeCookiePolicy);
+
+  policyModal?.addEventListener("click", (event) => {
+    const target = event.target;
+
+    if (
+      target instanceof Element &&
+      target.closest('[data-close-policy="true"]')
+    ) {
+      closeCookiePolicy();
+    }
+  });
+
+  document.addEventListener("keydown", (event) => {
+    if (!policyModal || policyModal.hidden) return;
+
+    if (event.key === "Escape") {
+      event.preventDefault();
+      closeCookiePolicy();
+      return;
+    }
+
+    /* Keep keyboard focus inside the open dialog. */
+    if (event.key === "Tab" && policyWasOpen) {
+      const focusable = Array.from(
+        policyDialog.querySelectorAll(
+          'a[href], button:not([disabled]), input:not([disabled]), ' +
+          '[tabindex]:not([tabindex="-1"])'
+        )
+      ).filter((element) => element.getClientRects().length > 0);
+
+      if (!focusable.length) {
+        event.preventDefault();
+        policyDialog.focus();
+        return;
+      }
+
+      const first = focusable[0];
+      const last = focusable[focusable.length - 1];
+
+      if (event.shiftKey && document.activeElement === first) {
+        event.preventDefault();
+        last.focus();
+      } else if (
+        !event.shiftKey &&
+        document.activeElement === last
+      ) {
+        event.preventDefault();
+        first.focus();
+      }
+    }
+  });
+
+  /* =======================================================
+     STARTUP
+  ======================================================= */
+
+  async function initialize() {
+    try {
+      await loadLocalities();
+
+      /* Support direct search links using ?q=... */
+      const params = new URLSearchParams(window.location.search);
+      const initialQuery = params.get("q");
+
+      if (initialQuery && input) {
+        input.value = initialQuery.slice(0, 100);
+
+        if (input.value.trim().length >= MIN_QUERY_LENGTH) {
+          await performSearch();
+        }
+      }
+    } catch {
+      /* loadLocalities already displays the failure message. */
+    }
+  }
+
+  initialize();
+})();
