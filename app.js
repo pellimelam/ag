@@ -3,7 +3,6 @@
 
 /* =========================================================
    VIDHWAAN — ARGENTINA DIGITAL DIRECTORY
-   File: app.js
    Brand: VIDHWAAN — Village Based Global Technology Company
    Data source: ./apps.json
    ========================================================= */
@@ -13,6 +12,7 @@
     dataUrl: "./apps.json",
     company: "VIDHWAAN",
     tagline: "Village Based Global Technology Company",
+
     sections: [
       {
         key: "vidhwaan-apps",
@@ -66,9 +66,9 @@
     installPrompt: null
   };
 
-  /* =======================================================
+  /* =========================================================
      SAFE HELPERS
-     ======================================================= */
+     ========================================================= */
 
   function escapeHTML(value = "") {
     return String(value).replace(/[&<>"']/g, char => ({
@@ -88,10 +88,7 @@
     try {
       const url = new URL(value, window.location.href);
 
-      if (
-        url.protocol !== "https:" &&
-        url.protocol !== "http:"
-      ) {
+      if (url.protocol !== "https:" && url.protocol !== "http:") {
         return "";
       }
 
@@ -102,34 +99,12 @@
   }
 
   function safeImageURL(value) {
-    if (typeof value !== "string" || !value.trim()) {
-      return "";
-    }
-
-    try {
-      const url = new URL(value, window.location.href);
-
-      if (
-        url.protocol !== "https:" &&
-        url.protocol !== "http:"
-      ) {
-        return "";
-      }
-
-      return url.href;
-    } catch {
-      return "";
-    }
+    return safeURL(value);
   }
 
   function safePhone(value) {
     const phone = String(value || "").replace(/[^\d+]/g, "");
-
-    if (!/^\+?\d{2,20}$/.test(phone)) {
-      return "";
-    }
-
-    return phone;
+    return /^\+?\d{2,20}$/.test(phone) ? phone : "";
   }
 
   function imageMarkup(item, className = "appIcon") {
@@ -159,9 +134,7 @@
   function externalLink(url, label, className = "openCardBtn") {
     const safe = safeURL(url);
 
-    if (!safe) {
-      return "";
-    }
+    if (!safe) return "";
 
     return `
       <a
@@ -173,14 +146,15 @@
     `;
   }
 
-  /* =======================================================
-     CARD RENDERERS
-     ======================================================= */
+  /* =========================================================
+     APPLICATION CARDS
+     ========================================================= */
 
   function renderApp(item) {
     const name = escapeHTML(item.name || "Aplicación");
     const category = escapeHTML(item.category || "VIDHWAAN");
     const description = escapeHTML(item.description || "");
+
     const badge = item.badge
       ? `<span class="appBadge">${escapeHTML(item.badge)}</span>`
       : "";
@@ -209,10 +183,15 @@
     `;
   }
 
+  /* =========================================================
+     GOVERNMENT PORTAL CARDS
+     ========================================================= */
+
   function renderGovernment(item) {
     const name = escapeHTML(item.name || "Portal gubernamental");
     const category = escapeHTML(item.category || "Servicio público");
     const description = escapeHTML(item.description || "");
+
     const badge = item.badge
       ? `<span class="appBadge">${escapeHTML(item.badge)}</span>`
       : "";
@@ -240,6 +219,10 @@
       </article>
     `;
   }
+
+  /* =========================================================
+     EMERGENCY CONTACT CARDS
+     ========================================================= */
 
   function renderEmergency(item) {
     const title = escapeHTML(item.title || "Contacto de emergencia");
@@ -282,11 +265,16 @@
     `;
   }
 
+  /* =========================================================
+     VIDHWAAN LINK CARDS
+     ========================================================= */
+
   function renderVidhwaanLink(item) {
     const title = escapeHTML(item.title || "VIDHWAAN");
     const badge = escapeHTML(item.badge || "GLOBAL TECHNOLOGY");
     const time = escapeHTML(item.time || "");
     const description = escapeHTML(item.description || "");
+
     const link = externalLink(item.url, "Explorar plataforma");
 
     return `
@@ -307,16 +295,14 @@
     `;
   }
 
-  /* =======================================================
+  /* =========================================================
      YOUTUBE VIDEO SUPPORT
-     ======================================================= */
+     ========================================================= */
 
   function getVideoDetails(item) {
     const raw = String(item.youtube || item.url || "").trim();
 
-    if (!raw) {
-      return null;
-    }
+    if (!raw) return null;
 
     try {
       const url = new URL(raw);
@@ -331,9 +317,7 @@
         "www.youtu.be"
       ].includes(host);
 
-      if (!validHost) {
-        return null;
-      }
+      if (!validHost) return null;
 
       let videoId = "";
       let isShort = false;
@@ -376,12 +360,11 @@
   function renderVideo(item) {
     const video = getVideoDetails(item);
 
-    if (!video) {
-      return "";
-    }
+    if (!video) return "";
 
     const title = escapeHTML(item.title || "Video de VIDHWAAN");
     const description = escapeHTML(item.description || "");
+
     const orientationClass = video.isShort
       ? "videoCardShort"
       : "videoCardNormal";
@@ -417,12 +400,13 @@
     `;
   }
 
-  /* =======================================================
+  /* =========================================================
      SECTION SETUP AND ORDER
-     ======================================================= */
+     ========================================================= */
 
   function createSection(section) {
     const element = document.createElement("section");
+
     element.id = section.id;
     element.className =
       "sectionBlock directoryDynamicSection " +
@@ -432,9 +416,11 @@
       <div class="sectionTitleWrap">
         <h2>${escapeHTML(section.title)}</h2>
       </div>
+
       <p class="sectionDescription">
         ${escapeHTML(section.subtitle)}
       </p>
+
       <div id="${escapeHTML(section.gridId)}"></div>
     `;
 
@@ -445,7 +431,9 @@
     const appRoot = byId("app") || $("main");
 
     if (!appRoot) {
-      throw new Error("No se encontró el contenedor principal de la aplicación.");
+      throw new Error(
+        "No se encontró el contenedor principal de la aplicación."
+      );
     }
 
     let footer = byId("footer");
@@ -471,50 +459,35 @@
       sections[config.key] = element;
     }
 
-    /*
-     * The current template may contain an older notifications
-     * section. It is not part of the requested five sections.
-     */
+    // Hide any legacy notifications section not in the five-section plan.
     const oldNotifications = byId("notificationsSection");
 
     if (oldNotifications) {
       oldNotifications.hidden = true;
     }
 
-    /*
-     * Reorder the five content sections without replacing the
-     * existing hero, Vidhwaan Digital Office, or footer.
-     */
+    // Keep the hero and Digital Office in place.
+    // Put the five content sections in the required order.
     for (const config of CONFIG.sections) {
-      const section = sections[config.key];
-
-      if (section.parentElement !== appRoot) {
-        appRoot.insertBefore(section, footer);
-      } else {
-        appRoot.insertBefore(section, footer);
-      }
+      appRoot.insertBefore(sections[config.key], footer);
     }
 
-    /*
-     * Videos must be the final content section before the footer.
-     */
+    // Guarantee that videos are immediately before the footer.
     appRoot.insertBefore(sections.videos, footer);
 
     return sections;
   }
 
-  /* =======================================================
-     DATA VALIDATION AND RENDERING
-     ======================================================= */
+  /* =========================================================
+     DATA CLASSIFICATION AND RENDERING
+     ========================================================= */
 
   function classify(item) {
     if (item.section) {
       return item.section;
     }
 
-    /*
-     * Compatibility with older apps.json files.
-     */
+    // Backward compatibility with older apps.json data.
     if (item.type === "video") return "videos";
     if (item.number !== undefined) return "emergency-contacts";
     if (item.time !== undefined) return "vidhwaan-links";
@@ -533,9 +506,7 @@
     };
 
     for (const item of data) {
-      if (!item || typeof item !== "object") {
-        continue;
-      }
+      if (!item || typeof item !== "object") continue;
 
       const key = classify(item);
 
@@ -556,19 +527,14 @@
       const section = sections[config.key];
       const grid = byId(config.gridId);
 
-      if (!section || !grid) {
-        continue;
-      }
+      if (!section || !grid) continue;
 
       const items = groups[config.key] || [];
       const renderer = renderers[config.key];
 
       grid.innerHTML = items.map(renderer).join("");
 
-      /*
-       * Hide sections without content instead of displaying
-       * empty cards or blank headings.
-       */
+      // Hide empty sections instead of showing blank headings.
       section.hidden = items.length === 0;
     }
   }
@@ -585,7 +551,9 @@
       });
 
       if (!response.ok) {
-        throw new Error(`apps.json respondió con HTTP ${response.status}`);
+        throw new Error(
+          `apps.json respondió con HTTP ${response.status}`
+        );
       }
 
       const data = await response.json();
@@ -595,11 +563,15 @@
       }
 
       state.data = data;
+
       renderIntoSections(data, sections);
 
       document.documentElement.classList.add("directoryReady");
     } catch (error) {
-      console.error("Error al cargar el directorio de VIDHWAAN:", error);
+      console.error(
+        "Error al cargar el directorio de VIDHWAAN:",
+        error
+      );
 
       for (const config of CONFIG.sections) {
         const grid = byId(config.gridId);
@@ -609,7 +581,11 @@
             <div class="directoryError" role="status">
               <h3>No se pudo cargar esta sección</h3>
               <p>Compruebe su conexión e inténtelo de nuevo.</p>
-              <button class="launchButton" type="button" data-retry-load>
+              <button
+                class="launchButton"
+                type="button"
+                data-retry-load
+              >
                 Reintentar
               </button>
             </div>
@@ -619,33 +595,34 @@
     }
   }
 
-  /* =======================================================
+  /* =========================================================
      CLICK HANDLERS
-     ======================================================= */
+     ========================================================= */
 
   document.addEventListener("click", event => {
-    const retry = event.target.closest("[data-retry-load]");
+    const target = event.target;
+
+    if (!(target instanceof Element)) return;
+
+    const retry = target.closest("[data-retry-load]");
 
     if (retry) {
       loadData();
       return;
     }
 
-    const poster = event.target.closest(".videoPoster");
+    const poster = target.closest(".videoPoster");
 
-    if (!poster) {
-      return;
-    }
+    if (!poster) return;
 
     const card = poster.closest(".videoCard");
     const playerWrap = card && $(".videoPlayerWrap", card);
     const videoSrc = card && card.dataset.videoSrc;
 
-    if (!playerWrap || !videoSrc) {
-      return;
-    }
+    if (!playerWrap || !videoSrc) return;
 
     const iframe = document.createElement("iframe");
+
     iframe.className = "videoPlayer";
     iframe.src = videoSrc;
     iframe.title = "Video de VIDHWAAN";
@@ -658,9 +635,9 @@
     playerWrap.replaceChildren(iframe);
   });
 
-  /* =======================================================
+  /* =========================================================
      IMAGE FALLBACK
-     ======================================================= */
+     ========================================================= */
 
   document.addEventListener("error", event => {
     const image = event.target;
@@ -678,6 +655,7 @@
     image.hidden = true;
 
     const fallback = document.createElement("span");
+
     fallback.className = "directoryIconFallback";
     fallback.setAttribute("aria-hidden", "true");
     fallback.textContent = "✦";
@@ -685,9 +663,9 @@
     image.insertAdjacentElement("afterend", fallback);
   }, true);
 
-  /* =======================================================
+  /* =========================================================
      PWA INSTALL EXPERIENCE
-     ======================================================= */
+     ========================================================= */
 
   const installBtn = byId("installBtn");
 
@@ -699,33 +677,64 @@
   }
 
   function hideInstallButton() {
-    if (installBtn) {
-      installBtn.classList.remove("showInstall");
-      installBtn.hidden = true;
-    }
+    if (!installBtn) return;
+
+    installBtn.classList.remove("showInstall");
+    installBtn.hidden = true;
+    installBtn.setAttribute("aria-hidden", "true");
   }
 
+  function showInstallButton() {
+    if (!installBtn || isInstalled()) return;
+
+    installBtn.hidden = false;
+    installBtn.removeAttribute("aria-hidden");
+    installBtn.classList.add("showInstall");
+  }
+
+  function explainManualInstall() {
+    const userAgent = window.navigator.userAgent;
+    const isAppleMobile = /iphone|ipad|ipod/i.test(userAgent);
+    const isSafari = /safari/i.test(userAgent) &&
+      !/crios|fxios|edgios|chrome|chromium/i.test(userAgent);
+
+    if (isAppleMobile && isSafari) {
+      window.alert(
+        "Para instalar esta aplicación en iPhone o iPad: toque Compartir en Safari y seleccione «Añadir a pantalla de inicio»."
+      );
+      return;
+    }
+
+    window.alert(
+      "La instalación automática no está disponible en este momento. Abra el menú del navegador y busque «Instalar aplicación» o «Añadir a pantalla de inicio». Si esa opción no aparece, compruebe que la página se abre mediante HTTPS y que el navegador admite la instalación de aplicaciones web."
+    );
+  }
+
+  // Show the button immediately unless this page is already installed.
   if (isInstalled()) {
     hideInstallButton();
+  } else {
+    showInstallButton();
   }
 
+  // Save the browser's install prompt when supported.
   window.addEventListener("beforeinstallprompt", event => {
     event.preventDefault();
     state.installPrompt = event;
-
-    if (installBtn && !isInstalled()) {
-      installBtn.hidden = false;
-      installBtn.classList.add("showInstall");
-    }
+    showInstallButton();
   });
 
   if (installBtn) {
     installBtn.addEventListener("click", async () => {
+      if (isInstalled()) {
+        hideInstallButton();
+        return;
+      }
+
+      // Some browsers never expose beforeinstallprompt.
+      // Keep the button useful with manual installation instructions.
       if (!state.installPrompt) {
-        /*
-         * Some browsers do not expose a programmatic install
-         * prompt. Do not pretend the installation succeeded.
-         */
+        explainManualInstall();
         return;
       }
 
@@ -739,21 +748,30 @@
 
         if (choice && choice.outcome === "accepted") {
           hideInstallButton();
+        } else {
+          showInstallButton();
         }
       } catch (error) {
-        console.error("No se pudo abrir la instalación PWA:", error);
+        console.error(
+          "No se pudo abrir la instalación PWA:",
+          error
+        );
+
+        showInstallButton();
+        explainManualInstall();
       }
     });
   }
 
+  // Hide the button after successful installation.
   window.addEventListener("appinstalled", () => {
     state.installPrompt = null;
     hideInstallButton();
   });
 
-  /* =======================================================
+  /* =========================================================
      STARTUP
-     ======================================================= */
+     ========================================================= */
 
   if (document.readyState === "loading") {
     document.addEventListener("DOMContentLoaded", loadData, {
