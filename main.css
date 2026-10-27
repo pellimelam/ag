@@ -344,7 +344,7 @@ a:focus-visible {
 }
 
 /* =========================================================
-   FEATURED CARD — FOR EXISTING TEMPLATE COMPATIBILITY
+   FEATURED CARD — EXISTING TEMPLATE COMPATIBILITY
    ========================================================= */
 
 #featuredApp {
@@ -1067,30 +1067,41 @@ a:focus-visible {
 }
 
 /* =========================================================
-   PWA INSTALL BUTTON
+   PWA INSTALL BUTTON — BOTTOM LEFT
    ========================================================= */
 
 #installBtn {
   position: fixed;
-  z-index: 1000;
-  right: max(20px, env(safe-area-inset-right));
+  z-index: 10000;
+  left: max(20px, env(safe-area-inset-left));
+  right: auto;
   bottom: max(20px, env(safe-area-inset-bottom));
+
   display: inline-flex;
   align-items: center;
   justify-content: center;
   gap: 9px;
+
   min-height: 51px;
   padding: 13px 21px;
+
   border: 1px solid rgba(255,255,255,.2);
   border-radius: 999px;
+
   background: linear-gradient(135deg, var(--gold-bright), var(--gold));
   color: #15110a;
+
   font-size: .9rem;
   font-weight: 850;
-  box-shadow: 0 12px 38px rgba(0,0,0,.42), 0 5px 22px rgba(214,181,109,.18);
-  opacity: 0;
-  visibility: hidden;
-  transform: translateY(12px);
+
+  box-shadow:
+    0 12px 38px rgba(0,0,0,.42),
+    0 5px 22px rgba(214,181,109,.18);
+
+  opacity: 1;
+  visibility: visible;
+  transform: translateY(0);
+
   transition:
     opacity .22s ease,
     visibility .22s ease,
@@ -1112,7 +1123,9 @@ a:focus-visible {
 
 @media (hover: hover) and (pointer: fine) {
   #installBtn:hover {
-    box-shadow: 0 15px 42px rgba(0,0,0,.48), 0 7px 26px rgba(214,181,109,.25);
+    box-shadow:
+      0 15px 42px rgba(0,0,0,.48),
+      0 7px 26px rgba(214,181,109,.25);
   }
 }
 
@@ -1482,7 +1495,8 @@ a:focus-visible {
   }
 
   #installBtn {
-    right: max(13px, env(safe-area-inset-right));
+    left: max(13px, env(safe-area-inset-left));
+    right: auto;
     bottom: max(13px, env(safe-area-inset-bottom));
     min-height: 47px;
     padding: 12px 17px;
