@@ -1,21 +1,24 @@
+
 "use strict";
 
 const LOCALITY_FOLDER = "larrechea-82105160";
-const CACHE_NAME = "vidhwaan-argentina-" + LOCALITY_FOLDER + "-v1";
+const CACHE_NAME =
+  "vidhwaan-argentina-" + LOCALITY_FOLDER + "-v2";
 
 const OFFLINE_URL = "./";
 
 self.addEventListener("install", (event) => {
   event.waitUntil(
-    caches.open(CACHE_NAME).then(async (cache) => {
+    (async () => {
       try {
+        const cache = await caches.open(CACHE_NAME);
         await cache.add(OFFLINE_URL);
       } catch (error) {
-        // Installation can continue if the page is temporarily unavailable.
+        // Installation can continue if the page is unavailable.
       }
 
       await self.skipWaiting();
-    })
+    })()
   );
 });
 
@@ -53,23 +56,23 @@ self.addEventListener("fetch", (event) => {
     return;
   }
 
-  // Always check the network first for navigation requests.
-  // Fall back to the cached page when offline.
+  // Always fetch the latest HTML from the network first.
+  // Use the service-worker cache only when the network fails.
   if (request.mode === "navigate") {
     event.respondWith(
-      fetch(request)
-        .then((response) => {
-          if (response.ok) {
-            const copy = response.clone();
+      (async () => {
+        try {
+          const response = await fetch(request, {
+            cache: "no-store"
+          });
 
-            caches.open(CACHE_NAME).then((cache) => {
-              cache.put(request, copy);
-            });
+          if (response.ok) {
+            const cache = await caches.open(CACHE_NAME);
+            await cache.put(request, response.clone());
           }
 
           return response;
-        })
-        .catch(async () => {
+        } catch (error) {
           const cached =
             (await caches.match(request)) ||
             (await caches.match(OFFLINE_URL));
@@ -86,42 +89,62 @@ self.addEventListener("fetch", (event) => {
               }
             )
           );
-        })
+        }
+      })()
     );
 
     return;
   }
 
-  // Cache same-origin assets when available, refreshing them in the
-  // background. Do not cache JSON data or API responses.
+  // Do not cache JSON data or API responses in the service worker.
   if (
     url.pathname.endsWith(".json") ||
     url.pathname.includes("/api/")
   ) {
-    event.respondWith(fetch(request));
+    event.respondWith(
+      fetch(request, {
+        cache: "no-store"
+      })
+    );
+
     return;
   }
 
+  // Fetch CSS, JavaScript, images, icons and fonts from the network first.
+  // Use a cached copy only when the network request fails.
   if (
-    /\.(?:css|js|png|jpg|jpeg|webp|svg|ico|woff2?)$/i.test(url.pathname)
+    /\.(?:css|js|png|jpg|jpeg|webp|svg|ico|woff2?)$/i.test(
+      url.pathname
+    )
   ) {
     event.respondWith(
-      caches.match(request).then((cached) => {
-        const networkRequest = fetch(request)
-          .then((response) => {
-            if (response.ok) {
-              const copy = response.clone();
-
-              caches.open(CACHE_NAME).then((cache) => {
-                cache.put(request, copy);
-              });
-            }
-
-            return response;
+      (async () => {
+        try {
+          const response = await fetch(request, {
+            cache: "no-store"
           });
 
-        return cached || networkRequest;
-      })
+          if (response.ok) {
+            const cache = await caches.open(CACHE_NAME);
+            await cache.put(request, response.clone());
+          }
+
+          return response;
+        } catch (error) {
+          const cached = await caches.match(request);
+
+          if (cached) {
+            return cached;
+          }
+
+          return new Response("Resource unavailable offline.", {
+            status: 503,
+            headers: {
+              "Content-Type": "text/plain; charset=utf-8"
+            }
+          });
+        }
+      })()
     );
   }
 });
