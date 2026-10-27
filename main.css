@@ -1,941 +1,463 @@
 
-/* =========================================================
-   VIDHWAAN — ARGENTINA DIGITAL DIRECTORY
-   Premium global technology company design system
-   Theme: Obsidian Black + Champagne Gold
-   Responsive: Mobile, Tablet, Desktop
-   ========================================================= */
-
 :root {
-  color-scheme: dark;
-  --bg: #080808;
-  --bg-soft: #101010;
-  --surface: #141414;
-  --surface-raised: #1b1a17;
-  --gold: #d6b56d;
-  --gold-bright: #f3d994;
-  --gold-deep: #8f6c30;
-  --gold-glow: rgba(214, 181, 109, .15);
-  --white: #f7f5ef;
-  --text: #eae7df;
-  --muted: #aaa69b;
-  --line: rgba(214, 181, 109, .19);
-  --line-soft: rgba(255, 255, 255, .075);
-  --success: #7bd8a5;
-  --danger: #ff8f8f;
-  --radius-sm: 12px;
-  --radius-md: 19px;
-  --radius-lg: 28px;
-  --radius-xl: 36px;
-  --shadow-card: 0 18px 48px rgba(0, 0, 0, .25);
-  --shadow-gold: 0 8px 30px rgba(214, 181, 109, .12);
-  --content-width: 1320px;
-  --ease: cubic-bezier(.2, .75, .25, 1);
+  color-scheme: light;
+  --primary: #174A86;
+  --primary-dark: #10345E;
+  --primary-light: #EAF2FC;
+  --gold: #C49A3A;
+  --gold-light: #F7F0DE;
+  --background: #F5F8FC;
+  --surface: #FFFFFF;
+  --text: #192B42;
+  --muted: #64748B;
+  --border: #E1E8F0;
+  --success: #16865B;
+  --shadow: 0 8px 28px rgba(23, 54, 91, .075);
+  --radius: 18px;
+  --max-width: 1180px;
 }
 
-*,
-*::before,
-*::after {
+* {
   box-sizing: border-box;
-  margin: 0;
-  padding: 0;
 }
 
 html {
-  min-height: 100%;
-  background: var(--bg);
   scroll-behavior: smooth;
-  scroll-padding-top: 24px;
-  overflow-x: clip;
+  scroll-padding-top: 90px;
   -webkit-text-size-adjust: 100%;
-  text-size-adjust: 100%;
-  -webkit-tap-highlight-color: transparent;
 }
 
 body {
-  min-height: 100vh;
-  overflow-x: clip;
-  background:
-    radial-gradient(ellipse at 50% -15%, rgba(214,181,109,.105), transparent 44rem),
-    radial-gradient(ellipse at 0% 38%, rgba(214,181,109,.035), transparent 34rem),
-    linear-gradient(180deg, #080808 0%, #0b0b0a 45%, #080808 100%);
+  margin: 0;
+  background: var(--background);
   color: var(--text);
-  font-family:
-    Inter,
-    "Segoe UI",
-    Roboto,
-    "Helvetica Neue",
-    Arial,
-    sans-serif;
-  font-size: 16px;
-  line-height: 1.6;
+  font-family: Inter, "Segoe UI", Roboto, Arial, sans-serif;
+  font-size: 15px;
+  line-height: 1.65;
   -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-rendering: optimizeLegibility;
 }
 
-body::before {
-  position: fixed;
-  z-index: -1;
-  inset: 0;
-  pointer-events: none;
-  content: "";
-  opacity: .15;
-  background-image:
-    linear-gradient(rgba(214,181,109,.035) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(214,181,109,.035) 1px, transparent 1px);
-  background-size: 64px 64px;
-  mask-image: linear-gradient(to bottom, black, transparent 72%);
-}
-
-::selection {
-  color: #090909;
-  background: var(--gold-bright);
-}
-
-[hidden] {
-  display: none !important;
-}
-
-img,
-svg,
-video,
-iframe {
-  display: block;
-  max-width: 100%;
-}
-
-img {
-  height: auto;
-  border: 0;
-  -webkit-user-drag: none;
+body,
+button,
+input,
+a {
+  -webkit-tap-highlight-color: transparent;
 }
 
 a {
-  color: inherit;
+  color: var(--primary);
   text-decoration: none;
-  touch-action: manipulation;
+}
+
+a:hover {
+  color: var(--primary-dark);
 }
 
 button,
-input,
-select,
-textarea {
-  font: inherit;
-}
-
-button {
-  color: inherit;
-  cursor: pointer;
+a {
   touch-action: manipulation;
 }
 
-button:focus-visible,
-a:focus-visible {
-  outline: 2px solid var(--gold-bright);
-  outline-offset: 4px;
+img {
+  display: block;
+  max-width: 100%;
 }
 
-#app {
-  width: min(100% - 48px, var(--content-width));
-  min-height: 100vh;
+button {
+  font: inherit;
+}
+
+.container,
+main,
+header,
+footer {
+  width: 100%;
+}
+
+.container,
+main {
+  max-width: var(--max-width);
   margin-inline: auto;
-  padding:
-    max(28px, env(safe-area-inset-top))
-    0
-    max(56px, env(safe-area-inset-bottom));
+  padding-inline: 22px;
 }
 
-/* =========================================================
-   HERO
-   ========================================================= */
+/* HEADER */
 
-.heroSection {
+header {
   position: relative;
+  z-index: 10;
+  color: var(--text);
+  background: var(--surface);
+  border-bottom: 1px solid var(--border);
+}
+
+.headerInner,
+.header-content,
+.siteHeader {
   display: flex;
   align-items: center;
-  gap: clamp(30px, 6vw, 84px);
-  width: 100%;
-  padding: clamp(32px, 6vw, 76px) 0 clamp(48px, 7vw, 92px);
+  justify-content: space-between;
+  gap: 18px;
+  max-width: var(--max-width);
+  margin: auto;
+  padding: 16px 22px;
 }
 
-.heroSection::after {
-  position: absolute;
-  right: 0;
-  bottom: 0;
-  left: 0;
-  height: 1px;
-  content: "";
-  background: linear-gradient(
-    90deg,
-    transparent,
-    var(--gold-deep),
-    rgba(214,181,109,.12),
-    transparent
-  );
-}
-
-.heroLogoWrap {
-  position: relative;
-  isolation: isolate;
-  display: grid;
-  place-items: center;
-  flex: 0 0 clamp(130px, 17vw, 220px);
-  width: clamp(130px, 17vw, 220px);
-  aspect-ratio: 1;
-  overflow: hidden;
-  border: 1px solid var(--line);
-  border-radius: var(--radius-xl);
-  background:
-    radial-gradient(circle at 50% 30%, rgba(214,181,109,.13), transparent 64%),
-    linear-gradient(145deg, #1c1a15, #0c0c0b 70%);
-  box-shadow:
-    0 24px 70px rgba(0,0,0,.4),
-    inset 0 1px 0 rgba(255,255,255,.06),
-    var(--shadow-gold);
-}
-
-.heroLogoWrap::before {
-  position: absolute;
-  z-index: -1;
-  inset: 10px;
-  border: 1px solid rgba(214,181,109,.12);
-  border-radius: calc(var(--radius-xl) - 10px);
-  content: "";
-}
-
-.heroLogoWrap::after {
-  position: absolute;
-  top: -45%;
-  left: -80%;
-  width: 55%;
-  height: 190%;
-  content: "";
-  background: linear-gradient(90deg, transparent, rgba(255,255,255,.055), transparent);
-  transform: rotate(24deg);
-  animation: logoShimmer 9s ease-in-out infinite;
-}
-
-.heroLogo {
-  position: relative;
-  z-index: 1;
-  width: 76%;
-  height: 76%;
-  object-fit: contain;
-}
-
-.heroContent {
-  flex: 1;
+.brand,
+.logo,
+.siteBrand {
+  display: flex;
+  align-items: center;
+  gap: 12px;
   min-width: 0;
 }
 
-.heroBadge,
-.digitalOfficeBadge {
-  display: inline-flex;
-  align-items: center;
-  gap: 10px;
-  max-width: 100%;
-  padding: 9px 15px;
-  border: 1px solid rgba(214,181,109,.24);
-  border-radius: 999px;
-  background: rgba(214,181,109,.065);
-  color: var(--gold-bright);
-  font-size: .72rem;
+.brand img,
+.logo img,
+.siteBrand img,
+.headerInner img,
+.header-content img,
+.siteHeader img {
+  width: 46px;
+  height: 46px;
+  object-fit: contain;
+}
+
+.brand h1,
+.logo h1,
+.siteBrand h1,
+header h1 {
+  margin: 0;
+  color: var(--primary-dark);
+  font-size: clamp(18px, 3vw, 24px);
   font-weight: 800;
-  letter-spacing: .14em;
+  letter-spacing: -.6px;
+}
+
+.brand p,
+.logo p,
+.siteBrand p {
+  margin: 2px 0 0;
+  color: var(--muted);
+  font-size: 11px;
   line-height: 1.5;
 }
 
-.heroBadge::before,
-.digitalOfficeBadge::before {
-  width: 6px;
-  height: 6px;
-  flex: 0 0 6px;
-  border-radius: 50%;
-  background: var(--gold);
-  box-shadow: 0 0 12px rgba(214,181,109,.65);
-  content: "";
+/* MAIN CONTENT */
+
+main {
+  padding-top: 25px;
+  padding-bottom: 45px;
 }
 
-.heroContent h1 {
-  max-width: 880px;
-  margin-top: 24px;
-  color: var(--white);
-  font-size: clamp(2.25rem, 5.2vw, 5rem);
-  font-weight: 850;
-  letter-spacing: -.065em;
-  line-height: 1.04;
-  text-wrap: balance;
+section {
+  margin: 0 0 30px;
+  scroll-margin-top: 90px;
 }
 
-.heroText {
-  max-width: 760px;
-  margin-top: 24px;
-  color: var(--muted);
-  font-size: clamp(.98rem, 1.4vw, 1.13rem);
-  line-height: 1.9;
-  text-wrap: pretty;
-}
-
-/* =========================================================
-   GENERAL SECTIONS
-   ========================================================= */
-
-.sectionBlock {
-  width: 100%;
-  margin: 0 auto clamp(44px, 6vw, 76px);
-  scroll-margin-top: 24px;
-}
-
-.sectionTitleWrap {
+section h2 {
   position: relative;
   display: flex;
   align-items: center;
-  gap: 18px;
-  margin-bottom: 14px;
+  gap: 10px;
+  margin: 0 0 17px;
+  padding: 0 0 11px;
+  color: var(--primary-dark);
+  font-size: clamp(19px, 3vw, 25px);
+  font-weight: 750;
+  line-height: 1.35;
+  letter-spacing: -.4px;
 }
 
-.sectionTitleWrap::before {
-  width: 4px;
-  height: 30px;
-  flex: 0 0 4px;
-  border-radius: 8px;
-  background: linear-gradient(180deg, var(--gold-bright), var(--gold-deep));
-  box-shadow: 0 0 20px rgba(214,181,109,.15);
-  content: "";
-}
-
-.sectionTitleWrap h2 {
-  color: var(--white);
-  font-size: clamp(1.45rem, 2.8vw, 2.15rem);
-  font-weight: 800;
-  letter-spacing: -.045em;
-  line-height: 1.2;
-  text-wrap: balance;
-}
-
-.sectionDescription {
-  max-width: 800px;
-  margin: 0 0 26px 22px;
-  color: var(--muted);
-  font-size: .96rem;
-  line-height: 1.85;
-  text-wrap: pretty;
-}
-
-.directoryDynamicSection {
-  animation: sectionEnter .5s var(--ease) both;
-}
-
-.directoryDynamicSection:nth-of-type(2) {
-  animation-delay: .04s;
-}
-
-.directoryDynamicSection:nth-of-type(3) {
-  animation-delay: .08s;
-}
-
-.directoryDynamicSection:nth-of-type(4) {
-  animation-delay: .12s;
-}
-
-.directoryDynamicSection:nth-of-type(5) {
-  animation-delay: .16s;
-}
-
-/* =========================================================
-   FEATURED CARD — EXISTING TEMPLATE COMPATIBILITY
-   ========================================================= */
-
-#featuredApp {
-  min-width: 0;
-}
-
-.featuredCard {
-  position: relative;
-  isolation: isolate;
-  display: flex;
-  align-items: center;
-  gap: clamp(22px, 4vw, 42px);
-  overflow: hidden;
-  padding: clamp(24px, 4vw, 44px);
-  border: 1px solid var(--line);
-  border-radius: var(--radius-xl);
-  background:
-    radial-gradient(ellipse at 100% 0%, rgba(214,181,109,.12), transparent 55%),
-    linear-gradient(145deg, #191712, #0d0d0c 72%);
-  box-shadow: var(--shadow-card);
-}
-
-.featuredGlow,
-.appCardGlow,
-.whatsappGlow,
-.digitalOfficeGlow {
+section h2::after {
   position: absolute;
-  z-index: -1;
-  inset: 0;
-  pointer-events: none;
-  background: radial-gradient(circle at 95% 0%, rgba(214,181,109,.09), transparent 45%);
+  bottom: 0;
+  left: 0;
+  width: 54px;
+  height: 3px;
+  border-radius: 10px;
+  background: var(--gold);
+  content: "";
 }
 
-.featuredImageWrap {
-  display: grid;
-  place-items: center;
-  flex: 0 0 clamp(110px, 16vw, 180px);
-  width: clamp(110px, 16vw, 180px);
-  aspect-ratio: 1;
-  overflow: hidden;
-  border: 1px solid var(--line);
-  border-radius: 24px;
-  background: #0b0b0a;
-}
+/* HERO / INTRO */
 
-.featuredImageWrap img {
-  width: 78%;
-  height: 78%;
-  object-fit: contain;
-}
-
-.featuredContent {
+.hero,
+.heroSection,
+.welcomeSection {
   position: relative;
-  z-index: 1;
-  flex: 1;
-  min-width: 0;
+  overflow: hidden;
+  padding: clamp(25px, 5vw, 48px);
+  border: 1px solid #D8E5F5;
+  border-radius: 24px;
+  background:
+    radial-gradient(ellipse at 95% 0%, rgba(196,154,58,.15), transparent 36%),
+    linear-gradient(135deg, #FFFFFF 0%, #EDF4FD 100%);
+  box-shadow: var(--shadow);
 }
 
-.featuredBadge {
-  display: inline-flex;
-  margin-bottom: 15px;
-  padding: 7px 12px;
-  border: 1px solid var(--line);
-  border-radius: 999px;
-  color: var(--gold-bright);
-  background: rgba(214,181,109,.07);
-  font-size: .7rem;
+.hero h1,
+.heroSection h1,
+.welcomeSection h1 {
+  margin: 0 0 12px;
+  color: var(--primary-dark);
+  font-size: clamp(27px, 5vw, 43px);
   font-weight: 800;
-  letter-spacing: .12em;
+  line-height: 1.2;
+  letter-spacing: -1.1px;
 }
 
-.featuredContent h3 {
-  margin-bottom: 14px;
-  color: var(--white);
-  font-size: clamp(1.8rem, 3.5vw, 2.8rem);
-  font-weight: 850;
-  letter-spacing: -.05em;
-  line-height: 1.12;
-}
-
-.featuredContent p {
+.hero p,
+.heroSection p,
+.welcomeSection p {
+  max-width: 720px;
+  margin: 0;
   color: var(--muted);
-  line-height: 1.85;
+  font-size: 16px;
 }
 
-/* =========================================================
-   PREMIUM CARD GRIDS
-   ========================================================= */
+/* SHARED CARD GRIDS */
 
+.appsGrid,
+.governmentGrid,
+.tollGrid,
+.vidhwaanLinksGrid,
+.videosGrid,
 #appsGrid,
 #governmentGrid,
 #tollGrid,
-#vidhwaanLinksGrid {
-  display: grid;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
-  align-items: stretch;
-  gap: 20px;
-}
-
-.appCard {
-  position: relative;
-  isolation: isolate;
-  display: flex;
-  flex-direction: column;
-  min-width: 0;
-  min-height: 100%;
-  overflow: hidden;
-  padding: 25px;
-  border: 1px solid var(--line-soft);
-  border-radius: var(--radius-lg);
-  background:
-    linear-gradient(145deg, rgba(255,255,255,.025), transparent 45%),
-    linear-gradient(160deg, #171715, #10100f 80%);
-  box-shadow:
-    0 12px 32px rgba(0,0,0,.14),
-    inset 0 1px 0 rgba(255,255,255,.025);
-  transition:
-    border-color .25s ease,
-    box-shadow .25s ease,
-    transform .25s var(--ease),
-    background-color .25s ease;
-}
-
-.appCard::after {
-  position: absolute;
-  top: 0;
-  left: 24px;
-  width: 54px;
-  height: 2px;
-  border-radius: 0 0 4px 4px;
-  background: linear-gradient(90deg, var(--gold-bright), transparent);
-  opacity: .8;
-  content: "";
-}
-
-.appCardGlow {
-  opacity: .65;
-  transition: opacity .25s ease;
-}
-
-.directoryCardIdentity {
-  position: relative;
-  display: flex;
-  align-items: center;
-  justify-content: flex-start;
-  min-height: 78px;
-  margin-bottom: 22px;
-}
-
-.appIcon {
-  width: 76px;
-  height: 76px;
-  object-fit: contain;
-  border-radius: 19px;
-  filter: drop-shadow(0 8px 18px rgba(0,0,0,.24));
-}
-
-.governmentIcon {
-  padding: 7px;
-  border: 1px solid rgba(214,181,109,.12);
-  background: #f4f0e5;
-  object-fit: contain;
-}
-
-.directoryIconFallback {
-  display: grid;
-  place-items: center;
-  width: 76px;
-  height: 76px;
-  border: 1px solid var(--line);
-  border-radius: 20px;
-  background: linear-gradient(145deg, #252116, #11100d);
-  color: var(--gold-bright);
-  font-size: 2rem;
-}
-
-.appInfo {
-  position: relative;
-  z-index: 1;
-  display: flex;
-  flex: 1;
-  flex-direction: column;
-  min-width: 0;
-}
-
-.appTag {
-  display: inline-flex;
-  align-self: flex-start;
-  max-width: 100%;
-  margin-bottom: 13px;
-  padding: 6px 10px;
-  overflow-wrap: anywhere;
-  border: 1px solid rgba(214,181,109,.15);
-  border-radius: 999px;
-  background: rgba(214,181,109,.055);
-  color: var(--gold);
-  font-size: .68rem;
-  font-weight: 800;
-  letter-spacing: .09em;
-  line-height: 1.5;
-  text-transform: uppercase;
-}
-
-.appBadge {
-  display: block;
-  margin: -3px 0 11px;
-  color: var(--gold-bright);
-  font-size: .76rem;
-  font-weight: 700;
-  line-height: 1.55;
-}
-
-.appInfo h3 {
-  margin-bottom: 11px;
-  color: var(--white);
-  font-size: clamp(1.15rem, 1.4vw, 1.38rem);
-  font-weight: 800;
-  letter-spacing: -.025em;
-  line-height: 1.32;
-  overflow-wrap: anywhere;
-  text-wrap: pretty;
-}
-
-.appInfo p {
-  flex: 1;
-  color: var(--muted);
-  font-size: .91rem;
-  line-height: 1.82;
-  overflow-wrap: anywhere;
-  text-wrap: pretty;
-}
-
-.cardButtons {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: stretch;
-  gap: 10px;
-  margin-top: 23px;
-}
-
-.launchButton,
-.openCardBtn,
-.whatsappBtn,
-.digitalOfficeEmailBtn,
-.digitalOfficeWhatsappBtn {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  gap: 8px;
-  min-height: 47px;
-  max-width: 100%;
-  padding: 12px 17px;
-  border: 1px solid transparent;
-  border-radius: 13px;
-  font-size: .86rem;
-  font-weight: 800;
-  line-height: 1.4;
-  text-align: center;
-  overflow-wrap: anywhere;
-  transition:
-    color .2s ease,
-    background .2s ease,
-    border-color .2s ease,
-    box-shadow .2s ease,
-    transform .2s var(--ease);
-}
-
-.launchButton,
-.emergencyCallBtn,
-.digitalOfficeEmailBtn {
-  background: linear-gradient(135deg, var(--gold-bright), var(--gold));
-  color: #15110a;
-  box-shadow: 0 5px 16px rgba(214,181,109,.11);
-}
-
-.openCardBtn,
-.digitalOfficeWhatsappBtn {
-  border-color: rgba(214,181,109,.25);
-  background: rgba(214,181,109,.055);
-  color: var(--gold-bright);
-}
-
-.linkUnavailable {
-  color: var(--muted);
-  font-size: .82rem;
-}
-
-@media (hover: hover) and (pointer: fine) {
-  .appCard:hover {
-    transform: translateY(-5px);
-    border-color: rgba(214,181,109,.38);
-    box-shadow:
-      0 24px 55px rgba(0,0,0,.3),
-      0 0 0 1px rgba(214,181,109,.035);
-  }
-
-  .appCard:hover .appCardGlow {
-    opacity: 1;
-  }
-
-  .launchButton:hover,
-  .emergencyCallBtn:hover,
-  .digitalOfficeEmailBtn:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 9px 24px rgba(214,181,109,.22);
-  }
-
-  .openCardBtn:hover,
-  .digitalOfficeWhatsappBtn:hover {
-    border-color: var(--gold);
-    background: rgba(214,181,109,.12);
-  }
-}
-
-/* =========================================================
-   GOVERNMENT PORTALS
-   ========================================================= */
-
-.governmentCard {
-  background:
-    radial-gradient(ellipse at 100% 0%, rgba(214,181,109,.06), transparent 50%),
-    linear-gradient(155deg, #171715, #10100f 80%);
-}
-
-.governmentCard .openCardBtn {
-  width: 100%;
-}
-
-/* =========================================================
-   EMERGENCY CONTACTS
-   ========================================================= */
-
-.emergencyCard {
-  border-color: rgba(255,255,255,.085);
-}
-
-.emergencyIcon {
-  display: grid;
-  place-items: center;
-  width: 58px;
-  height: 58px;
-  margin-bottom: 18px;
-  border: 1px solid rgba(214,181,109,.17);
-  border-radius: 18px;
-  background: rgba(214,181,109,.06);
-  font-size: 1.8rem;
-}
-
-.emergencyNumber {
-  margin: 1px 0 13px;
-  color: var(--gold-bright);
-  font-size: clamp(1.8rem, 3vw, 2.35rem);
-  font-weight: 850;
-  letter-spacing: -.045em;
-  line-height: 1.15;
-  overflow-wrap: anywhere;
-  font-variant-numeric: tabular-nums;
-}
-
-.emergencyCallBtn {
-  width: 100%;
-}
-
-/* =========================================================
-   VIDHWAAN LINKS
-   ========================================================= */
-
-.vidhwaanLinkCard {
-  background:
-    radial-gradient(ellipse at 100% 0%, rgba(214,181,109,.09), transparent 55%),
-    linear-gradient(155deg, #191711, #10100f 80%);
-}
-
-.linkEyebrow {
-  margin: -4px 0 12px;
-  color: var(--gold);
-  font-size: .7rem;
-  font-weight: 800;
-  letter-spacing: .14em;
-  text-transform: uppercase;
-}
-
-.vidhwaanLinkCard .openCardBtn {
-  width: 100%;
-}
-
-/* =========================================================
-   VIDEO GALLERY
-   ========================================================= */
-
+#vidhwaanLinksGrid,
 #videosGrid {
   display: grid;
   grid-template-columns: repeat(3, minmax(0, 1fr));
-  align-items: start;
-  gap: 22px;
+  gap: 18px;
 }
 
-.videoCard {
+.appCard,
+.governmentCard,
+.emergencyCard,
+.vidhwaanLinkCard,
+.videoCard,
+.card {
   min-width: 0;
   overflow: hidden;
-  border: 1px solid var(--line-soft);
-  border-radius: var(--radius-lg);
-  background: linear-gradient(155deg, #171715, #0e0e0d);
-  box-shadow: var(--shadow-card);
-  transition: border-color .25s ease, transform .25s var(--ease);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  background: var(--surface);
+  box-shadow: 0 4px 15px rgba(23, 54, 91, .035);
+  transition: transform .2s ease, box-shadow .2s ease, border-color .2s ease;
 }
 
-.videoPlayerWrap {
-  position: relative;
-  width: 100%;
-  overflow: hidden;
-  background: #000;
-  isolation: isolate;
+.appCard:hover,
+.governmentCard:hover,
+.emergencyCard:hover,
+.vidhwaanLinkCard:hover,
+.videoCard:hover,
+.card:hover {
+  transform: translateY(-3px);
+  border-color: #C5D7EE;
+  box-shadow: var(--shadow);
 }
 
-.videoCardShort .videoPlayerWrap {
-  aspect-ratio: 9 / 16;
+.appCard a,
+.governmentCard a,
+.emergencyCard a,
+.vidhwaanLinkCard a,
+.videoCard a,
+.card a {
+  overflow-wrap: anywhere;
 }
 
-.videoCardNormal .videoPlayerWrap {
-  aspect-ratio: 16 / 9;
+.appCardContent,
+.governmentCardContent,
+.emergencyCardContent,
+.vidhwaanLinkContent,
+.videoCardContent,
+.cardContent {
+  padding: 18px;
 }
 
-.videoPoster {
-  position: absolute;
-  inset: 0;
-  display: grid;
-  place-items: center;
-  width: 100%;
-  height: 100%;
-  overflow: hidden;
-  padding: 0;
-  border: 0;
-  background: #090909;
-}
-
-.videoThumbnail {
-  position: absolute;
-  inset: 0;
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  transition: transform .5s var(--ease), opacity .3s ease;
-}
-
-.videoCardShort .videoThumbnail {
-  object-fit: cover;
-}
-
-.videoPlayButton {
-  position: relative;
-  z-index: 2;
-  display: grid;
-  place-items: center;
-  width: 66px;
-  height: 66px;
-  padding-left: 4px;
-  border: 1px solid rgba(255,255,255,.6);
-  border-radius: 50%;
-  background: rgba(8,8,8,.75);
-  color: var(--gold-bright);
-  font-size: 1.4rem;
-  box-shadow: 0 8px 30px rgba(0,0,0,.4);
-  backdrop-filter: blur(12px);
-  transition: transform .25s var(--ease), background .25s ease;
-}
-
-.videoPlayer {
-  position: absolute;
-  inset: 0;
-  width: 100%;
-  height: 100%;
-  border: 0;
-  background: #000;
-}
-
-.videoContent {
-  padding: 20px 20px 22px;
-}
-
-.videoContent h3 {
-  margin-bottom: 8px;
-  color: var(--white);
-  font-size: 1.05rem;
-  font-weight: 800;
-  letter-spacing: -.02em;
+.appCard h3,
+.governmentCard h3,
+.emergencyCard h3,
+.vidhwaanLinkCard h3,
+.videoCard h3,
+.card h3 {
+  margin: 0 0 7px;
+  color: var(--primary-dark);
+  font-size: 17px;
+  font-weight: 750;
   line-height: 1.4;
-  overflow-wrap: anywhere;
 }
 
-.videoContent p {
+.appCard p,
+.governmentCard p,
+.emergencyCard p,
+.vidhwaanLinkCard p,
+.videoCard p,
+.card p {
+  margin: 0 0 12px;
   color: var(--muted);
-  font-size: .88rem;
-  line-height: 1.75;
+  font-size: 13px;
   overflow-wrap: anywhere;
 }
 
-@media (hover: hover) and (pointer: fine) {
-  .videoCard:hover {
-    transform: translateY(-4px);
-    border-color: rgba(214,181,109,.32);
-  }
+/* APP / CARD IMAGES */
 
-  .videoCard:hover .videoThumbnail {
-    transform: scale(1.035);
-  }
-
-  .videoPoster:hover .videoPlayButton {
-    transform: scale(1.08);
-    background: rgba(214,181,109,.2);
-  }
+.appCard img,
+.governmentCard img,
+.emergencyCard img,
+.vidhwaanLinkCard img,
+.card img {
+  max-width: 100%;
+  object-fit: contain;
 }
 
-/* =========================================================
-   VIDHWAAN DIGITAL OFFICE
-   ========================================================= */
+.appImage,
+.appIcon,
+.cardIcon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 62px;
+  height: 62px;
+  margin-bottom: 14px;
+  overflow: hidden;
+  border: 1px solid #E4EBF4;
+  border-radius: 16px;
+  background: #F4F7FC;
+}
+
+.appImage img,
+.appIcon img,
+.cardIcon img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+}
+
+/* ACTION BUTTONS */
+
+.btn,
+.cardButton,
+.appButton,
+.actionButton {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 7px;
+  min-height: 42px;
+  padding: 10px 16px;
+  border: 1px solid var(--primary);
+  border-radius: 10px;
+  background: var(--primary);
+  color: #FFFFFF;
+  font-size: 13px;
+  font-weight: 700;
+  line-height: 1.3;
+  text-align: center;
+  cursor: pointer;
+  transition: background .2s ease, transform .2s ease;
+}
+
+.btn:hover,
+.cardButton:hover,
+.appButton:hover,
+.actionButton:hover {
+  transform: translateY(-1px);
+  background: var(--primary-dark);
+  color: #FFFFFF;
+}
+
+.btnSecondary {
+  border-color: var(--border);
+  background: #FFFFFF;
+  color: var(--primary);
+}
+
+.btnSecondary:hover {
+  background: var(--primary-light);
+  color: var(--primary-dark);
+}
+
+.btnGold {
+  border-color: var(--gold);
+  background: var(--gold);
+  color: #172B42;
+}
+
+.btnGold:hover {
+  background: #D4AD55;
+  color: #172B42;
+}
+
+/* VIDHWAAN DIGITAL OFFICE */
 
 .digitalOfficeSection {
-  margin-bottom: clamp(44px, 6vw, 76px);
+  margin-bottom: 32px;
 }
 
 .digitalOfficeCard {
-  position: relative;
-  isolation: isolate;
-  display: flex;
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr);
   align-items: center;
-  gap: clamp(22px, 4vw, 38px);
-  width: 100%;
-  overflow: hidden;
-  padding: clamp(24px, 4vw, 42px);
-  border: 1px solid rgba(214,181,109,.25);
-  border-radius: var(--radius-xl);
+  gap: 24px;
+  padding: clamp(20px, 4vw, 32px);
+  border: 1px solid #D5E2F2;
+  border-top: 4px solid var(--gold);
+  border-radius: 20px;
   background:
-    radial-gradient(ellipse at 8% 0%, rgba(214,181,109,.13), transparent 42%),
-    radial-gradient(ellipse at 100% 100%, rgba(214,181,109,.06), transparent 44%),
-    linear-gradient(135deg, #1a1812, #10100e 72%);
-  box-shadow: var(--shadow-card), inset 0 1px 0 rgba(255,255,255,.035);
+    radial-gradient(ellipse at 100% 0%, rgba(23,74,134,.06), transparent 40%),
+    #FFFFFF;
+  box-shadow: var(--shadow);
 }
 
 .digitalOfficeLogoWrap {
-  position: relative;
-  z-index: 1;
-  display: grid;
-  place-items: center;
-  flex: 0 0 clamp(100px, 13vw, 156px);
-  width: clamp(100px, 13vw, 156px);
-  aspect-ratio: 1;
-  padding: 18px;
-  border: 1px solid rgba(255,255,255,.12);
-  border-radius: 25px;
-  background: #f7f5ef;
-  box-shadow: 0 12px 34px rgba(0,0,0,.3);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 104px;
+  height: 104px;
+  padding: 12px;
+  border: 1px solid var(--border);
+  border-radius: 20px;
+  background: #FFFFFF;
 }
 
-.digitalOfficeLogo {
+.digitalOfficeLogoWrap img {
   width: 100%;
   height: 100%;
   object-fit: contain;
 }
 
 .digitalOfficeContent {
-  position: relative;
-  z-index: 1;
-  flex: 1;
   min-width: 0;
 }
 
-.digitalOfficeContent h2 {
-  margin: 17px 0 12px;
-  color: var(--white);
-  font-size: clamp(1.65rem, 3.5vw, 2.8rem);
-  font-weight: 850;
-  letter-spacing: -.05em;
-  line-height: 1.13;
-  text-wrap: balance;
+.digitalOfficeContent h2,
+.digitalOfficeContent h3 {
+  margin: 0 0 7px;
+  color: var(--primary-dark);
+  font-size: clamp(21px, 3vw, 27px);
+  font-weight: 800;
+  line-height: 1.35;
 }
 
-.digitalOfficeDescription {
+.digitalOfficeContent h2::after,
+.digitalOfficeContent h3::after {
+  display: none;
+}
+
+.digitalOfficeContent p {
+  margin: 0 0 10px;
   color: var(--muted);
-  font-size: .98rem;
-  line-height: 1.85;
-  text-wrap: pretty;
-}
-
-.digitalOfficeContact {
-  margin-top: 17px;
 }
 
 .digitalOfficeEmail {
-  color: var(--gold-bright);
-  font-size: .92rem;
+  display: block;
+  margin: 10px 0 16px;
+  color: var(--primary);
+  font-size: 14px;
   font-weight: 700;
   overflow-wrap: anywhere;
 }
@@ -943,622 +465,296 @@ a:focus-visible {
 .digitalOfficeActions {
   display: flex;
   flex-wrap: wrap;
-  gap: 11px;
-  margin-top: 22px;
+  gap: 10px;
+  margin-top: 15px;
 }
 
-/* =========================================================
-   WHATSAPP CONTACT PANEL
-   ========================================================= */
-
-.whatsappSection {
-  margin: 0 auto clamp(44px, 6vw, 76px);
-}
-
-.whatsappCard {
-  position: relative;
-  isolation: isolate;
-  display: flex;
-  align-items: center;
-  gap: 24px;
-  overflow: hidden;
-  padding: clamp(23px, 3.5vw, 36px);
-  border: 1px solid var(--line);
-  border-radius: var(--radius-lg);
-  background:
-    radial-gradient(ellipse at 100% 0%, rgba(214,181,109,.08), transparent 50%),
-    linear-gradient(145deg, #171612, #0e0e0d);
-  box-shadow: var(--shadow-card);
-}
-
-.whatsappIcon {
-  display: grid;
-  place-items: center;
-  flex: 0 0 62px;
-  width: 62px;
-  height: 62px;
-  border: 1px solid rgba(214,181,109,.25);
-  border-radius: 19px;
-  background: rgba(214,181,109,.07);
-  color: var(--gold-bright);
-}
-
-.whatsappIcon svg {
-  width: 30px;
-  height: 30px;
-}
-
-.whatsappText {
-  position: relative;
-  z-index: 1;
-  flex: 1;
-  min-width: 0;
-}
-
-.whatsappText h3 {
-  margin-bottom: 8px;
-  color: var(--white);
-  font-size: clamp(1.2rem, 2.5vw, 1.6rem);
-  font-weight: 800;
-  letter-spacing: -.03em;
-}
-
-.whatsappText p {
-  color: var(--muted);
-  font-size: .94rem;
-  line-height: 1.8;
-}
-
-.whatsappBtn {
-  position: relative;
-  z-index: 1;
-  flex: 0 0 auto;
-  border-color: rgba(214,181,109,.25);
-  background: linear-gradient(135deg, var(--gold-bright), var(--gold));
-  color: #15110a;
-}
-
-/* =========================================================
-   FOOTER
-   ========================================================= */
-
-#footer {
-  position: relative;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 13px;
-  width: 100%;
-  margin-top: 28px;
-  padding: 38px 0 12px;
-  text-align: center;
-}
-
-#footer::before {
-  position: absolute;
-  top: 0;
-  right: 0;
-  left: 0;
-  height: 1px;
-  background: linear-gradient(90deg, transparent, var(--gold-deep), transparent);
-  content: "";
-}
-
-.footerLogo {
-  width: 66px;
-  height: 66px;
-  margin-bottom: 5px;
-  object-fit: contain;
-}
-
-#footer p {
-  max-width: 800px;
-  color: var(--muted);
-  font-size: .84rem;
-  line-height: 1.8;
-  text-wrap: pretty;
-}
-
-#footer p:first-of-type {
-  color: var(--gold-bright);
-  font-size: .88rem;
-  font-weight: 800;
-  letter-spacing: .015em;
-}
-
-/* =========================================================
-   PWA INSTALL BUTTON — BOTTOM LEFT
-   ========================================================= */
-
-#installBtn {
-  position: fixed;
-  z-index: 10000;
-  left: max(20px, env(safe-area-inset-left));
-  right: auto;
-  bottom: max(20px, env(safe-area-inset-bottom));
-
+.digitalOfficeEmailBtn,
+.digitalOfficeWhatsappBtn {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  gap: 9px;
-
-  min-height: 51px;
-  padding: 13px 21px;
-
-  border: 1px solid rgba(255,255,255,.2);
-  border-radius: 999px;
-
-  background: linear-gradient(135deg, var(--gold-bright), var(--gold));
-  color: #15110a;
-
-  font-size: .9rem;
-  font-weight: 850;
-
-  box-shadow:
-    0 12px 38px rgba(0,0,0,.42),
-    0 5px 22px rgba(214,181,109,.18);
-
-  opacity: 1;
-  visibility: visible;
-  transform: translateY(0);
-
-  transition:
-    opacity .22s ease,
-    visibility .22s ease,
-    transform .22s var(--ease),
-    box-shadow .22s ease;
+  gap: 8px;
+  min-height: 44px;
+  padding: 11px 17px;
+  border-radius: 10px;
+  color: #FFFFFF;
+  font-size: 13px;
+  font-weight: 750;
+  text-align: center;
+  transition: transform .2s ease, opacity .2s ease;
 }
 
-#installBtn::before {
-  content: "↓";
-  font-size: 1.15rem;
-  line-height: 1;
+.digitalOfficeEmailBtn {
+  background: var(--primary);
 }
 
-#installBtn.showInstall {
-  opacity: 1;
-  visibility: visible;
-  transform: translateY(0);
+.digitalOfficeWhatsappBtn {
+  background: var(--success);
 }
 
-@media (hover: hover) and (pointer: fine) {
-  #installBtn:hover {
-    box-shadow:
-      0 15px 42px rgba(0,0,0,.48),
-      0 7px 26px rgba(214,181,109,.25);
-  }
+.digitalOfficeEmailBtn:hover,
+.digitalOfficeWhatsappBtn:hover {
+  transform: translateY(-2px);
+  color: #FFFFFF;
+  opacity: .92;
 }
 
-/* =========================================================
-   ERROR AND EMPTY STATES
-   ========================================================= */
+/* FEATURED APP */
 
-.directoryError {
-  grid-column: 1 / -1;
-  padding: 28px;
-  border: 1px solid rgba(255,143,143,.25);
-  border-radius: var(--radius-md);
-  background: rgba(255,143,143,.045);
+.featuredSection {
+  margin-top: 0;
+  margin-bottom: 35px;
 }
 
-.directoryError h3 {
-  margin-bottom: 8px;
-  color: var(--white);
-  font-size: 1.15rem;
+.featuredSection h2::after {
+  background: var(--gold);
 }
 
-.directoryError p {
-  margin-bottom: 18px;
+.featuredCard {
+  display: grid;
+  grid-template-columns: minmax(150px, .8fr) minmax(0, 1.6fr);
+  align-items: center;
+  gap: 28px;
+  padding: clamp(20px, 4vw, 34px);
+  overflow: hidden;
+  border: 1px solid #D6E3F3;
+  border-radius: 22px;
+  background:
+    radial-gradient(ellipse at 0% 100%, rgba(196,154,58,.11), transparent 42%),
+    linear-gradient(120deg, #FFFFFF, #F0F6FE);
+  box-shadow: var(--shadow);
+}
+
+.featuredImageWrap {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 160px;
+  padding: 20px;
+  border: 1px solid #E1E9F3;
+  border-radius: 18px;
+  background: #FFFFFF;
+}
+
+.featuredImageWrap img,
+.featuredImage {
+  width: 100%;
+  max-width: 180px;
+  max-height: 180px;
+  border-radius: 14px;
+  object-fit: contain;
+}
+
+.featuredContent {
+  min-width: 0;
+}
+
+.featuredContent h3 {
+  margin: 0 0 10px;
+  color: var(--primary-dark);
+  font-size: clamp(22px, 3vw, 30px);
+  font-weight: 800;
+  line-height: 1.3;
+}
+
+.featuredContent p {
+  margin: 0 0 18px;
   color: var(--muted);
-  line-height: 1.7;
+  font-size: 15px;
 }
 
-/* =========================================================
-   RESPONSIVE — LARGE TABLETS
-   ========================================================= */
-
-@media (max-width: 1050px) {
-  #appsGrid,
-  #governmentGrid,
-  #tollGrid,
-  #vidhwaanLinksGrid,
-  #videosGrid {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-    gap: 17px;
-  }
-
-  .heroSection {
-    gap: 36px;
-  }
-
-  .appCard {
-    padding: 23px;
-  }
+.featuredBadge {
+  display: inline-flex;
+  align-items: center;
+  margin-bottom: 12px;
+  padding: 5px 11px;
+  border: 1px solid #E8D7A9;
+  border-radius: 50px;
+  background: var(--gold-light);
+  color: #765719;
+  font-size: 11px;
+  font-weight: 800;
+  letter-spacing: .7px;
+  text-transform: uppercase;
 }
 
-/* =========================================================
-   RESPONSIVE — TABLETS AND SMALL LAPTOPS
-   ========================================================= */
+/* GOVERNMENT LINKS */
 
-@media (max-width: 760px) {
-  #app {
-    width: min(100% - 36px, var(--content-width));
-  }
-
-  .heroSection {
-    flex-direction: column;
-    align-items: flex-start;
-    gap: 27px;
-    padding: 34px 0 48px;
-  }
-
-  .heroLogoWrap {
-    flex-basis: 132px;
-    width: 132px;
-    border-radius: 25px;
-  }
-
-  .heroContent h1 {
-    margin-top: 19px;
-    font-size: clamp(2.25rem, 8vw, 3.7rem);
-  }
-
-  .heroText {
-    margin-top: 17px;
-  }
-
-  .digitalOfficeCard {
-    align-items: flex-start;
-    gap: 23px;
-  }
-
-  .digitalOfficeLogoWrap {
-    flex-basis: 100px;
-    width: 100px;
-    border-radius: 20px;
-    padding: 13px;
-  }
-
-  .featuredCard {
-    gap: 22px;
-  }
-
-  .whatsappCard {
-    align-items: flex-start;
-    flex-wrap: wrap;
-  }
-
-  .whatsappText {
-    flex-basis: calc(100% - 90px);
-  }
-
-  .whatsappBtn {
-    margin-left: 86px;
-  }
+#governmentSection .governmentCard,
+.governmentGrid .governmentCard {
+  border-top: 3px solid var(--primary);
 }
 
-/* =========================================================
-   RESPONSIVE — MOBILE
-   ========================================================= */
+/* EMERGENCY CONTACTS */
 
-@media (max-width: 560px) {
-  #app {
-    width: calc(100% - 30px);
-    padding-top: max(17px, env(safe-area-inset-top));
-    padding-bottom: max(38px, env(safe-area-inset-bottom));
-  }
-
-  .heroSection {
-    padding-top: 24px;
-    padding-bottom: 37px;
-  }
-
-  .heroLogoWrap {
-    flex-basis: 112px;
-    width: 112px;
-    border-radius: 22px;
-  }
-
-  .heroLogoWrap::before {
-    inset: 6px;
-    border-radius: 17px;
-  }
-
-  .heroBadge,
-  .digitalOfficeBadge {
-    padding: 8px 11px;
-    font-size: .63rem;
-    letter-spacing: .09em;
-  }
-
-  .heroContent h1 {
-    margin-top: 17px;
-    font-size: clamp(2rem, 10vw, 2.9rem);
-    letter-spacing: -.055em;
-  }
-
-  .heroText {
-    font-size: .94rem;
-    line-height: 1.8;
-  }
-
-  .sectionBlock,
-  .digitalOfficeSection,
-  .whatsappSection {
-    margin-bottom: 43px;
-  }
-
-  .sectionTitleWrap {
-    align-items: flex-start;
-    gap: 12px;
-    margin-bottom: 12px;
-  }
-
-  .sectionTitleWrap::before {
-    width: 3px;
-    height: 25px;
-    flex-basis: 3px;
-    margin-top: 2px;
-  }
-
-  .sectionTitleWrap h2 {
-    font-size: 1.4rem;
-    letter-spacing: -.035em;
-  }
-
-  .sectionDescription {
-    margin-left: 15px;
-    margin-bottom: 20px;
-    font-size: .87rem;
-    line-height: 1.8;
-  }
-
-  #appsGrid,
-  #governmentGrid,
-  #tollGrid,
-  #vidhwaanLinksGrid {
-    grid-template-columns: minmax(0, 1fr);
-    gap: 14px;
-  }
-
-  #videosGrid {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-    align-items: start;
-    gap: 12px;
-  }
-
-  .appCard {
-    padding: 21px;
-    border-radius: 22px;
-  }
-
-  .directoryCardIdentity {
-    min-height: 64px;
-    margin-bottom: 17px;
-  }
-
-  .appIcon,
-  .directoryIconFallback {
-    width: 64px;
-    height: 64px;
-    border-radius: 16px;
-  }
-
-  .appInfo h3 {
-    font-size: 1.2rem;
-  }
-
-  .appInfo p {
-    font-size: .9rem;
-  }
-
-  .cardButtons {
-    flex-direction: column;
-    align-items: stretch;
-    gap: 9px;
-    margin-top: 19px;
-  }
-
-  .launchButton,
-  .openCardBtn,
-  .digitalOfficeEmailBtn,
-  .digitalOfficeWhatsappBtn {
-    width: 100%;
-    min-height: 47px;
-    padding: 12px 15px;
-  }
-
-  .emergencyIcon {
-    width: 50px;
-    height: 50px;
-    border-radius: 15px;
-    font-size: 1.55rem;
-  }
-
-  .emergencyNumber {
-    font-size: 2rem;
-  }
-
-  .videoCard {
-    border-radius: 17px;
-  }
-
-  .videoContent {
-    padding: 13px 12px 15px;
-  }
-
-  .videoContent h3 {
-    font-size: .88rem;
-    line-height: 1.42;
-  }
-
-  .videoContent p {
-    font-size: .77rem;
-    line-height: 1.65;
-  }
-
-  .videoPlayButton {
-    width: 48px;
-    height: 48px;
-    font-size: 1.1rem;
-  }
-
-  .digitalOfficeCard {
-    flex-direction: column;
-    align-items: flex-start;
-    padding: 23px;
-    border-radius: 25px;
-  }
-
-  .digitalOfficeLogoWrap {
-    flex-basis: 92px;
-    width: 92px;
-    padding: 12px;
-    border-radius: 19px;
-  }
-
-  .digitalOfficeContent h2 {
-    margin-top: 15px;
-    font-size: 1.8rem;
-  }
-
-  .digitalOfficeDescription {
-    font-size: .91rem;
-  }
-
-  .digitalOfficeActions {
-    width: 100%;
-    flex-direction: column;
-  }
-
-  .digitalOfficeEmail {
-    font-size: .82rem;
-  }
-
-  .featuredCard {
-    flex-direction: column;
-    align-items: flex-start;
-    padding: 22px;
-    border-radius: 25px;
-  }
-
-  .featuredImageWrap {
-    flex-basis: 100px;
-    width: 100px;
-    border-radius: 19px;
-  }
-
-  .featuredContent h3 {
-    font-size: 1.75rem;
-  }
-
-  .whatsappCard {
-    flex-direction: column;
-    align-items: stretch;
-    gap: 17px;
-    padding: 22px;
-    border-radius: 23px;
-  }
-
-  .whatsappIcon {
-    flex-basis: 53px;
-    width: 53px;
-    height: 53px;
-    border-radius: 16px;
-  }
-
-  .whatsappText {
-    flex-basis: auto;
-  }
-
-  .whatsappText h3 {
-    font-size: 1.25rem;
-  }
-
-  .whatsappBtn {
-    width: 100%;
-    margin-left: 0;
-  }
-
-  #footer {
-    gap: 11px;
-    padding-top: 28px;
-  }
-
-  .footerLogo {
-    width: 55px;
-    height: 55px;
-  }
-
-  #footer p {
-    font-size: .79rem;
-  }
-
-  #installBtn {
-    left: max(13px, env(safe-area-inset-left));
-    right: auto;
-    bottom: max(13px, env(safe-area-inset-bottom));
-    min-height: 47px;
-    padding: 12px 17px;
-    font-size: .84rem;
-  }
+#emergencySection .emergencyCard,
+#tollGrid .emergencyCard {
+  border-top: 3px solid var(--success);
 }
 
-/* =========================================================
-   VERY SMALL SCREENS
-   ========================================================= */
-
-@media (max-width: 360px) {
-  #app {
-    width: calc(100% - 24px);
-  }
-
-  #videosGrid {
-    grid-template-columns: minmax(0, 1fr);
-  }
-
-  .videoCardShort {
-    width: min(100%, 300px);
-    justify-self: center;
-  }
-
-  .videoContent {
-    padding: 16px;
-  }
-
-  .videoContent h3 {
-    font-size: 1rem;
-  }
-
-  .appCard {
-    padding: 18px;
-  }
-
-  .sectionTitleWrap h2 {
-    font-size: 1.25rem;
-  }
+.emergencyCard a[href^="tel:"] {
+  color: var(--success);
+  font-weight: 800;
 }
 
-/* =========================================================
-   ACCESSIBILITY AND PERFORMANCE
-   ========================================================= */
+/* VIDHWAAN LINKS */
 
-@media (hover: none) {
-  a,
-  button {
-    -webkit-tap-highlight-color: transparent;
-  }
+#vidhwaanLinksSection .vidhwaanLinkCard,
+#vidhwaanLinksGrid .vidhwaanLinkCard {
+  border-top: 3px solid var(--gold);
+}
 
-  .appCard:hover,
-  .videoCard:hover {
-    transform: none;
-  }
+/* VIDEOS */
 
-  .launchButton:active,
-  .openCardBtn:active,
-  .whatsappBtn:active {
-    transform: scale(.985);
-  }
+#videosGrid,
+.videosGrid {
+  align-items: start;
+}
+
+.videoCard {
+  background: #FFFFFF;
+}
+
+.videoThumbnail,
+.videoCard iframe,
+.videoCard video {
+  display: block;
+  width: 100%;
+  aspect-ratio: 16 / 9;
+  border: 0;
+  background: #E8EEF6;
+  object-fit: cover;
+}
+
+.videoCardContent {
+  padding: 15px 17px 18px;
+}
+
+.videoCard h3 {
+  font-size: 15px;
+}
+
+/* EMPTY STATES */
+
+.emptyState,
+.noResults,
+.emptyMessage {
+  grid-column: 1 / -1;
+  padding: 24px;
+  border: 1px dashed #C8D5E5;
+  border-radius: 14px;
+  background: #FFFFFF;
+  color: var(--muted);
+  text-align: center;
+}
+
+/* GENERAL LABELS */
+
+.badge,
+.tag {
+  display: inline-flex;
+  align-items: center;
+  padding: 4px 9px;
+  border-radius: 50px;
+  background: var(--primary-light);
+  color: var(--primary);
+  font-size: 11px;
+  font-weight: 750;
+}
+
+hr {
+  height: 1px;
+  margin: 24px 0;
+  border: 0;
+  background: var(--border);
+}
+
+/* FOOTER */
+
+footer {
+  margin-top: 15px;
+  padding: 35px 22px 25px;
+  border-top: 3px solid var(--gold);
+  background: var(--primary-dark);
+  color: #FFFFFF;
+  text-align: center;
+}
+
+footer .footerInner,
+footer .footer-content {
+  max-width: var(--max-width);
+  margin-inline: auto;
+}
+
+footer p {
+  margin: 5px 0;
+  color: #D6E3F2;
+  font-size: 13px;
+}
+
+footer a {
+  color: #F0D28B;
+}
+
+footer a:hover {
+  color: #FFFFFF;
+}
+
+footer strong,
+footer .brandName {
+  color: #FFFFFF;
+  font-weight: 800;
+}
+
+/* INSTALL BUTTON */
+
+#installBtn,
+.installBtn,
+#installButton,
+.install-button {
+  position: fixed;
+  z-index: 1000;
+  right: 20px;
+  bottom: 20px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  min-height: 48px;
+  padding: 13px 19px;
+  border: 1px solid #DDBB68;
+  border-radius: 50px;
+  background: var(--primary);
+  color: #FFFFFF;
+  box-shadow: 0 8px 25px rgba(16,52,94,.25);
+  font-size: 13px;
+  font-weight: 800;
+  cursor: pointer;
+  transition: transform .2s ease, background .2s ease;
+}
+
+#installBtn:hover,
+.installBtn:hover,
+#installButton:hover,
+.install-button:hover {
+  transform: translateY(-3px);
+  background: var(--primary-dark);
+  color: #FFFFFF;
+}
+
+#installBtn[hidden],
+.installBtn[hidden],
+#installButton[hidden],
+.install-button[hidden] {
+  display: none !important;
+}
+
+/* ACCESSIBILITY */
+
+:focus-visible {
+  outline: 3px solid #D9AD49;
+  outline-offset: 3px;
 }
 
 @media (prefers-reduced-motion: reduce) {
@@ -1566,30 +762,226 @@ a:focus-visible {
   *::before,
   *::after {
     scroll-behavior: auto !important;
+    transition-duration: .01ms !important;
     animation-duration: .01ms !important;
     animation-iteration-count: 1 !important;
-    transition-duration: .01ms !important;
   }
 }
 
-@keyframes sectionEnter {
-  from {
-    opacity: 0;
-    transform: translateY(9px);
+/* TABLET */
+
+@media (max-width: 900px) {
+  .appsGrid,
+  .governmentGrid,
+  .tollGrid,
+  .vidhwaanLinksGrid,
+  .videosGrid,
+  #appsGrid,
+  #governmentGrid,
+  #tollGrid,
+  #vidhwaanLinksGrid,
+  #videosGrid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 15px;
   }
 
-  to {
-    opacity: 1;
-    transform: translateY(0);
+  .featuredCard {
+    gap: 20px;
   }
 }
 
-@keyframes logoShimmer {
-  0%, 72%, 100% {
-    left: -80%;
+/* MOBILE */
+
+@media (max-width: 600px) {
+  body {
+    font-size: 14px;
   }
 
-  86% {
-    left: 130%;
+  .container,
+  main {
+    padding-inline: 15px;
+  }
+
+  main {
+    padding-top: 17px;
+    padding-bottom: 30px;
+  }
+
+  .headerInner,
+  .header-content,
+  .siteHeader {
+    padding: 12px 15px;
+    gap: 10px;
+  }
+
+  .brand,
+  .logo,
+  .siteBrand {
+    gap: 9px;
+  }
+
+  .brand img,
+  .logo img,
+  .siteBrand img,
+  .headerInner img,
+  .header-content img,
+  .siteHeader img {
+    width: 39px;
+    height: 39px;
+  }
+
+  .brand p,
+  .logo p,
+  .siteBrand p {
+    max-width: 230px;
+    font-size: 10px;
+  }
+
+  section {
+    margin-bottom: 25px;
+  }
+
+  section h2 {
+    margin-bottom: 13px;
+    font-size: 20px;
+  }
+
+  .hero,
+  .heroSection,
+  .welcomeSection {
+    padding: 24px 19px;
+    border-radius: 18px;
+  }
+
+  .hero h1,
+  .heroSection h1,
+  .welcomeSection h1 {
+    font-size: 29px;
+  }
+
+  .hero p,
+  .heroSection p,
+  .welcomeSection p {
+    font-size: 14px;
+  }
+
+  .appsGrid,
+  .governmentGrid,
+  .tollGrid,
+  .vidhwaanLinksGrid,
+  .videosGrid,
+  #appsGrid,
+  #governmentGrid,
+  #tollGrid,
+  #vidhwaanLinksGrid,
+  #videosGrid {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 12px;
+  }
+
+  .appCardContent,
+  .governmentCardContent,
+  .emergencyCardContent,
+  .vidhwaanLinkContent,
+  .videoCardContent,
+  .cardContent {
+    padding: 16px;
+  }
+
+  .digitalOfficeCard {
+    grid-template-columns: 1fr;
+    justify-items: start;
+    gap: 16px;
+    padding: 21px;
+    border-radius: 17px;
+  }
+
+  .digitalOfficeLogoWrap {
+    width: 78px;
+    height: 78px;
+    padding: 9px;
+    border-radius: 15px;
+  }
+
+  .digitalOfficeContent h2,
+  .digitalOfficeContent h3 {
+    font-size: 22px;
+  }
+
+  .digitalOfficeEmail {
+    font-size: 13px;
+  }
+
+  .digitalOfficeActions {
+    display: grid;
+    grid-template-columns: 1fr;
+    width: 100%;
+  }
+
+  .digitalOfficeEmailBtn,
+  .digitalOfficeWhatsappBtn {
+    width: 100%;
+    min-height: 45px;
+  }
+
+  .featuredCard {
+    grid-template-columns: 1fr;
+    gap: 17px;
+    padding: 19px;
+    border-radius: 18px;
+  }
+
+  .featuredImageWrap {
+    min-height: 135px;
+    padding: 16px;
+  }
+
+  .featuredImageWrap img,
+  .featuredImage {
+    max-width: 135px;
+    max-height: 135px;
+  }
+
+  .featuredContent h3 {
+    font-size: 23px;
+  }
+
+  .featuredContent p {
+    font-size: 14px;
+  }
+
+  #installBtn,
+  .installBtn,
+  #installButton,
+  .install-button {
+    right: 14px;
+    bottom: 14px;
+    min-height: 45px;
+    padding: 11px 16px;
+    font-size: 12px;
+  }
+
+  footer {
+    padding: 29px 17px 22px;
+  }
+}
+
+/* SMALL MOBILE */
+
+@media (max-width: 360px) {
+  .container,
+  main {
+    padding-inline: 11px;
+  }
+
+  .digitalOfficeCard,
+  .featuredCard {
+    padding: 15px;
+  }
+
+  .hero h1,
+  .heroSection h1,
+  .welcomeSection h1 {
+    font-size: 25px;
   }
 }
