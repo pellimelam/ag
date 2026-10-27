@@ -4,7 +4,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-  <meta name="theme-color" content="#ffffff">
+  <meta name="theme-color" content="#F9FAFC">
   <meta name="color-scheme" content="light">
 
   <title>Argentina Localities | Argentina Locality Search Engine</title>
@@ -39,7 +39,7 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
 
-  <link rel="stylesheet" href="styles.css">
+  <link rel="stylesheet" href="/styles.css">
 
   <script type="application/ld+json">
   {
@@ -76,6 +76,7 @@
 <body>
   <main class="page">
 
+    <!-- INTRODUCTION -->
     <section class="hero">
       <img
         src="/icons/logo.png"
@@ -93,7 +94,8 @@
       </p>
     </section>
 
-    <section class="searchSection">
+    <!-- LOCALITY SEARCH -->
+    <section class="searchSection" aria-label="Search localities">
       <form id="searchForm" autocomplete="off">
         <div class="searchBox">
           <svg
@@ -135,6 +137,7 @@
       </form>
     </section>
 
+    <!-- SEARCH STATUS -->
     <section
       id="statusArea"
       class="statusArea"
@@ -144,13 +147,16 @@
       Loading the Argentina locality directory...
     </section>
 
+    <!-- SEARCH RESULTS -->
     <section
       id="results"
       class="results"
       hidden
       aria-live="polite"
+      aria-label="Locality search results"
     ></section>
 
+    <!-- NO RESULTS -->
     <section id="emptyState" class="emptyState" hidden>
       <h2>No Matching Localities Found</h2>
       <p>
@@ -159,6 +165,7 @@
       </p>
     </section>
 
+    <!-- ABOUT THE DIRECTORY -->
     <section class="info">
       <h2>Explore Argentina's Localities</h2>
       <p>
@@ -169,6 +176,7 @@
       </p>
     </section>
 
+    <!-- SEARCH TIPS -->
     <section class="tips">
       <h2>Search Tips</h2>
       <ul>
@@ -180,6 +188,7 @@
       </ul>
     </section>
 
+    <!-- FOOTER -->
     <footer class="footer">
       <img
         src="/icons/logo.png"
@@ -204,8 +213,21 @@
 
       <div class="footerMeta">
         <span>Argentina</span>
-        <span>•</span>
+        <span aria-hidden="true">•</span>
         <span>Powered by VIDHWAAN</span>
+      </div>
+
+      <!-- COOKIES POLICY LINK -->
+      <div class="footerPolicyLinks">
+        <button
+          type="button"
+          id="openCookiePolicy"
+          class="policyLink"
+          aria-haspopup="dialog"
+          aria-controls="cookiePolicyModal"
+        >
+          Cookies Policy
+        </button>
       </div>
 
       <p class="copyright">
@@ -219,6 +241,181 @@
 
   </main>
 
-  <script src="search.js" defer></script>
+  <!-- COOKIES AND PRIVACY POLICY POPUP -->
+  <div
+    id="cookiePolicyModal"
+    class="policyModal"
+    hidden
+  >
+    <div class="policyBackdrop" data-close-policy="true"></div>
+
+    <section
+      class="policyDialog"
+      role="dialog"
+      aria-modal="true"
+      aria-labelledby="cookiePolicyTitle"
+      aria-describedby="cookiePolicyIntro"
+      tabindex="-1"
+    >
+      <header class="policyHeader">
+        <div class="policyHeaderText">
+          <span class="policyEyebrow">VIDHWAAN TRANSPARENCY</span>
+          <h2 id="cookiePolicyTitle">Cookies &amp; Privacy Policy</h2>
+          <p id="cookiePolicyIntro">
+            Your privacy matters. This portal is provided to help
+            people find locality information and access useful services.
+          </p>
+        </div>
+
+        <button
+          type="button"
+          id="closeCookiePolicy"
+          class="policyCloseButton"
+          aria-label="Close Cookies and Privacy Policy"
+          title="Close"
+        >
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            viewBox="0 0 24 24"
+            width="22"
+            height="22"
+            fill="none"
+            aria-hidden="true"
+          >
+            <path
+              d="M6 6L18 18M18 6L6 18"
+              stroke="currentColor"
+              stroke-width="2"
+              stroke-linecap="round"
+            ></path>
+          </svg>
+        </button>
+      </header>
+
+      <div class="policyBody">
+        <section class="policyHighlight">
+          <h3>Our commitment to your privacy</h3>
+          <p>
+            <strong>
+              VIDHWAAN does not ask for, collect, or store your personal
+              information or the search terms you enter through this portal.
+              We do not sell users' personal data.
+            </strong>
+          </p>
+          <p>
+            You can use the locality search service without creating an
+            account or providing your name, email address, phone number,
+            or other personal details.
+          </p>
+        </section>
+
+        <section class="policySection">
+          <h3>1. What this portal does</h3>
+          <p>
+            This portal helps people search locality names, departments,
+            provinces, agglomerations and locality codes in Argentina.
+            Search terms are processed by the website's search functionality
+            to display matching entries from its locality dataset.
+          </p>
+          <p>
+            The search functionality in this portal does not send your
+            search terms to a Vidhwaan user account or an analytics service.
+            We provide this service to make information easier to find.
+          </p>
+        </section>
+
+        <section class="policySection">
+          <h3>2. Cookies and tracking</h3>
+          <p>
+            The portal's search functionality does not intentionally use
+            advertising cookies, analytics cookies, or tracking scripts
+            to profile visitors.
+          </p>
+          <p>
+            The hosting or content-delivery provider may use essential
+            technical mechanisms, including security-related cookies,
+            where required to protect and deliver the website. Such
+            mechanisms are controlled by the relevant provider and may
+            be subject to its own policies.
+          </p>
+        </section>
+
+        <section class="policySection">
+          <h3>3. Technical information and hosting</h3>
+          <p>
+            Although Vidhwaan does not collect or store your personal
+            information or search terms through this portal, the hosting,
+            network, or content-delivery provider may automatically process
+            technical request information. This may include an IP address,
+            browser or device information, request timestamps, and security
+            logs for purposes such as website delivery, abuse prevention,
+            troubleshooting, and security.
+          </p>
+          <p>
+            Such technical processing is handled by the relevant
+            infrastructure provider under its own terms and privacy
+            practices. We do not claim that the entire internet or hosting
+            infrastructure operates without processing technical data.
+          </p>
+        </section>
+
+        <section class="policySection">
+          <h3>4. Personal information</h3>
+          <p>
+            This portal does not provide an account registration form,
+            a personal profile, or a form asking visitors to submit
+            personal details. Please do not include private or sensitive
+            information in a search query.
+          </p>
+        </section>
+
+        <section class="policySection">
+          <h3>5. External locality pages and websites</h3>
+          <p>
+            Selecting a search result may take you to a locality page.
+            If you follow a link to another website or service, that
+            destination may have its own privacy and cookie practices.
+            Please review the policies of the destination when applicable.
+          </p>
+        </section>
+
+        <section class="policySection">
+          <h3>6. Policy updates</h3>
+          <p>
+            This policy may be updated if the portal's functionality,
+            hosting arrangements, or privacy practices change. The latest
+            version will be available through the Cookies Policy link
+            in the website footer.
+          </p>
+        </section>
+
+        <section class="policyContact">
+          <h3>Our purpose</h3>
+          <p>
+            VIDHWAAN provides digital services to help people access
+            useful information. We aim to keep this portal simple,
+            accessible, and respectful of visitors' privacy.
+          </p>
+          <p class="policyUpdated">
+            Last updated: October 27, 2026
+          </p>
+        </section>
+      </div>
+
+      <footer class="policyFooter">
+        <span>Vidhwaan Village Based Global Technology Company</span>
+
+        <button
+          type="button"
+          id="closeCookiePolicyFooter"
+          class="policyDoneButton"
+        >
+          Close Policy
+        </button>
+      </footer>
+    </section>
+  </div>
+
+  <script src="/search.js" defer></script>
 </body>
 </html>
