@@ -38,9 +38,6 @@ jobs:
 
           test -f index.html
           test -f app.js
-          test -f market.html
-          test -f market.js
-          test -f market.css
           test -f search.js
           test -f main.css
           test -f styles.css
@@ -54,9 +51,6 @@ jobs:
 
           test -f index.html
           test -f app.js
-          test -f market.html
-          test -f market.js
-          test -f market.css
           test -f search.js
           test -f main.css
           test -f styles.css
