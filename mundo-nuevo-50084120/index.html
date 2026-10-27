@@ -89,25 +89,7 @@
 
   <link rel="stylesheet" href="../main.css">
 
-  <script src="https://cdn.onesignal.com/sdks/web/v16/OneSignalSDK.page.js" defer></script>
 
-  <script>
-    window.OneSignalDeferred = window.OneSignalDeferred || [];
-
-    window.OneSignalDeferred.push(async function (OneSignal) {
-      try {
-        await OneSignal.init({
-          appId: "800e8aed-7b79-4578-b9ce-6dda37bea6cd",
-          serviceWorkerParam: {
-            scope: "/mundo-nuevo-50084120/"
-          },
-          serviceWorkerPath: "sw.js"
-        });
-      } catch (error) {
-        console.error("Could not initialize notifications:", error);
-      }
-    });
-  </script>
 </head>
 
 <body>
@@ -157,7 +139,7 @@
         </div>
 
         <div class="digitalOfficeContent">
-          <span class="digitalOfficeBadge">VIDHWAAN DIGITAL OFFICE</span>
+          <span class="digitalOfficeBadge">VIDHWAAN AG DIGITAL OFFICE</span>
 
           <h2 id="digitalOfficeHeading">Digital Ideas. Real Solutions.</h2>
 
