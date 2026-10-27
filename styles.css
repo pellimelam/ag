@@ -191,12 +191,16 @@ a {
   font-size: 14px;
 }
 
+
 .results {
   display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
+  grid-template-columns: minmax(0, 1fr);
   gap: 14px;
-  margin: 20px 0 38px;
+  width: 100%;
+  max-width: 760px;
+  margin: 20px auto 38px;
 }
+
 
 .results[hidden],
 .emptyState[hidden],
