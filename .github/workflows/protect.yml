@@ -1,0 +1,88 @@
+name: Protect Frontend
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: protect-frontend
+  cancel-in-progress: false
+
+jobs:
+  protect:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+        
+
+      - name: Install Dependencies
+        run: npm install
+
+      - name: Verify Project Files
+        run: |
+          set -e
+
+          test -f package.json
+          test -f scripts/protect.js
+
+          test -f index.html
+          test -f app.js
+          test -f market.html
+          test -f market.js
+          test -f market.css
+          test -f search.js
+          test -f main.css
+          test -f styles.css
+
+      - name: Run Protection Pipeline
+        run: npm run protect
+
+      - name: Verify Output Files
+        run: |
+          set -e
+
+          test -f index.html
+          test -f app.js
+          test -f market.html
+          test -f market.js
+          test -f market.css
+          test -f search.js
+          test -f main.css
+          test -f styles.css
+
+      - name: Show Repository Status
+        run: |
+          echo "Repository Status"
+          git status
+
+          echo
+          echo "Changed Files"
+          git diff --stat || true
+
+      - name: Commit Changes
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+
+          git add -A
+
+          if git diff --cached --quiet; then
+            echo "No changes detected."
+            exit 0
+          fi
+
+          git commit -m "Optimize frontend assets"
+
+      - name: Push Changes
+        run: git push
