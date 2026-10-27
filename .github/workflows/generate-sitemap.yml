@@ -1,0 +1,277 @@
+
+name: Generate Argentina Sitemap
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - main
+    paths-ignore:
+      - sitemap.xml
+  schedule:
+    - cron: "30 0 * * *"
+
+permissions:
+  contents: write
+
+concurrency:
+  group: argentina-sitemap
+  cancel-in-progress: false
+
+jobs:
+  generate-sitemap:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v5
+        with:
+          fetch-depth: 0
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v5
+        with:
+          node-version: 24
+
+      - name: Generate Sitemap
+        shell: bash
+        run: |
+          set -euo pipefail
+
+          node <<'NODE'
+          const fs = require("node:fs");
+          const path = require("node:path");
+
+          const ROOT = process.cwd();
+          const BASE_URL = "https://argentina.vidhwaan.com";
+          const SITEMAP_PATH = path.join(ROOT, "sitemap.xml");
+
+          function escapeXml(value) {
+            return String(value)
+              .replace(/&/g, "&amp;")
+              .replace(/</g, "&lt;")
+              .replace(/>/g, "&gt;")
+              .replace(/"/g, "&quot;")
+              .replace(/'/g, "&apos;");
+          }
+
+          function isLocalityDirectory(directory) {
+            const indexPath = path.join(
+              directory,
+              "index.html"
+            );
+
+            const manifestPath = path.join(
+              directory,
+              "manifest.json"
+            );
+
+            const workerPath = path.join(
+              directory,
+              "sw.js"
+            );
+
+            if (
+              !fs.existsSync(indexPath) ||
+              !fs.existsSync(manifestPath) ||
+              !fs.existsSync(workerPath)
+            ) {
+              return false;
+            }
+
+            try {
+              const html = fs.readFileSync(
+                indexPath,
+                "utf8"
+              );
+
+              const manifest = JSON.parse(
+                fs.readFileSync(
+                  manifestPath,
+                  "utf8"
+                )
+              );
+
+              return (
+                /<meta\s+[^>]*name=["']locality-folder["']/i
+                  .test(html) &&
+                manifest &&
+                typeof manifest === "object"
+              );
+            } catch (error) {
+              console.warn(
+                `Skipping ${path.basename(directory)}: ${error.message}`
+              );
+
+              return false;
+            }
+          }
+
+          const urls = new Set([
+            `${BASE_URL}/`
+          ]);
+
+          const entries = fs.readdirSync(
+            ROOT,
+            { withFileTypes: true }
+          );
+
+          for (const entry of entries) {
+            if (!entry.isDirectory()) continue;
+
+            if (
+              entry.name.startsWith(".") ||
+              entry.name === "node_modules"
+            ) {
+              continue;
+            }
+
+            const directory = path.join(
+              ROOT,
+              entry.name
+            );
+
+            if (!isLocalityDirectory(directory)) {
+              continue;
+            }
+
+            const indexPath = path.join(
+              directory,
+              "index.html"
+            );
+
+            const html = fs.readFileSync(
+              indexPath,
+              "utf8"
+            );
+
+            const canonicalMatch = html.match(
+              /<link\s+[^>]*rel=["']canonical["'][^>]*href=["']([^"']+)["']/i
+            );
+
+            let url;
+
+            if (canonicalMatch) {
+              try {
+                const canonical = new URL(
+                  canonicalMatch[1],
+                  `${BASE_URL}/`
+                );
+
+                if (
+                  canonical.protocol !== "https:" ||
+                  canonical.hostname !== "argentina.vidhwaan.com"
+                ) {
+                  console.warn(
+                    `Skipping invalid canonical URL in ${entry.name}`
+                  );
+                  continue;
+                }
+
+                url = canonical.href;
+              } catch {
+                console.warn(
+                  `Skipping invalid canonical URL in ${entry.name}`
+                );
+                continue;
+              }
+            } else {
+              url = `${BASE_URL}/${encodeURIComponent(entry.name)}/`;
+            }
+
+            urls.add(url);
+          }
+
+          const sortedUrls = [...urls].sort(
+            (a, b) => {
+              if (a === `${BASE_URL}/`) return -1;
+              if (b === `${BASE_URL}/`) return 1;
+              return a.localeCompare(b);
+            }
+          );
+
+          const xml = [
+            '<?xml version="1.0" encoding="UTF-8"?>',
+            '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">',
+            ...sortedUrls.map(url =>
+              `  <url><loc>${escapeXml(url)}</loc></url>`
+            ),
+            '</urlset>',
+            ''
+          ].join("\n");
+
+          fs.writeFileSync(
+            SITEMAP_PATH,
+            xml,
+            "utf8"
+          );
+
+          console.log(
+            `Generated sitemap.xml with ${sortedUrls.length} URLs.`
+          );
+          console.log(
+            `Locality portals: ${sortedUrls.length - 1}`
+          );
+          NODE
+
+      - name: Verify Sitemap
+        shell: bash
+        run: |
+          set -euo pipefail
+
+          test -s sitemap.xml
+
+          node <<'NODE'
+          const fs = require("node:fs");
+
+          const xml = fs.readFileSync(
+            "sitemap.xml",
+            "utf8"
+          );
+
+          if (
+            !xml.startsWith('<?xml version="1.0" encoding="UTF-8"?>') ||
+            !xml.includes("<urlset ") ||
+            !xml.includes("</urlset>")
+          ) {
+            throw new Error("Sitemap XML structure is invalid.");
+          }
+
+          const urls = [
+            ...xml.matchAll(/<loc>(.*?)<\/loc>/g)
+          ].map(match => match[1]);
+
+          if (urls.length === 0) {
+            throw new Error("Sitemap contains no URLs.");
+          }
+
+          if (
+            !urls.includes("https://argentina.vidhwaan.com/")
+          ) {
+            throw new Error("Homepage URL is missing.");
+          }
+
+          if (urls.length !== new Set(urls).size) {
+            throw new Error("Duplicate URLs found.");
+          }
+
+          console.log(`Verified ${urls.length} sitemap URLs.`);
+          NODE
+
+      - name: Commit and Push Sitemap
+        shell: bash
+        run: |
+          set -euo pipefail
+
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+
+          git add sitemap.xml
+
+          if git diff --cached --quiet; then
+            echo "Sitemap is already up to date."
+            exit 0
+          fi
+
+          git commit -m "Generate Argentina sitemap"
+          git push
