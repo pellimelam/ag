@@ -1,0 +1,418 @@
+
+[
+  {
+    "id": "vidhwaan-business",
+    "name": "Vidhwaan Business",
+    "category": "Business Services",
+    "badge": "Our Business Platform",
+    "description": "Vidhwaan Business helps you launch and grow your business digitally. Create e-commerce apps, business websites, mobile apps, and other digital business solutions tailored to your needs.",
+    "url": "https://business.vidhwaan.com",
+    "icon": "https://business.vidhwaan.com/logo.png",
+    "featured": false
+  },
+  {
+    "id": "vidhai",
+    "name": "VidhAI",
+    "category": "AI Services",
+    "badge": "Our AI Team",
+    "description": "Turn your ideas into real projects with our AI team. Submit your project requirements and budget to get AI solutions, business automation, websites, mobile apps, and software development services tailored to your needs.",
+    "url": "https://vidhai.vidhwaan.com",
+    "icon": "https://vidhai.vidhwaan.com/icons/icon-512.png",
+    "featured": false
+  },
+  {
+    "id": "neet",
+    "name": "VIDHWAAN NEET",
+    "category": "Education",
+    "badge": "365-Day NEET Preparation",
+    "description": "A 365-day NEET preparation app aligned with the syllabus. Strengthen your NEET preparation with daily concepts, explanations, and practice MCQs.",
+    "url": "https://neet.vidhwaan.com",
+    "icon": "https://neet.vidhwaan.com/icons/logo.png",
+    "featured": false
+  },
+  {
+    "id": "kidlab",
+    "name": "KidLab",
+    "category": "Science & Learning",
+    "badge": "Interactive Science App",
+    "description": "Interactive science learning missions, future-focused quizzes, visual explanations, and engaging educational experiences designed to make learning fun for students.",
+    "url": "https://villagekidlab.vidhwaan.com",
+    "icon": "https://villagekidlab.vidhwaan.com/icons/logo2.png",
+    "featured": false
+  },
+  {
+    "id": "calculator",
+    "name": "VIDHWAAN Calculator",
+    "category": "Useful Tools",
+    "badge": "Smart Calculator",
+    "description": "Easily perform everyday calculations, percentages, discounts, scientific calculations, and many other useful calculations.",
+    "url": "https://calculator.vidhwaan.com",
+    "icon": "https://calculator.vidhwaan.com/icons/logo.png",
+    "featured": false
+  },
+  {
+    "id": "ai-writer",
+    "name": "VIDHWAAN AI Writer",
+    "category": "AI Services",
+    "badge": "AI-Powered Content Creation",
+    "description": "Create professional blogs, articles, social media posts, emails, and business content with AI. Designed for students, content creators, professionals, and businesses seeking a simple and intelligent writing experience.",
+    "url": "https://writer.vidhwaan.com",
+    "icon": "https://writer.vidhwaan.com/assets/icons/icon-512.png",
+    "featured": false
+  },
+  {
+    "id": "billwaan",
+    "name": "Billwaan App",
+    "category": "Business",
+    "badge": "Bills & Invoices",
+    "description": "Create bills, invoices, estimates, quotations, receipts, and proforma invoices. Save, print, and share professional PDFs. Suitable for businesses, shops, freelancers, and professionals.",
+    "url": "https://bill.vidhwaan.com",
+    "icon": "https://bill.vidhwaan.com/icons/icon-512.png",
+    "featured": false
+  },
+  {
+    "id": "quotes",
+    "name": "Quotes",
+    "category": "Inspiration",
+    "badge": "Daily Inspiration",
+    "description": "Discover inspiring quotes, powerful thoughts, and premium content designed to provide daily motivation and inspiration.",
+    "url": "https://quotes.vidhwaan.com",
+    "icon": "https://quotes.vidhwaan.com/icons/icon-512.png",
+    "featured": false
+  },
+  {
+    "id": "code-notes",
+    "name": "Code & Notes",
+    "category": "Productivity",
+    "badge": "For Students & Developers",
+    "description": "Write notes, save ideas, practice coding, store code snippets, and organize study materials in one place. Designed for students, developers, and lifelong learners.",
+    "url": "https://apps.vidhwaan.com/",
+    "icon": "https://utukur.vidhwaan.com/icons/dev.png",
+    "featured": false
+  },
+  {
+    "id": "clock",
+    "name": "VIDHWAAN Clock",
+    "category": "Time",
+    "badge": "Smart Time App",
+    "description": "Easily use digital time, live clock, stopwatch, timer, alarm, and other useful time tools.",
+    "url": "https://clock.vidhwaan.com",
+    "icon": "https://clock.vidhwaan.com/icons/logo.png",
+    "featured": false
+  },
+  {
+    "id": "vidhwaan-time",
+    "name": "VIDHWAAN Time",
+    "category": "Time",
+    "badge": "Next-Generation Time System",
+    "description": "Experience the VIDHWAAN Time System through beautifully designed analog and digital clocks. A real-time clock experience designed for everyday life and future smart devices.",
+    "url": "https://time.vidhwaan.com",
+    "icon": "https://time.vidhwaan.com/icons/icon-512.png",
+    "featured": false
+  },
+  {
+    "id": "ccl",
+    "name": "CCL",
+    "category": "Sports",
+    "badge": "Circle Cricket League",
+    "description": "The official Circle Cricket League platform. Create your player card, register as a player, and explore the Circle 6 (C6) and Circle 12 (C12) formats. Take a new sport born from a village to the world.",
+    "url": "https://ccl.vidhwaan.com/",
+    "icon": "https://ccl.vidhwaan.com/icons/icon-512.png",
+    "featured": false
+  },
+  {
+    "id": "app-store",
+    "name": "VIDHWAAN App Store",
+    "category": "Vidhwaan Apps",
+    "badge": "All Vidhwaan Apps in One Place",
+    "description": "The official app store for accessing Vidhwaan apps in one place. Easily discover and access the Vidhwaan app you need.",
+    "url": "https://store.vidhwaan.com",
+    "icon": "https://store.vidhwaan.com/icons/logo.png",
+    "featured": false
+  },
+  {
+    "id": "vidhwaan-notifications",
+    "name": "VIDHWAAN Notifications",
+    "category": "Vidhwaan Information",
+    "badge": "Vidhwaan Announcements",
+    "description": "Stay updated with important Vidhwaan announcements, new apps and services, business opportunities, business proposals, special programs, and other official information in one place.",
+    "url": "https://vidhwaan.com/notifications",
+    "icon": "https://vidhwaan.com/icons1/logo.png",
+    "featured": true
+  },
+  {
+    "id": "argentina-gov",
+    "name": "Argentina Government Portal",
+    "category": "Government Services",
+    "badge": "Official National Government Portal",
+    "description": "Access official information, public services, procedures, and government resources of the Argentine Republic.",
+    "url": "https://www.argentina.gob.ar/",
+    "icon": "https://utukur.vidhwaan.com/icons/gov.png"
+  },
+  {
+    "id": "mi-argentina",
+    "name": "Mi Argentina",
+    "category": "Digital Government Services",
+    "badge": "Official Digital Identity and Services",
+    "description": "Access supported digital documents, personal records, appointments, and government services through Argentina’s official digital platform.",
+    "url": "https://www.argentina.gob.ar/miargentina",
+    "icon": "https://utukur.vidhwaan.com/icons/gov.png"
+  },
+  {
+    "id": "renaper-dni",
+    "name": "DNI and Identity Documents",
+    "category": "Identity Services",
+    "badge": "RENAPER",
+    "description": "Official information about Argentina’s National Registry of Persons and procedures for the Documento Nacional de Identidad (DNI). Check the official requirements and availability before starting a procedure.",
+    "url": "https://www.argentina.gob.ar/interior/renaper",
+    "icon": "https://utukur.vidhwaan.com/icons/gov.png"
+  },
+  {
+    "id": "arca",
+    "name": "ARCA Tax Services",
+    "category": "Taxes and Revenue",
+    "badge": "Official Tax Agency",
+    "description": "Access Argentina’s tax and customs services, registrations, tax accounts, and related procedures through the Agencia de Recaudación y Control Aduanero (ARCA).",
+    "url": "https://www.arca.gob.ar/",
+    "icon": "https://utukur.vidhwaan.com/icons/gov.png"
+  },
+  {
+    "id": "anses",
+    "name": "ANSES Social Security Services",
+    "category": "Social Security and Benefits",
+    "badge": "Official Social Security Agency",
+    "description": "Access official information and online procedures related to social security, pensions, family allowances, and other ANSES benefits.",
+    "url": "https://www.anses.gob.ar/",
+    "icon": "https://utukur.vidhwaan.com/icons/gov.png"
+  },
+  {
+    "id": "argentina-health",
+    "name": "National Health Services",
+    "category": "Health Services",
+    "badge": "Ministry of Health",
+    "description": "Find official national health information, public health guidance, programs, and links to health-related services in Argentina. Local emergency numbers and care availability may vary by jurisdiction.",
+    "url": "https://www.argentina.gob.ar/salud",
+    "icon": "https://utukur.vidhwaan.com/icons/gov.png"
+  },
+  {
+    "id": "argentina-education",
+    "name": "Education Services",
+    "category": "Education",
+    "badge": "Official Education Information",
+    "description": "Access official national education information, programs, and resources. School and university administration may also depend on provincial or local authorities.",
+    "url": "https://www.argentina.gob.ar/educacion",
+    "icon": "https://utukur.vidhwaan.com/icons/gov.png"
+  },
+  {
+    "id": "driving-licence",
+    "name": "National Driving Licence Information",
+    "category": "Transport Services",
+    "badge": "Official Government Procedure",
+    "description": "Review official requirements and procedures for obtaining the National Driving Licence. Issuance and appointments involve the relevant authorised local centre.",
+    "url": "https://www.argentina.gob.ar/servicio/obtener-la-licencia-nacional-de-conducir",
+    "icon": "https://utukur.vidhwaan.com/icons/gov.png"
+  },
+  {
+    "id": "consumer-protection",
+    "name": "Consumer Protection Claims",
+    "category": "Consumer Protection",
+    "badge": "Official Consumer Complaint Service",
+    "description": "Learn how to submit a consumer complaint through Argentina’s Federal Consumer Protection process. The complaint is routed to the competent authority as appropriate.",
+    "url": "https://www.argentina.gob.ar/servicio/iniciar-un-reclamo-ante-defensa-del-consumidor",
+    "icon": "https://utukur.vidhwaan.com/icons/gov.png"
+  },
+  {
+    "id": "ar-emergency-911",
+    "title": "General Emergency Number",
+    "number": "911",
+    "icon": "🚨",
+    "category": "Emergency",
+    "description": "Number: 911. Argentina’s national emergency line for requesting police presence or an emergency ambulance. Tell the operator your exact location."
+  },
+  {
+    "id": "ar-fire-100",
+    "title": "Firefighters",
+    "number": "100",
+    "icon": "🚒",
+    "category": "Emergency",
+    "description": "Number: 100. Call for fire emergencies. Use the official emergency directory for current guidance."
+  },
+  {
+    "id": "ar-civil-defence-103",
+    "title": "Civil Defence",
+    "number": "103",
+    "icon": "🆘",
+    "category": "Emergency",
+    "description": "Number: 103. Assistance related to disasters and incidents such as floods, collapses, and other civil emergencies."
+  },
+  {
+    "id": "ar-environment-105",
+    "title": "Environmental Emergency Reports",
+    "number": "105",
+    "icon": "🌿",
+    "category": "Emergency",
+    "description": "Number: 105. Official number listed for reporting potential environmental catastrophes."
+  },
+  {
+    "id": "ar-nautical-106",
+    "title": "Nautical Emergencies",
+    "number": "106",
+    "icon": "🛟",
+    "category": "Emergency",
+    "description": "Number: 106. Request assistance for emergencies on Argentine rivers, lakes, or coastal waters."
+  },
+  {
+    "id": "ar-medical-107",
+    "title": "SAME Medical Emergencies",
+    "number": "107",
+    "icon": "🚑",
+    "category": "Emergency",
+    "description": "Number: 107. Medical emergency ambulance number in the City of Buenos Aires and localities in Buenos Aires Province. Availability differs elsewhere; check the local emergency number."
+  },
+  {
+    "id": "ar-gender-violence-144",
+    "title": "Gender-Based Violence Support Line",
+    "number": "144",
+    "icon": "🫶",
+    "category": "Public Assistance",
+    "description": "Number: 144. Free support, information, and guidance for people experiencing gender-based violence. In immediate danger, call 911."
+  },
+  {
+    "id": "ar-child-102",
+    "title": "Children and Adolescents Support Line",
+    "number": "102",
+    "icon": "🧒",
+    "category": "Public Assistance",
+    "description": "Number: 102. Free, confidential guidance concerning the rights and protection of children and adolescents."
+  },
+  {
+    "id": "ar-suicide-prevention-135",
+    "title": "Suicide Prevention Line",
+    "number": "135",
+    "icon": "💙",
+    "category": "Mental Health Support",
+    "description": "Number: 135. Support line listed by the national government for emotional crises and suicide prevention. If there is immediate danger, call 911."
+  },
+  {
+    "id": "ar-family-sexual-violence-137",
+    "title": "Family and Sexual Violence Support",
+    "number": "137",
+    "icon": "🛡️",
+    "category": "Public Assistance",
+    "description": "Number: 137. Assistance for people affected by or aware of family or sexual violence; the official national government lists this line as available 24 hours."
+  },
+  {
+    "id": "ar-missing-children-142",
+    "title": "Missing Children Hotline",
+    "number": "142",
+    "icon": "🔎",
+    "category": "Public Assistance",
+    "description": "Number: 142. Report a missing child or provide information that may help locate a missing minor; the official government lists this line as available 24 hours."
+  },
+  {
+    "id": "ar-trafficking-145",
+    "title": "Human Trafficking and Exploitation Hotline",
+    "number": "145",
+    "icon": "🛡️",
+    "category": "Public Assistance",
+    "description": "Number: 145. Report suspected human trafficking or exploitation. The national government lists this line as free and available 24 hours across Argentina."
+  },
+  {
+    "id": "ar-institutional-violence-134",
+    "title": "Institutional Violence Reports",
+    "number": "134",
+    "icon": "⚖️",
+    "category": "Public Assistance",
+    "description": "Number: 134. National Ministry of Security line for reporting institutional violence or matters within its stated jurisdiction."
+  },
+  {
+    "id": "ar-sedronar-141",
+    "title": "SEDRONAR Support Line",
+    "number": "141",
+    "icon": "🤝",
+    "category": "Health and Support",
+    "description": "Number: 141. Free, anonymous, nationwide, 24-hour guidance and support for problematic substance use and related concerns."
+  },
+  {
+    "id": "ar-mental-health-0800",
+    "title": "National Mental Health Urgent Support Line",
+    "number": "0800-999-0091",
+    "icon": "🧠",
+    "category": "Mental Health Support",
+    "description": "Number: 0800-999-0091. Free, confidential, nationwide mental health urgent-support and guidance line, available 24 hours every day."
+  },
+  {
+    "id": 1,
+    "badge": "OFFICIAL",
+    "time": "GLOBAL NETWORK",
+    "title": "Vidhwaan",
+    "description": "Village Based Global Technology Company, Official digital ecosystem connecting Vidhwaan platforms, technology products, AI systems, Cultural initiatives, community projects and future innovations under one unified network.",
+    "url": "https://vidhwaan.com"
+  },
+  {
+    "id": 2,
+    "badge": "TECHNOLOGY",
+    "time": "GLOBAL",
+    "title": "Vidhwaan Technologies",
+    "description": "Modern digital infrastructure, automation systems, cloud-native platforms and scalable software solutions built for startups, enterprises and communities worldwide.",
+    "url": "https://tech.vidhwaan.com"
+  },
+  {
+    "id": 3,
+    "badge": "AI ECOSYSTEM",
+    "time": "FLAGSHIP",
+    "title": "Vidhwaan AI",
+    "description": "Advanced AI platform powering intelligent assistants, automation systems, productivity tools, knowledge engines and next-generation digital experiences across the Vidhwaan ecosystem.",
+    "url": "https://ai.vidhwaan.com"
+  },
+  {
+    "id": 4,
+    "badge": "BUSINESS PLATFORM",
+    "time": "BUSINESS",
+    "title": "Vidhwaan Business",
+    "description": "Digital business platform that helps businesses create professional websites and ecommerce applications through simple, modern and accessible technology.",
+    "url": "https://business.vidhwaan.com"
+  },
+  {
+    "id": 5,
+    "badge": "FOUNDATION",
+    "time": "SOCIAL IMPACT",
+    "title": "Vidhwaan Foundation",
+    "description": "Technology-driven social initiatives focused on accessibility, education, inclusion and community empowerment.",
+    "url": "https://foundation.vidhwaan.com"
+  },
+  {
+    "id": 6,
+    "badge": "AI SERVICES",
+    "time": "SMART AUTOMATION",
+    "title": "VidhAI",
+    "description": "AI-powered automation, intelligent business solutions, website development, workflow optimization and modern digital transformation services.",
+    "url": "https://vidhai.vidhwaan.com"
+  },
+  {
+    "id": 7,
+    "badge": "MARKETPLACE",
+    "time": "Market",
+    "title": "Online Shop",
+    "description": "Digital commerce platform connecting local products, services and village businesses through a modern village-first marketplace ecosystem.",
+    "url": "https://market.vidhwaan.com"
+  },
+  {
+    "type": "video",
+    "title": "Vidhwaan Ecommerce",
+    "youtube": "https://youtube.com/shorts/vbKKKwyrazM?si=EuTQHsb7JtQEmtnc",
+    "description": "Create your own professional Ecommerce app without any technical knowledge!"
+  },
+  {
+    "type": "video",
+    "title": "Vidhwaan Global Website",
+    "youtube": "https://youtube.com/shorts/XzPM77G7k7k?si=bxUJY1f3TRzTYU7Y",
+    "description": "Create your own professional Global Website without any technical knowledge!"
+  },
+  {
+    "type": "video",
+    "title": "Vidhwaan NEET",
+    "youtube": "https://youtube.com/shorts/yJllgrJpHGI?si=JgHT4lJMW2vk1f2o",
+    "description": "A systematic 365-day daily preparation plan for your NEET journey!"
+  }
+]
