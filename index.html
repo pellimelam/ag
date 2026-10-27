@@ -1,0 +1,224 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="theme-color" content="#ffffff">
+  <meta name="color-scheme" content="light">
+
+  <title>Argentina Localities | Argentina Locality Search Engine</title>
+
+  <meta name="description" content="Search localities across Argentina. Find locality names, provinces, departments, agglomerations and local government information in one place.">
+  <meta name="keywords" content="Argentina localities, Argentina locality search, localidades de Argentina, Argentina province directory, Argentina department directory, locality database, Vidhwaan">
+  <meta name="author" content="VIDHWAAN">
+  <meta name="publisher" content="VIDHWAAN">
+  <meta name="robots" content="index,follow,max-image-preview:large">
+  <meta name="application-name" content="Argentina Localities">
+
+  <link rel="canonical" href="https://argentina.vidhwaan.com/">
+
+  <meta property="og:type" content="website">
+  <meta property="og:site_name" content="Argentina Localities">
+  <meta property="og:title" content="Argentina Localities | Vidhwaan">
+  <meta property="og:description" content="Search Argentina localities by locality name, department, province and official locality code.">
+  <meta property="og:url" content="https://argentina.vidhwaan.com/">
+  <meta property="og:image" content="https://argentina.vidhwaan.com/icons/icon-512.png">
+  <meta property="og:locale" content="en_US">
+
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Argentina Localities | Vidhwaan">
+  <meta name="twitter:description" content="Search localities across Argentina by name, province, department or official code.">
+  <meta name="twitter:image" content="https://argentina.vidhwaan.com/icons/icon-512.png">
+
+  <link rel="manifest" href="/manifest.json">
+  <link rel="icon" href="/favicon.ico" sizes="any">
+  <link rel="apple-touch-icon" href="/icons/icon-192.png">
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+
+  <link rel="stylesheet" href="styles.css">
+
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "Organization",
+    "name": "VIDHWAAN",
+    "url": "https://vidhwaan.com/",
+    "sameAs": ["https://vidhwaan.com/"]
+  }
+  </script>
+
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "WebSite",
+    "name": "Argentina Localities",
+    "url": "https://argentina.vidhwaan.com/",
+    "description": "Search localities across Argentina by locality, department, province and official code.",
+    "inLanguage": ["en", "es"],
+    "publisher": {
+      "@type": "Organization",
+      "name": "VIDHWAAN",
+      "url": "https://vidhwaan.com/"
+    },
+    "potentialAction": {
+      "@type": "SearchAction",
+      "target": "https://argentina.vidhwaan.com/?q={search_term_string}",
+      "query-input": "required name=search_term_string"
+    }
+  }
+  </script>
+</head>
+
+<body>
+  <main class="page">
+
+    <section class="hero">
+      <img
+        src="/icons/logo.png"
+        alt="Vidhwaan"
+        class="heroLogo"
+        width="110"
+        height="110"
+        fetchpriority="high"
+      >
+
+      <h1 class="heroTitle">Argentina Localities</h1>
+
+      <p class="heroSubtitle">
+        Search localities, departments and provinces across Argentina
+      </p>
+    </section>
+
+    <section class="searchSection">
+      <form id="searchForm" autocomplete="off">
+        <div class="searchBox">
+          <svg
+            class="searchIcon"
+            xmlns="http://www.w3.org/2000/svg"
+            viewBox="0 0 24 24"
+            fill="none"
+            aria-hidden="true"
+          >
+            <circle
+              cx="11"
+              cy="11"
+              r="7"
+              stroke="currentColor"
+              stroke-width="2"
+            ></circle>
+            <path
+              d="M20 20L17 17"
+              stroke="currentColor"
+              stroke-width="2"
+              stroke-linecap="round"
+            ></path>
+          </svg>
+
+          <input
+            id="searchInput"
+            type="search"
+            placeholder="Search locality, department, province or code..."
+            aria-label="Search Argentina localities"
+            spellcheck="false"
+            maxlength="100"
+            enterkeyhint="search"
+          >
+        </div>
+
+        <button id="searchButton" type="submit">
+          Search Localities
+        </button>
+      </form>
+    </section>
+
+    <section
+      id="statusArea"
+      class="statusArea"
+      aria-live="polite"
+      role="status"
+    >
+      Loading the Argentina locality directory...
+    </section>
+
+    <section
+      id="results"
+      class="results"
+      hidden
+      aria-live="polite"
+    ></section>
+
+    <section id="emptyState" class="emptyState" hidden>
+      <h2>No Matching Localities Found</h2>
+      <p>
+        Check the spelling or try another locality, department,
+        province or official locality code.
+      </p>
+    </section>
+
+    <section class="info">
+      <h2>Explore Argentina's Localities</h2>
+      <p>
+        Search the locality directory using a locality name,
+        department, province, agglomeration, local government
+        name or official code. Results are based on the
+        Argentina locality dataset available on this website.
+      </p>
+    </section>
+
+    <section class="tips">
+      <h2>Search Tips</h2>
+      <ul>
+        <li>Enter at least 2 characters.</li>
+        <li>Search by locality, department or province.</li>
+        <li>You can also search using an official locality code.</li>
+        <li>Up to 50 matching results are displayed.</li>
+        <li>Open a result to visit its locality page when available.</li>
+      </ul>
+    </section>
+
+    <footer class="footer">
+      <img
+        src="/icons/logo.png"
+        alt="VIDHWAAN"
+        class="footerLogo"
+        width="64"
+        height="64"
+        loading="lazy"
+      >
+
+      <h2>Argentina Localities</h2>
+
+      <p>Argentina Locality Search Engine</p>
+
+      <div class="footerDivider"></div>
+
+      <p class="footerDescription">
+        Discover localities across Argentina with a searchable
+        directory of province, department, locality and local
+        government information.
+      </p>
+
+      <div class="footerMeta">
+        <span>Argentina</span>
+        <span>•</span>
+        <span>Powered by VIDHWAAN</span>
+      </div>
+
+      <p class="copyright">
+        © 2026 VIDHWAAN. All Rights Reserved.
+      </p>
+
+      <p class="copyright">
+        Vidhwaan Village Based Global Technology Company
+      </p>
+    </footer>
+
+  </main>
+
+  <script src="search.js" defer></script>
+</body>
+</html>
