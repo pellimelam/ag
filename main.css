@@ -1,24 +1,36 @@
 
-/* VIDHWAAN Argentina Digital Directory — Responsive Global Tech Theme */
+/* =========================================================
+   VIDHWAAN — ARGENTINA DIGITAL DIRECTORY
+   Premium Global Technology Company Theme
+   White + Royal Blue + Elegant Gold
+   Responsive Desktop, Tablet and Mobile
+   ========================================================= */
+
 :root {
   color-scheme: light;
   --primary: #174A86;
-  --primary-dark: #10345E;
-  --primary-light: #EAF2FC;
+  --primary-dark: #12365F;
+  --primary-light: #EDF4FD;
   --gold: #C49A3A;
-  --gold-light: #F7F0DE;
-  --background: #F5F8FC;
+  --gold-light: #FBF5E7;
+  --background: #F9FAFC;
   --surface: #FFFFFF;
-  --text: #192B42;
-  --muted: #64748B;
-  --border: #E1E8F0;
+  --text: #203047;
+  --muted: #627187;
+  --border: #E3E9F1;
   --success: #16865B;
-  --shadow: 0 8px 28px rgba(23, 54, 91, .075);
+  --shadow: 0 8px 26px rgba(28, 55, 90, .06);
   --radius: 18px;
-  --max-width: 1180px;
+  --max-width: 1240px;
 }
 
-* { box-sizing: border-box; }
+/* RESET */
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
 
 html {
   scroll-behavior: smooth;
@@ -32,26 +44,58 @@ body {
   color: var(--text);
   font-family: Inter, "Segoe UI", Roboto, Arial, sans-serif;
   font-size: 15px;
-  line-height: 1.6;
+  line-height: 1.65;
   -webkit-font-smoothing: antialiased;
 }
 
-img { display: block; max-width: 100%; }
-a { color: var(--primary); text-decoration: none; overflow-wrap: anywhere; }
-a:hover { color: var(--primary-dark); }
-button { font: inherit; }
-button, a { -webkit-tap-highlight-color: transparent; touch-action: manipulation; }
-[hidden] { display: none !important; }
+img {
+  display: block;
+  max-width: 100%;
+}
 
-/* Main page container */
+a {
+  color: var(--primary);
+  text-decoration: none;
+  overflow-wrap: anywhere;
+}
+
+a:hover {
+  color: var(--primary-dark);
+}
+
+button {
+  font: inherit;
+  -webkit-tap-highlight-color: transparent;
+}
+
+a {
+  -webkit-tap-highlight-color: transparent;
+  touch-action: manipulation;
+}
+
+[hidden] {
+  display: none !important;
+}
+
+:focus-visible {
+  outline: 3px solid var(--gold);
+  outline-offset: 3px;
+}
+
+/* MAIN PAGE */
+
 #app {
   width: 100%;
   max-width: var(--max-width);
+  min-width: 0;
   margin: 0 auto;
   padding: 24px 22px 40px;
 }
 
-/* Locality hero */
+/* =========================================================
+   LOCALITY HERO
+   ========================================================= */
+
 .heroSection {
   position: relative;
   display: grid;
@@ -60,15 +104,19 @@ button, a { -webkit-tap-highlight-color: transparent; touch-action: manipulation
   gap: clamp(20px, 4vw, 38px);
   width: 100%;
   min-width: 0;
-  margin: 0 0 28px;
+  margin: 0 0 30px;
   padding: clamp(24px, 4vw, 42px);
   overflow: hidden;
-  border: 1px solid #D8E5F5;
+  border: 1px solid #DFE8F4;
   border-top: 4px solid var(--gold);
   border-radius: 24px;
   background:
-    radial-gradient(ellipse at 95% 0%, rgba(196,154,58,.15), transparent 36%),
-    linear-gradient(135deg, #FFFFFF 0%, #EDF4FD 100%);
+    radial-gradient(
+      circle at 95% 5%,
+      rgba(196, 154, 58, .13),
+      transparent 34%
+    ),
+    linear-gradient(135deg, #FFFFFF, #F0F6FD);
   box-shadow: var(--shadow);
 }
 
@@ -81,7 +129,7 @@ button, a { -webkit-tap-highlight-color: transparent; touch-action: manipulation
   padding: 12px;
   border: 1px solid var(--border);
   border-radius: 24px;
-  background: #fff;
+  background: #FFFFFF;
 }
 
 .heroLogo {
@@ -90,7 +138,9 @@ button, a { -webkit-tap-highlight-color: transparent; touch-action: manipulation
   object-fit: contain;
 }
 
-.heroContent { min-width: 0; }
+.heroContent {
+  min-width: 0;
+}
 
 .heroBadge,
 .digitalOfficeBadge,
@@ -107,8 +157,8 @@ button, a { -webkit-tap-highlight-color: transparent; touch-action: manipulation
   color: #765719;
   font-size: 11px;
   font-weight: 800;
-  line-height: 1.4;
-  letter-spacing: .55px;
+  line-height: 1.45;
+  letter-spacing: .5px;
   overflow-wrap: anywhere;
 }
 
@@ -117,8 +167,8 @@ button, a { -webkit-tap-highlight-color: transparent; touch-action: manipulation
   color: var(--primary-dark);
   font-size: clamp(28px, 4vw, 43px);
   font-weight: 800;
-  line-height: 1.15;
-  letter-spacing: -.8px;
+  line-height: 1.2;
+  letter-spacing: -.7px;
   overflow-wrap: anywhere;
 }
 
@@ -127,15 +177,19 @@ button, a { -webkit-tap-highlight-color: transparent; touch-action: manipulation
   margin: 0;
   color: var(--muted);
   font-size: 16px;
+  line-height: 1.75;
   overflow-wrap: anywhere;
 }
 
-/* Sections and headings */
+/* =========================================================
+   SECTIONS AND HEADINGS
+   ========================================================= */
+
 .sectionBlock {
   display: block;
   width: 100%;
   min-width: 0;
-  margin: 0 0 32px;
+  margin: 0 0 34px;
   clear: both;
 }
 
@@ -154,8 +208,8 @@ button, a { -webkit-tap-highlight-color: transparent; touch-action: manipulation
   color: var(--primary-dark);
   font-size: clamp(20px, 2.8vw, 26px);
   font-weight: 800;
-  line-height: 1.3;
-  letter-spacing: -.35px;
+  line-height: 1.35;
+  letter-spacing: -.3px;
   overflow-wrap: anywhere;
 }
 
@@ -163,24 +217,29 @@ button, a { -webkit-tap-highlight-color: transparent; touch-action: manipulation
   position: absolute;
   bottom: 0;
   left: 0;
-  width: 55px;
+  width: 48px;
   height: 3px;
   border-radius: 10px;
-  background: var(--gold);
+  background: linear-gradient(90deg, var(--gold), #E4C77D);
   content: "";
 }
 
 .sectionDescription {
   max-width: 800px;
-  margin: 0 0 18px;
+  margin: 0 0 19px;
   color: var(--muted);
   font-size: 14px;
-  line-height: 1.65;
+  line-height: 1.75;
   overflow-wrap: anywhere;
 }
 
-/* Digital Office */
-.digitalOfficeSection { margin-bottom: 32px; }
+/* =========================================================
+   DIGITAL OFFICE
+   ========================================================= */
+
+.digitalOfficeSection {
+  margin-bottom: 34px;
+}
 
 .digitalOfficeCard {
   position: relative;
@@ -192,10 +251,16 @@ button, a { -webkit-tap-highlight-color: transparent; touch-action: manipulation
   min-width: 0;
   padding: clamp(20px, 3.5vw, 32px);
   overflow: hidden;
-  border: 1px solid #D5E2F2;
+  border: 1px solid #DFE7F1;
   border-top: 4px solid var(--gold);
-  border-radius: 20px;
-  background: #fff;
+  border-radius: 22px;
+  background:
+    radial-gradient(
+      circle at 100% 0%,
+      rgba(196, 154, 58, .08),
+      transparent 36%
+    ),
+    #FFFFFF;
   box-shadow: var(--shadow);
 }
 
@@ -205,7 +270,11 @@ button, a { -webkit-tap-highlight-color: transparent; touch-action: manipulation
   position: absolute;
   inset: 0;
   pointer-events: none;
-  background: radial-gradient(ellipse at 100% 0%, rgba(23,74,134,.055), transparent 43%);
+  background: radial-gradient(
+    ellipse at 100% 0%,
+    rgba(23, 74, 134, .045),
+    transparent 43%
+  );
 }
 
 .digitalOfficeLogoWrap {
@@ -219,7 +288,7 @@ button, a { -webkit-tap-highlight-color: transparent; touch-action: manipulation
   padding: 12px;
   border: 1px solid var(--border);
   border-radius: 20px;
-  background: #fff;
+  background: #FFFFFF;
 }
 
 .digitalOfficeLogo {
@@ -234,7 +303,9 @@ button, a { -webkit-tap-highlight-color: transparent; touch-action: manipulation
   min-width: 0;
 }
 
-.digitalOfficeBadge { margin-bottom: 10px; }
+.digitalOfficeBadge {
+  margin-bottom: 10px;
+}
 
 .digitalOfficeContent h2 {
   margin: 0 0 10px;
@@ -242,17 +313,20 @@ button, a { -webkit-tap-highlight-color: transparent; touch-action: manipulation
   color: var(--primary-dark);
   font-size: clamp(22px, 3vw, 29px);
   font-weight: 800;
-  line-height: 1.25;
+  line-height: 1.35;
   overflow-wrap: anywhere;
 }
 
-.digitalOfficeContent h2::after { display: none; }
+.digitalOfficeContent h2::after {
+  display: none;
+}
 
 .digitalOfficeDescription,
 .digitalOfficeContent p {
   margin: 0 0 12px;
   color: var(--muted);
   font-size: 14px;
+  line-height: 1.75;
   overflow-wrap: anywhere;
 }
 
@@ -267,19 +341,24 @@ button, a { -webkit-tap-highlight-color: transparent; touch-action: manipulation
   color: var(--primary);
   font-size: 14px;
   font-weight: 750;
+  line-height: 1.65;
   overflow-wrap: anywhere;
+  word-break: break-word;
 }
 
-.digitalOfficeActions,
-.cardButtons {
+.digitalOfficeActions {
   position: relative;
   display: flex;
   flex-wrap: wrap;
   align-items: center;
   gap: 10px;
   min-width: 0;
-  margin-top: 12px;
+  margin-top: 14px;
 }
+
+/* =========================================================
+   BUTTONS
+   ========================================================= */
 
 .digitalOfficeEmailBtn,
 .digitalOfficeWhatsappBtn,
@@ -288,21 +367,26 @@ button, a { -webkit-tap-highlight-color: transparent; touch-action: manipulation
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  min-height: 42px;
+  flex: 0 0 auto;
+  min-width: 0;
   max-width: 100%;
-  padding: 10px 16px;
+  min-height: 44px;
+  padding: 11px 17px;
   border: 1px solid var(--primary);
-  border-radius: 10px;
+  border-radius: 11px;
   background: var(--primary);
-  color: #fff;
+  color: #FFFFFF;
   font-size: 13px;
   font-weight: 750;
-  line-height: 1.35;
+  line-height: 1.4;
   text-align: center;
   text-decoration: none;
-  cursor: pointer;
   overflow-wrap: anywhere;
-  transition: transform .18s ease, background .18s ease;
+  cursor: pointer;
+  transition:
+    background .2s ease,
+    transform .2s ease,
+    box-shadow .2s ease;
 }
 
 .digitalOfficeWhatsappBtn {
@@ -314,13 +398,29 @@ button, a { -webkit-tap-highlight-color: transparent; touch-action: manipulation
 .digitalOfficeWhatsappBtn:hover,
 .launchButton:hover,
 .openCardBtn:hover {
-  transform: translateY(-1px);
-  color: #fff;
-  filter: brightness(.94);
+  transform: translateY(-2px);
+  color: #FFFFFF;
+  box-shadow: 0 5px 13px rgba(23, 54, 91, .12);
 }
 
-/* Featured App */
-.featuredSection { margin-top: 0; }
+.digitalOfficeEmailBtn:hover,
+.launchButton:hover,
+.openCardBtn:hover {
+  background: var(--primary-dark);
+}
+
+.digitalOfficeWhatsappBtn:hover {
+  background: #106B49;
+}
+
+/* =========================================================
+   FEATURED APP
+   ========================================================= */
+
+.featuredSection {
+  margin-top: 0;
+  margin-bottom: 36px;
+}
 
 .featuredCard {
   position: relative;
@@ -332,9 +432,16 @@ button, a { -webkit-tap-highlight-color: transparent; touch-action: manipulation
   min-width: 0;
   padding: clamp(20px, 3.5vw, 34px);
   overflow: hidden;
-  border: 1px solid #D6E3F3;
+  border: 1px solid #DCE6F3;
+  border-top: 3px solid var(--gold);
   border-radius: 22px;
-  background: linear-gradient(120deg, #fff, #F0F6FE);
+  background:
+    radial-gradient(
+      circle at 0% 100%,
+      rgba(196, 154, 58, .08),
+      transparent 38%
+    ),
+    linear-gradient(120deg, #FFFFFF, #F2F7FD);
   box-shadow: var(--shadow);
 }
 
@@ -347,9 +454,9 @@ button, a { -webkit-tap-highlight-color: transparent; touch-action: manipulation
   min-width: 0;
   min-height: 160px;
   padding: 20px;
-  border: 1px solid #E1E9F3;
+  border: 1px solid #E3EAF3;
   border-radius: 18px;
-  background: #fff;
+  background: #FFFFFF;
 }
 
 .featuredImageWrap img,
@@ -368,13 +475,16 @@ button, a { -webkit-tap-highlight-color: transparent; touch-action: manipulation
   min-width: 0;
 }
 
-.featuredContent .featuredBadge { margin-bottom: 10px; }
+.featuredContent .featuredBadge {
+  margin-bottom: 10px;
+}
 
 .featuredContent .linkEyebrow {
   margin: 0 0 6px;
   color: var(--primary);
   font-size: 12px;
   font-weight: 750;
+  overflow-wrap: anywhere;
 }
 
 .featuredContent h3 {
@@ -382,7 +492,7 @@ button, a { -webkit-tap-highlight-color: transparent; touch-action: manipulation
   color: var(--primary-dark);
   font-size: clamp(22px, 3vw, 30px);
   font-weight: 800;
-  line-height: 1.3;
+  line-height: 1.35;
   overflow-wrap: anywhere;
 }
 
@@ -390,10 +500,14 @@ button, a { -webkit-tap-highlight-color: transparent; touch-action: manipulation
   margin: 0 0 14px;
   color: var(--muted);
   font-size: 14px;
+  line-height: 1.75;
   overflow-wrap: anywhere;
 }
 
-/* Content grids */
+/* =========================================================
+   APP, GOVERNMENT, EMERGENCY, LINKS AND VIDEO GRIDS
+   ========================================================= */
+
 #appsGrid,
 #governmentGrid,
 #tollGrid,
@@ -402,10 +516,12 @@ button, a { -webkit-tap-highlight-color: transparent; touch-action: manipulation
   display: grid;
   grid-template-columns: repeat(3, minmax(0, 1fr));
   align-items: stretch;
-  gap: 17px;
+  gap: 18px;
   width: 100%;
   min-width: 0;
 }
+
+/* Directory cards */
 
 .directoryCard,
 .appCard,
@@ -419,47 +535,60 @@ button, a { -webkit-tap-highlight-color: transparent; touch-action: manipulation
   border: 1px solid var(--border);
   border-radius: var(--radius);
   background: var(--surface);
-  box-shadow: 0 4px 15px rgba(23,54,91,.04);
-  transition: transform .18s ease, box-shadow .18s ease, border-color .18s ease;
+  box-shadow: 0 4px 16px rgba(28, 55, 90, .035);
+  transition:
+    transform .2s ease,
+    box-shadow .2s ease,
+    border-color .2s ease;
 }
 
 .directoryCard:hover,
 .appCard:hover,
 .videoCard:hover {
-  transform: translateY(-2px);
-  border-color: #C5D7EE;
-  box-shadow: var(--shadow);
+  transform: translateY(-3px);
+  border-color: #C8D8EC;
+  box-shadow: 0 12px 28px rgba(28, 55, 90, .08);
 }
+
+/* Card content */
 
 .appInfo {
   position: relative;
   z-index: 1;
   display: flex;
+  flex: 1;
   flex-direction: column;
   align-items: flex-start;
-  flex: 1;
   min-width: 0;
-  padding: 18px;
+  padding: 19px;
 }
+
+/* Application icons */
 
 .directoryCardIdentity {
   display: flex;
   align-items: center;
   justify-content: center;
+  flex: 0 0 auto;
   width: 64px;
   height: 64px;
   margin: 0 0 14px;
   padding: 8px;
   overflow: hidden;
   border: 1px solid #E4EBF4;
-  border-radius: 16px;
-  background: #F4F7FC;
+  border-radius: 17px;
+  background: #F5F8FD;
 }
 
-.directoryCardIdentity img,
+.directoryCardIdentity img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+}
+
 .appIcon,
-.governmentIcon,
-.featuredImage {
+.governmentIcon {
   display: block;
   width: 100%;
   height: 100%;
@@ -476,17 +605,21 @@ button, a { -webkit-tap-highlight-color: transparent; touch-action: manipulation
   font-size: 28px;
 }
 
+/* Category and badges */
+
 .appTag {
   display: inline-flex;
+  align-items: center;
   max-width: 100%;
-  margin: 0 0 8px;
-  padding: 4px 9px;
+  margin: 0 0 9px;
+  padding: 5px 10px;
+  border: 1px solid #E5EDF8;
   border-radius: 999px;
   background: var(--primary-light);
-  color: var(--primary);
+  color: var(--primary-dark);
   font-size: 11px;
   font-weight: 750;
-  line-height: 1.4;
+  line-height: 1.45;
   overflow-wrap: anywhere;
 }
 
@@ -494,42 +627,56 @@ button, a { -webkit-tap-highlight-color: transparent; touch-action: manipulation
   display: inline-block;
   max-width: 100%;
   margin: 0 0 8px;
-  color: #80611D;
+  color: #89651E;
   font-size: 11px;
   font-weight: 750;
+  line-height: 1.5;
   overflow-wrap: anywhere;
 }
+
+/* Card titles and descriptions */
 
 .appInfo h3,
 .videoContent h3 {
   width: 100%;
-  margin: 0 0 8px;
+  margin: 0 0 9px;
   color: var(--primary-dark);
   font-size: 17px;
   font-weight: 800;
-  line-height: 1.35;
+  line-height: 1.45;
   overflow-wrap: anywhere;
+  word-break: normal;
 }
 
 .appInfo p,
 .videoContent p {
   width: 100%;
-  margin: 0 0 12px;
+  margin: 0 0 13px;
   color: var(--muted);
   font-size: 13px;
-  line-height: 1.6;
+  line-height: 1.75;
   overflow-wrap: anywhere;
+  word-break: normal;
 }
 
+/* Align buttons at the bottom of app cards */
+
 .cardButtons {
+  position: relative;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-start;
+  gap: 10px;
   width: 100%;
+  min-width: 0;
   margin-top: auto;
-  padding-top: 5px;
+  padding-top: 8px;
 }
 
 .cardButtons .launchButton,
 .cardButtons .openCardBtn {
   flex: 0 1 auto;
+  margin: 0;
 }
 
 .linkUnavailable {
@@ -538,22 +685,33 @@ button, a { -webkit-tap-highlight-color: transparent; touch-action: manipulation
   overflow-wrap: anywhere;
 }
 
-.governmentCard { border-top: 3px solid var(--primary); }
-.emergencyCard { border-top: 3px solid var(--success); }
-.vidhwaanLinkCard { border-top: 3px solid var(--gold); }
+/* Section-specific accents */
+
+.governmentCard {
+  border-top: 3px solid var(--primary);
+}
+
+.emergencyCard {
+  border-top: 3px solid var(--success);
+}
+
+.vidhwaanLinkCard {
+  border-top: 3px solid var(--gold);
+}
 
 .emergencyIcon {
   margin-bottom: 10px;
   color: var(--success);
   font-size: 27px;
-  line-height: 1.2;
+  line-height: 1.3;
 }
 
 .emergencyNumber {
   margin: 2px 0 10px;
-  color: var(--success);
+  color: #14784F;
   font-size: 19px;
   font-weight: 850;
+  line-height: 1.5;
   overflow-wrap: anywhere;
 }
 
@@ -562,9 +720,17 @@ button, a { -webkit-tap-highlight-color: transparent; touch-action: manipulation
   background: var(--success);
 }
 
-/* Videos: reserve player dimensions */
+.emergencyCallBtn:hover {
+  background: #106B49;
+}
+
+/* =========================================================
+   VIDEO PLAYER LAYOUT
+   ========================================================= */
+
 .videoPlayerWrap {
   position: relative;
+  flex: 0 0 auto;
   width: 100%;
   aspect-ratio: 16 / 9;
   overflow: hidden;
@@ -586,6 +752,7 @@ button, a { -webkit-tap-highlight-color: transparent; touch-action: manipulation
   justify-content: center;
   width: 100%;
   height: 100%;
+  margin: 0;
   padding: 0;
   overflow: hidden;
   border: 0;
@@ -610,13 +777,16 @@ button, a { -webkit-tap-highlight-color: transparent; touch-action: manipulation
   padding-left: 4px;
   border: 2px solid rgba(255,255,255,.85);
   border-radius: 50%;
-  background: rgba(16,52,94,.88);
-  color: #fff;
+  background: rgba(18, 54, 95, .9);
+  color: #FFFFFF;
   font-size: 22px;
   box-shadow: 0 4px 20px rgba(0,0,0,.2);
+  pointer-events: none;
 }
 
 .videoPlayer {
+  position: absolute;
+  inset: 0;
   display: block;
   width: 100%;
   height: 100%;
@@ -624,38 +794,62 @@ button, a { -webkit-tap-highlight-color: transparent; touch-action: manipulation
 }
 
 .videoContent {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
   min-width: 0;
-  padding: 15px 17px 18px;
+  padding: 16px 17px 18px;
+  overflow-wrap: anywhere;
 }
 
-.videoContent h3 { font-size: 15px; }
-.videoContent p { margin-bottom: 0; }
+.videoContent h3 {
+  font-size: 15px;
+}
 
-/* Error and empty states */
+.videoContent p {
+  margin-bottom: 0;
+}
+
+/* =========================================================
+   ERROR AND EMPTY STATES
+   ========================================================= */
+
 .directoryError,
 .emptyState,
 .noResults,
 .emptyMessage {
   grid-column: 1 / -1;
+  min-width: 0;
   padding: 22px;
   border: 1px dashed #C8D5E5;
   border-radius: 14px;
-  background: #fff;
+  background: #FFFFFF;
   color: var(--muted);
+  overflow-wrap: anywhere;
 }
 
-.directoryError h3 { margin: 0 0 8px; color: var(--primary-dark); }
-.directoryError p { margin: 0 0 12px; }
+.directoryError h3 {
+  margin: 0 0 8px;
+  color: var(--primary-dark);
+}
 
-/* Footer */
+.directoryError p {
+  margin: 0 0 12px;
+}
+
+/* =========================================================
+   FOOTER
+   ========================================================= */
+
 #footer {
+  display: block;
   width: 100%;
   margin: 28px 0 0;
-  padding: 30px 22px 24px;
+  padding: 32px 22px 25px;
   border-top: 3px solid var(--gold);
   border-radius: 18px 18px 0 0;
-  background: var(--primary-dark);
-  color: #fff;
+  background: linear-gradient(135deg, #12365F, #0D2A4B);
+  color: #FFFFFF;
   text-align: center;
 }
 
@@ -669,21 +863,31 @@ button, a { -webkit-tap-highlight-color: transparent; touch-action: manipulation
 #footer p {
   max-width: 760px;
   margin: 6px auto;
-  color: #D6E3F2;
+  color: #DCE6F2;
   font-size: 13px;
+  line-height: 1.75;
+  overflow-wrap: anywhere;
 }
 
 #footer p:first-of-type {
-  color: #fff;
+  color: #FFFFFF;
   font-size: 16px;
   font-weight: 850;
   letter-spacing: .6px;
 }
 
-#footer a { color: #F0D28B; }
-#footer a:hover { color: #fff; }
+#footer a {
+  color: #F0D28B;
+}
 
-/* Floating install button */
+#footer a:hover {
+  color: #FFFFFF;
+}
+
+/* =========================================================
+   FLOATING INSTALL BUTTON
+   ========================================================= */
+
 #installBtn {
   position: fixed;
   z-index: 1000;
@@ -692,40 +896,36 @@ button, a { -webkit-tap-highlight-color: transparent; touch-action: manipulation
   display: inline-flex;
   align-items: center;
   justify-content: center;
+  min-width: 0;
   min-height: 47px;
-  padding: 12px 18px;
+  padding: 12px 19px;
   border: 1px solid #DDBB68;
   border-radius: 999px;
   background: var(--primary);
-  color: #fff;
-  box-shadow: 0 8px 25px rgba(16,52,94,.25);
+  color: #FFFFFF;
+  box-shadow: 0 8px 25px rgba(16, 52, 94, .22);
   font-size: 13px;
   font-weight: 800;
+  line-height: 1.35;
   cursor: pointer;
+  transition:
+    background .2s ease,
+    transform .2s ease;
 }
 
-#installBtn:hover { background: var(--primary-dark); }
-
-/* Accessibility */
-:focus-visible {
-  outline: 3px solid #D9AD49;
-  outline-offset: 3px;
+#installBtn:hover {
+  transform: translateY(-2px);
+  background: var(--primary-dark);
 }
 
-@media (prefers-reduced-motion: reduce) {
-  *,
-  *::before,
-  *::after {
-    scroll-behavior: auto !important;
-    transition-duration: .01ms !important;
-    animation-duration: .01ms !important;
-    animation-iteration-count: 1 !important;
+/* =========================================================
+   TABLET
+   ========================================================= */
+
+@media (max-width: 1000px) {
+  #app {
+    padding: 20px 18px 34px;
   }
-}
-
-/* Tablet */
-@media (max-width: 900px) {
-  #app { padding: 18px 17px 32px; }
 
   #appsGrid,
   #governmentGrid,
@@ -733,30 +933,45 @@ button, a { -webkit-tap-highlight-color: transparent; touch-action: manipulation
   #vidhwaanLinksGrid,
   #videosGrid {
     grid-template-columns: repeat(2, minmax(0, 1fr));
-    gap: 14px;
+    gap: 15px;
   }
 
   .heroSection {
     grid-template-columns: 120px minmax(0, 1fr);
-    gap: 22px;
-    padding: 28px;
+    gap: 24px;
+    padding: 30px;
   }
 
-  .heroLogoWrap { width: 120px; height: 120px; }
-  .featuredCard { gap: 20px; }
+  .heroLogoWrap {
+    width: 120px;
+    height: 120px;
+  }
+
+  .featuredCard {
+    gap: 22px;
+  }
 }
 
-/* Mobile */
+/* =========================================================
+   MOBILE
+   ========================================================= */
+
 @media (max-width: 600px) {
-  #app { padding: 12px 12px 28px; }
+  body {
+    font-size: 14px;
+  }
+
+  #app {
+    padding: 12px 13px 28px;
+  }
 
   .heroSection {
     grid-template-columns: minmax(0, 1fr);
     justify-items: start;
     gap: 17px;
-    margin-bottom: 22px;
+    margin-bottom: 23px;
     padding: 22px 18px;
-    border-radius: 18px;
+    border-radius: 19px;
   }
 
   .heroLogoWrap {
@@ -766,18 +981,37 @@ button, a { -webkit-tap-highlight-color: transparent; touch-action: manipulation
     border-radius: 15px;
   }
 
-  .heroContent h1 { font-size: clamp(26px, 8vw, 34px); }
-  .heroText { font-size: 14px; }
-  .sectionBlock { margin-bottom: 26px; }
-  .sectionBlock h2 { font-size: 21px; }
-  .sectionDescription { font-size: 13px; }
+  .heroContent h1 {
+    font-size: clamp(26px, 7.5vw, 34px);
+    line-height: 1.25;
+  }
 
+  .heroText {
+    font-size: 14px;
+    line-height: 1.75;
+  }
+
+  .sectionBlock {
+    margin-bottom: 27px;
+  }
+
+  .sectionBlock h2 {
+    font-size: 21px;
+  }
+
+  .sectionDescription {
+    margin-bottom: 15px;
+    font-size: 13px;
+    line-height: 1.75;
+  }
+
+  /* Digital Office */
   .digitalOfficeCard {
     grid-template-columns: minmax(0, 1fr);
     justify-items: start;
     gap: 15px;
     padding: 20px 17px;
-    border-radius: 17px;
+    border-radius: 18px;
   }
 
   .digitalOfficeLogoWrap {
@@ -787,17 +1021,28 @@ button, a { -webkit-tap-highlight-color: transparent; touch-action: manipulation
     border-radius: 15px;
   }
 
-  .digitalOfficeContent h2 { font-size: 23px; }
+  .digitalOfficeContent h2 {
+    font-size: 23px;
+    line-height: 1.35;
+  }
+
+  .digitalOfficeEmail {
+    font-size: 13px;
+  }
 
   .digitalOfficeActions {
     display: grid;
     grid-template-columns: minmax(0, 1fr);
     width: 100%;
+    gap: 9px;
   }
 
   .digitalOfficeEmailBtn,
-  .digitalOfficeWhatsappBtn { width: 100%; }
+  .digitalOfficeWhatsappBtn {
+    width: 100%;
+  }
 
+  /* Featured App */
   .featuredCard {
     grid-template-columns: minmax(0, 1fr);
     gap: 16px;
@@ -805,7 +1050,10 @@ button, a { -webkit-tap-highlight-color: transparent; touch-action: manipulation
     border-radius: 18px;
   }
 
-  .featuredImageWrap { min-height: 120px; padding: 14px; }
+  .featuredImageWrap {
+    min-height: 120px;
+    padding: 14px;
+  }
 
   .featuredImageWrap img,
   .featuredImage {
@@ -813,31 +1061,66 @@ button, a { -webkit-tap-highlight-color: transparent; touch-action: manipulation
     max-height: 125px;
   }
 
+  .featuredContent h3 {
+    font-size: 23px;
+  }
+
+  /* All directory sections use one column on phones */
   #appsGrid,
   #governmentGrid,
   #tollGrid,
   #vidhwaanLinksGrid,
   #videosGrid {
     grid-template-columns: minmax(0, 1fr);
-    gap: 12px;
+    gap: 13px;
   }
 
-  .appInfo { padding: 16px; }
-  .videoContent { padding: 14px 15px 16px; }
-  #footer { padding: 26px 15px 22px; }
+  .appInfo {
+    padding: 17px;
+  }
 
+  .appInfo h3 {
+    font-size: 17px;
+  }
+
+  .appInfo p {
+    font-size: 13px;
+    line-height: 1.75;
+  }
+
+  .cardButtons {
+    gap: 9px;
+  }
+
+  .videoContent {
+    padding: 14px 15px 16px;
+  }
+
+  /* Footer */
+  #footer {
+    padding: 27px 16px 23px;
+    border-radius: 15px 15px 0 0;
+  }
+
+  /* Floating button stays clear of screen edges */
   #installBtn {
     right: 12px;
     bottom: max(12px, env(safe-area-inset-bottom));
     min-height: 44px;
-    padding: 11px 15px;
+    padding: 11px 16px;
     font-size: 12px;
   }
 }
 
-/* Very small phones */
+/* =========================================================
+   VERY SMALL PHONES
+   ========================================================= */
+
 @media (max-width: 360px) {
-  #app { padding-inline: 9px; }
+  #app {
+    padding-right: 9px;
+    padding-left: 9px;
+  }
 
   .heroSection,
   .digitalOfficeCard,
@@ -845,6 +1128,39 @@ button, a { -webkit-tap-highlight-color: transparent; touch-action: manipulation
     padding: 15px;
   }
 
-  .digitalOfficeEmail { font-size: 12px; }
-  .digitalOfficeActions { gap: 8px; }
+  .heroContent h1 {
+    font-size: 26px;
+  }
+
+  .digitalOfficeEmail {
+    font-size: 12px;
+  }
+
+  .digitalOfficeActions {
+    gap: 8px;
+  }
+
+  .appInfo {
+    padding: 15px;
+  }
+
+  #installBtn {
+    right: 10px;
+    bottom: 10px;
+  }
+}
+
+/* =========================================================
+   REDUCED MOTION
+   ========================================================= */
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    scroll-behavior: auto !important;
+    animation-duration: .01ms !important;
+    transition-duration: .01ms !important;
+    animation-iteration-count: 1 !important;
+  }
 }
