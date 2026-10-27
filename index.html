@@ -1,45 +1,39 @@
 
 <!DOCTYPE html>
-<html lang="en">
+<html lang="es-AR">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-  <meta name="theme-color" content="#F9FAFC">
+  <meta name="theme-color" content="#ffffff">
   <meta name="color-scheme" content="light">
-
-  <title>Argentina Localities | Argentina Locality Search Engine</title>
-
-  <meta name="description" content="Search localities across Argentina. Find locality names, provinces, departments, agglomerations and local government information in one place.">
-  <meta name="keywords" content="Argentina localities, Argentina locality search, localidades de Argentina, Argentina province directory, Argentina department directory, locality database, Vidhwaan">
   <meta name="author" content="VIDHWAAN">
   <meta name="publisher" content="VIDHWAAN">
   <meta name="robots" content="index,follow,max-image-preview:large">
-  <meta name="application-name" content="Argentina Localities">
-
-  <link rel="canonical" href="https://argentina.vidhwaan.com/">
-
+  <meta name="description" content="Explore localities across Argentina with Vidhwaan's digital locality directory. Search by locality, department, province or locality code.">
+  <meta name="keywords" content="Argentina localities, Argentina locality search, localities directory, provinces of Argentina, departments of Argentina, Vidhwaan, digital services">
   <meta property="og:type" content="website">
-  <meta property="og:site_name" content="Argentina Localities">
+  <meta property="og:site_name" content="Argentina Localities | Vidhwaan">
   <meta property="og:title" content="Argentina Localities | Vidhwaan">
-  <meta property="og:description" content="Search Argentina localities by locality name, department, province and official locality code.">
+  <meta property="og:description" content="Discover localities across Argentina through a modern digital directory powered by Vidhwaan.">
   <meta property="og:url" content="https://argentina.vidhwaan.com/">
   <meta property="og:image" content="https://argentina.vidhwaan.com/icons/icon-512.png">
-  <meta property="og:locale" content="en_US">
-
   <meta name="twitter:card" content="summary_large_image">
   <meta name="twitter:title" content="Argentina Localities | Vidhwaan">
-  <meta name="twitter:description" content="Search localities across Argentina by name, province, department or official code.">
+  <meta name="twitter:description" content="Search localities, departments and provinces across Argentina.">
   <meta name="twitter:image" content="https://argentina.vidhwaan.com/icons/icon-512.png">
 
-  <link rel="manifest" href="/manifest.json">
+  <title>Argentina Localities — Digital Locality Directory | Vidhwaan</title>
+
+  <link rel="canonical" href="https://argentina.vidhwaan.com/">
   <link rel="icon" href="/favicon.ico" sizes="any">
+  <link rel="manifest" href="/manifest.json">
   <link rel="apple-touch-icon" href="/icons/icon-192.png">
 
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 
-  <link rel="stylesheet" href="/styles.css">
+  <link rel="stylesheet" href="./styles.css">
 
   <script type="application/ld+json">
   {
@@ -47,7 +41,8 @@
     "@type": "Organization",
     "name": "VIDHWAAN",
     "url": "https://vidhwaan.com/",
-    "sameAs": ["https://vidhwaan.com/"]
+    "description": "Village Based Global Technology Company",
+    "logo": "https://argentina.vidhwaan.com/icons/icon-512.png"
   }
   </script>
 
@@ -56,9 +51,10 @@
     "@context": "https://schema.org",
     "@type": "WebSite",
     "name": "Argentina Localities",
+    "alternateName": "Argentina Locality Search",
     "url": "https://argentina.vidhwaan.com/",
-    "description": "Search localities across Argentina by locality, department, province and official code.",
-    "inLanguage": ["en", "es"],
+    "description": "Search localities, departments and provinces throughout Argentina.",
+    "inLanguage": "es-AR",
     "publisher": {
       "@type": "Organization",
       "name": "VIDHWAAN",
@@ -66,7 +62,10 @@
     },
     "potentialAction": {
       "@type": "SearchAction",
-      "target": "https://argentina.vidhwaan.com/?q={search_term_string}",
+      "target": {
+        "@type": "EntryPoint",
+        "urlTemplate": "https://argentina.vidhwaan.com/?q={search_term_string}"
+      },
       "query-input": "required name=search_term_string"
     }
   }
@@ -74,348 +73,179 @@
 </head>
 
 <body>
+  <a class="skipLink" href="#searchInput">Ir a la búsqueda</a>
+
+  <header class="siteHeader">
+    <a class="brand" href="/" aria-label="Argentina Localities, inicio">
+      <span class="brandMark" aria-hidden="true">V</span>
+      <span class="brandText">
+        <strong>VIDHWAAN</strong>
+        <span>Village Based Global Technology Company</span>
+      </span>
+    </a>
+
+    <div class="headerLabel">
+      <span class="statusIndicator" aria-hidden="true"></span>
+      <span>ARGENTINA</span>
+    </div>
+  </header>
+
   <main class="page">
+    <section class="hero" aria-labelledby="pageTitle">
+      <div class="heroEyebrow">
+        <span class="eyebrowLine"></span>
+        DIRECTORIO DIGITAL
+        <span class="eyebrowLine"></span>
+      </div>
 
-    <!-- INTRODUCTION -->
-    <section class="hero">
-      <img
-        src="/icons/logo.png"
-        alt="Vidhwaan"
-        class="heroLogo"
-        width="110"
-        height="110"
-        fetchpriority="high"
-      >
-
-      <h1 class="heroTitle">Argentina Localities</h1>
+      <h1 id="pageTitle" class="heroTitle">
+        Descubra <span>Argentina.</span>
+      </h1>
 
       <p class="heroSubtitle">
-        Search localities, departments and provinces across Argentina
+        Explore localidades, departamentos y provincias en un solo lugar.
+        Encuentre la información territorial que necesita.
       </p>
+
+      <div class="heroFeatures" aria-label="Características">
+        <span><span class="featureDot"></span> Búsqueda inteligente</span>
+        <span><span class="featureDot"></span> Información territorial</span>
+        <span><span class="featureDot"></span> Acceso digital</span>
+      </div>
     </section>
 
-    <!-- LOCALITY SEARCH -->
-    <section class="searchSection" aria-label="Search localities">
-      <form id="searchForm" autocomplete="off">
+    <section class="searchSection" aria-label="Buscar localidades">
+      <form id="searchForm" autocomplete="off" role="search">
+        <label class="searchLabel" for="searchInput">
+          BUSCAR UNA LOCALIDAD
+        </label>
+
         <div class="searchBox">
-          <svg
-            class="searchIcon"
-            xmlns="http://www.w3.org/2000/svg"
-            viewBox="0 0 24 24"
-            fill="none"
-            aria-hidden="true"
-          >
-            <circle
-              cx="11"
-              cy="11"
-              r="7"
-              stroke="currentColor"
-              stroke-width="2"
-            ></circle>
-            <path
-              d="M20 20L17 17"
-              stroke="currentColor"
-              stroke-width="2"
-              stroke-linecap="round"
-            ></path>
+          <svg class="searchIcon" xmlns="http://www.w3.org/2000/svg"
+               viewBox="0 0 24 24" fill="none" aria-hidden="true">
+            <circle cx="11" cy="11" r="7"
+                    stroke="currentColor" stroke-width="1.8"/>
+            <path d="m16.2 16.2 4.3 4.3"
+                  stroke="currentColor" stroke-width="1.8"
+                  stroke-linecap="round"/>
           </svg>
 
           <input
             id="searchInput"
+            name="q"
             type="search"
-            placeholder="Search locality, department, province or code..."
-            aria-label="Search Argentina localities"
+            placeholder="Ej. Buenos Aires, Córdoba..."
+            autocomplete="off"
+            autocapitalize="none"
             spellcheck="false"
             maxlength="100"
             enterkeyhint="search"
+            aria-label="Nombre de localidad, departamento, provincia o código"
           >
+
+          <span class="searchShortcut" aria-hidden="true">↵</span>
         </div>
 
         <button id="searchButton" type="submit">
-          Search Localities
+          <span>Buscar localidades</span>
+          <span aria-hidden="true">→</span>
         </button>
       </form>
     </section>
 
-    <!-- SEARCH STATUS -->
     <section
       id="statusArea"
       class="statusArea"
       aria-live="polite"
-      role="status"
+      aria-atomic="true"
     >
-      Loading the Argentina locality directory...
+      Cargando el directorio digital de Argentina...
     </section>
 
-    <!-- SEARCH RESULTS -->
     <section
       id="results"
       class="results"
-      hidden
+      aria-label="Resultados de búsqueda"
       aria-live="polite"
-      aria-label="Locality search results"
+      hidden
     ></section>
 
-    <!-- NO RESULTS -->
     <section id="emptyState" class="emptyState" hidden>
-      <h2>No Matching Localities Found</h2>
+      <div class="emptyIcon" aria-hidden="true">⌕</div>
+      <h2>No encontramos esa localidad</h2>
       <p>
-        Check the spelling or try another locality, department,
-        province or official locality code.
+        Compruebe la escritura o pruebe con otro nombre,
+        departamento, provincia o código.
       </p>
     </section>
 
-    <!-- ABOUT THE DIRECTORY -->
-    <section class="info">
-      <h2>Explore Argentina's Localities</h2>
+    <section class="directoryInfo" aria-labelledby="directoryTitle">
+      <div class="sectionOverline">UN DIRECTORIO, MUCHAS POSIBILIDADES</div>
+      <h2 id="directoryTitle">
+        La información local,<br>
+        <span>más fácil de encontrar.</span>
+      </h2>
       <p>
-        Search the locality directory using a locality name,
-        department, province, agglomeration, local government
-        name or official code. Results are based on the
-        Argentina locality dataset available on this website.
+        Argentina Localities es un directorio digital diseñado para facilitar
+        la búsqueda de localidades y su contexto territorial. Explore
+        localidades por nombre, departamento, provincia o código y acceda
+        a los portales digitales disponibles para cada lugar.
       </p>
+
+      <div class="infoGrid">
+        <article class="infoCard">
+          <span class="infoNumber">01</span>
+          <h3>Encuentre</h3>
+          <p>Busque localidades de manera rápida y sencilla.</p>
+        </article>
+
+        <article class="infoCard">
+          <span class="infoNumber">02</span>
+          <h3>Identifique</h3>
+          <p>Consulte el departamento y la provincia correspondientes.</p>
+        </article>
+
+        <article class="infoCard">
+          <span class="infoNumber">03</span>
+          <h3>Explore</h3>
+          <p>Abra el portal digital correspondiente a la localidad.</p>
+        </article>
+      </div>
     </section>
 
-    <!-- SEARCH TIPS -->
-    <section class="tips">
-      <h2>Search Tips</h2>
+    <section class="searchTips" aria-labelledby="tipsTitle">
+      <h2 id="tipsTitle">Consejos de búsqueda</h2>
       <ul>
-        <li>Enter at least 2 characters.</li>
-        <li>Search by locality, department or province.</li>
-        <li>You can also search using an official locality code.</li>
-        <li>Up to 50 matching results are displayed.</li>
-        <li>Open a result to visit its locality page when available.</li>
+        <li>Ingrese al menos dos caracteres.</li>
+        <li>Puede buscar por localidad, departamento o provincia.</li>
+        <li>También puede utilizar el código de localidad.</li>
+        <li>Seleccione un resultado para abrir su portal digital.</li>
       </ul>
     </section>
-
-    <!-- FOOTER -->
-    <footer class="footer">
-      <img
-        src="/icons/logo.png"
-        alt="VIDHWAAN"
-        class="footerLogo"
-        width="64"
-        height="64"
-        loading="lazy"
-      >
-
-      <h2>Argentina Localities</h2>
-
-      <p>Argentina Locality Search Engine</p>
-
-      <div class="footerDivider"></div>
-
-      <p class="footerDescription">
-        Discover localities across Argentina with a searchable
-        directory of province, department, locality and local
-        government information.
-      </p>
-
-      <div class="footerMeta">
-        <span>Argentina</span>
-        <span aria-hidden="true">•</span>
-        <span>Powered by VIDHWAAN</span>
-      </div>
-
-      <!-- COOKIES POLICY LINK -->
-      <div class="footerPolicyLinks">
-        <button
-          type="button"
-          id="openCookiePolicy"
-          class="policyLink"
-          aria-haspopup="dialog"
-          aria-controls="cookiePolicyModal"
-        >
-          Cookies Policy
-        </button>
-      </div>
-
-      <p class="copyright">
-        © 2026 VIDHWAAN. All Rights Reserved.
-      </p>
-
-      <p class="copyright">
-        Vidhwaan Village Based Global Technology Company
-      </p>
-    </footer>
-
   </main>
 
-  <!-- COOKIES AND PRIVACY POLICY POPUP -->
-  <div
-    id="cookiePolicyModal"
-    class="policyModal"
-    hidden
-  >
-    <div class="policyBackdrop" data-close-policy="true"></div>
+  <footer class="siteFooter">
+    <div class="footerTop">
+      <a class="brand footerBrand" href="/" aria-label="Volver al inicio">
+        <span class="brandMark" aria-hidden="true">V</span>
+        <span class="brandText">
+          <strong>VIDHWAAN</strong>
+          <span>Village Based Global Technology Company</span>
+        </span>
+      </a>
 
-    <section
-      class="policyDialog"
-      role="dialog"
-      aria-modal="true"
-      aria-labelledby="cookiePolicyTitle"
-      aria-describedby="cookiePolicyIntro"
-      tabindex="-1"
-    >
-      <header class="policyHeader">
-        <div class="policyHeaderText">
-          <span class="policyEyebrow">VIDHWAAN TRANSPARENCY</span>
-          <h2 id="cookiePolicyTitle">Cookies &amp; Privacy Policy</h2>
-          <p id="cookiePolicyIntro">
-            Your privacy matters. This portal is provided to help
-            people find locality information and access useful services.
-          </p>
-        </div>
+      <p class="footerStatement">
+        Tecnología para conectar<br>
+        personas, lugares y oportunidades.
+      </p>
+    </div>
 
-        <button
-          type="button"
-          id="closeCookiePolicy"
-          class="policyCloseButton"
-          aria-label="Close Cookies and Privacy Policy"
-          title="Close"
-        >
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            viewBox="0 0 24 24"
-            width="22"
-            height="22"
-            fill="none"
-            aria-hidden="true"
-          >
-            <path
-              d="M6 6L18 18M18 6L6 18"
-              stroke="currentColor"
-              stroke-width="2"
-              stroke-linecap="round"
-            ></path>
-          </svg>
-        </button>
-      </header>
+    <div class="footerBottom">
+      <span>© 2026 VIDHWAAN. Todos los derechos reservados.</span>
+      <span>Argentina Localities <span class="footerSeparator">·</span> Argentina</span>
+    </div>
+  </footer>
 
-      <div class="policyBody">
-        <section class="policyHighlight">
-          <h3>Our commitment to your privacy</h3>
-          <p>
-            <strong>
-              VIDHWAAN does not ask for, collect, or store your personal
-              information or the search terms you enter through this portal.
-              We do not sell users' personal data.
-            </strong>
-          </p>
-          <p>
-            You can use the locality search service without creating an
-            account or providing your name, email address, phone number,
-            or other personal details.
-          </p>
-        </section>
-
-        <section class="policySection">
-          <h3>1. What this portal does</h3>
-          <p>
-            This portal helps people search locality names, departments,
-            provinces, agglomerations and locality codes in Argentina.
-            Search terms are processed by the website's search functionality
-            to display matching entries from its locality dataset.
-          </p>
-          <p>
-            The search functionality in this portal does not send your
-            search terms to a Vidhwaan user account or an analytics service.
-            We provide this service to make information easier to find.
-          </p>
-        </section>
-
-        <section class="policySection">
-          <h3>2. Cookies and tracking</h3>
-          <p>
-            The portal's search functionality does not intentionally use
-            advertising cookies, analytics cookies, or tracking scripts
-            to profile visitors.
-          </p>
-          <p>
-            The hosting or content-delivery provider may use essential
-            technical mechanisms, including security-related cookies,
-            where required to protect and deliver the website. Such
-            mechanisms are controlled by the relevant provider and may
-            be subject to its own policies.
-          </p>
-        </section>
-
-        <section class="policySection">
-          <h3>3. Technical information and hosting</h3>
-          <p>
-            Although Vidhwaan does not collect or store your personal
-            information or search terms through this portal, the hosting,
-            network, or content-delivery provider may automatically process
-            technical request information. This may include an IP address,
-            browser or device information, request timestamps, and security
-            logs for purposes such as website delivery, abuse prevention,
-            troubleshooting, and security.
-          </p>
-          <p>
-            Such technical processing is handled by the relevant
-            infrastructure provider under its own terms and privacy
-            practices. We do not claim that the entire internet or hosting
-            infrastructure operates without processing technical data.
-          </p>
-        </section>
-
-        <section class="policySection">
-          <h3>4. Personal information</h3>
-          <p>
-            This portal does not provide an account registration form,
-            a personal profile, or a form asking visitors to submit
-            personal details. Please do not include private or sensitive
-            information in a search query.
-          </p>
-        </section>
-
-        <section class="policySection">
-          <h3>5. External locality pages and websites</h3>
-          <p>
-            Selecting a search result may take you to a locality page.
-            If you follow a link to another website or service, that
-            destination may have its own privacy and cookie practices.
-            Please review the policies of the destination when applicable.
-          </p>
-        </section>
-
-        <section class="policySection">
-          <h3>6. Policy updates</h3>
-          <p>
-            This policy may be updated if the portal's functionality,
-            hosting arrangements, or privacy practices change. The latest
-            version will be available through the Cookies Policy link
-            in the website footer.
-          </p>
-        </section>
-
-        <section class="policyContact">
-          <h3>Our purpose</h3>
-          <p>
-            VIDHWAAN provides digital services to help people access
-            useful information. We aim to keep this portal simple,
-            accessible, and respectful of visitors' privacy.
-          </p>
-          <p class="policyUpdated">
-            Last updated: October 27, 2026
-          </p>
-        </section>
-      </div>
-
-      <footer class="policyFooter">
-        <span>Vidhwaan Village Based Global Technology Company</span>
-
-        <button
-          type="button"
-          id="closeCookiePolicyFooter"
-          class="policyDoneButton"
-        >
-          Close Policy
-        </button>
-      </footer>
-    </section>
-  </div>
-
-  <script src="/search.js" defer></script>
+  <script src="./search.js" defer></script>
 </body>
 </html>
