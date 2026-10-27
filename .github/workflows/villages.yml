@@ -1,0 +1,317 @@
+name: Generate Argentina Locality Pages
+
+on:
+  workflow_dispatch:
+
+  push:
+    branches:
+      - main
+    paths:
+      - argentina.json
+      - template.html
+      - manifest.json
+      - sw.js
+      - .github/workflows/villages.yml
+
+permissions:
+  contents: write
+
+concurrency:
+  group: generate-argentina-localities
+  cancel-in-progress: false
+
+jobs:
+  generate:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      - name: Validate Argentina Dataset
+        run: |
+          node <<'NODE'
+          const fs = require("fs");
+
+          if (!fs.existsSync("argentina.json")) {
+            throw new Error("argentina.json was not found.");
+          }
+
+          const data = JSON.parse(
+            fs.readFileSync("argentina.json", "utf8")
+          );
+
+          if (!Array.isArray(data)) {
+            throw new Error("argentina.json must contain a JSON array.");
+          }
+
+          if (data.length === 0) {
+            throw new Error("argentina.json contains no localities.");
+          }
+
+          const required = [
+            "locality",
+            "province",
+            "localityCode"
+          ];
+
+          const missing = required.filter(
+            key => !(key in data[0])
+          );
+
+          if (missing.length) {
+            throw new Error(
+              "Unexpected Argentina JSON schema. Missing fields: " +
+              missing.join(", ")
+            );
+          }
+
+          console.log(`Validated ${data.length} Argentina records.`);
+          NODE
+
+      - name: Generate Argentina Locality Pages
+        shell: node {0}
+        run: |
+          const fs = require("fs");
+          const path = require("path");
+
+          const root = process.cwd();
+
+          const localities = JSON.parse(
+            fs.readFileSync("argentina.json", "utf8")
+          );
+
+          const template = fs.readFileSync(
+            "template.html",
+            "utf8"
+          );
+
+          const manifestTemplate = fs.readFileSync(
+            "manifest.json",
+            "utf8"
+          );
+
+          const swTemplate = fs.readFileSync(
+            "sw.js",
+            "utf8"
+          );
+
+          function clean(value) {
+            if (value === null || value === undefined) {
+              return "";
+            }
+
+            return String(value).trim();
+          }
+
+          function slugify(value) {
+            return clean(value)
+              .normalize("NFD")
+              .replace(/[\u0300-\u036f]/g, "")
+              .toLowerCase()
+              .replace(/[^a-z0-9]+/g, "-")
+              .replace(/^-+|-+$/g, "");
+          }
+
+          function escapeHtml(value) {
+            return clean(value)
+              .replace(/&/g, "&amp;")
+              .replace(/</g, "&lt;")
+              .replace(/>/g, "&gt;")
+              .replace(/"/g, "&quot;")
+              .replace(/'/g, "&#39;");
+          }
+
+          function replaceTokens(text, values) {
+            let output = text;
+
+            for (const [key, value] of Object.entries(values)) {
+              output = output.replaceAll(
+                `{{${key}}}`,
+                String(value)
+              );
+            }
+
+            return output;
+          }
+
+          function getLocality(record, index) {
+            const locality = clean(record.locality);
+            const province = clean(record.province);
+            const department = clean(record.department);
+            const localityCode = clean(record.localityCode);
+
+            if (!locality) {
+              throw new Error(
+                `Record ${index + 1} has no locality name.`
+              );
+            }
+
+            if (!localityCode) {
+              throw new Error(
+                `Record ${index + 1} (${locality}) has no localityCode.`
+              );
+            }
+
+            if (!province) {
+              throw new Error(
+                `Record ${index + 1} (${locality}) has no province.`
+              );
+            }
+
+            const localitySlug = slugify(locality);
+            const folder = `${localitySlug}-${slugify(localityCode)}`;
+
+            return {
+              locality,
+              province,
+              department,
+              localityCode,
+              localitySlug,
+              folder,
+              localityType: clean(record.localityType) || "No especificado",
+              agglomeration: clean(record.agglomeration) || "No especificada",
+              localGovernment: clean(record.localGovernment) || "No especificado",
+              localGovernmentCategory:
+                clean(record.localGovernmentCategory) || "No especificada",
+              jurisdictionCode: clean(record.jurisdictionCode),
+              departmentCode: clean(record.departmentCode),
+              agglomerationCode: clean(record.agglomerationCode),
+              localGovernmentCode: clean(record.localGovernmentCode)
+            };
+          }
+
+          function makeTokens(item) {
+            const canonical =
+              `https://argentina.vidhwaan.com/${item.folder}/`;
+
+            return {
+              LOCALITY_NAME: escapeHtml(item.locality),
+              LOCALITY_SLUG: item.localitySlug,
+              LOCALITY_CODE: escapeHtml(item.localityCode),
+              PROVINCE_NAME: escapeHtml(item.province),
+              DEPARTMENT_NAME: escapeHtml(item.department || "No especificado"),
+              LOCALITY_TYPE: escapeHtml(item.localityType),
+              AGGLOMERATION_NAME: escapeHtml(item.agglomeration),
+              LOCAL_GOVERNMENT_NAME: escapeHtml(item.localGovernment),
+              LOCAL_GOVERNMENT_CATEGORY:
+                escapeHtml(item.localGovernmentCategory),
+
+              LOCALITY_FOLDER: item.folder,
+              LOCALITY_CANONICAL_URL: canonical,
+
+              // Legacy tokens for manifest/service-worker templates
+              VILLAGE_NAME: escapeHtml(item.locality),
+              VILLAGE_NAME_UPPER: escapeHtml(item.locality.toUpperCase()),
+              PINCODE: escapeHtml(item.localityCode),
+              VILLAGE_FOLDER: item.folder
+            };
+          }
+
+          const keep = new Set([
+            ".git",
+            ".github",
+            "icons",
+            "template.html",
+            "manifest.json",
+            "sw.js",
+            "argentina.json",
+            "index.html",
+            "search.js",
+            "styles.css",
+            "README.md",
+            ".gitignore",
+            "CNAME"
+          ]);
+
+          // Remove old generated locality directories while preserving
+          // the source files required by this workflow.
+          for (const item of fs.readdirSync(root)) {
+            if (keep.has(item)) continue;
+
+            const fullPath = path.join(root, item);
+
+            if (!fs.existsSync(fullPath)) continue;
+
+            const stat = fs.lstatSync(fullPath);
+
+            if (stat.isDirectory()) {
+              fs.rmSync(fullPath, {
+                recursive: true,
+                force: true
+              });
+            }
+          }
+
+          // Remove the obsolete marketplace page from the repository.
+          if (fs.existsSync("market.html")) {
+            fs.rmSync("market.html", { force: true });
+          }
+
+          const createdFolders = new Set();
+
+          for (let index = 0; index < localities.length; index++) {
+            const item = getLocality(localities[index], index);
+            const tokens = makeTokens(item);
+
+            if (createdFolders.has(item.folder)) {
+              throw new Error(
+                `Duplicate locality folder detected: ${item.folder}`
+              );
+            }
+
+            createdFolders.add(item.folder);
+
+            const directory = path.join(root, item.folder);
+
+            fs.mkdirSync(directory, { recursive: true });
+
+            fs.writeFileSync(
+              path.join(directory, "index.html"),
+              replaceTokens(template, tokens),
+              "utf8"
+            );
+
+            fs.writeFileSync(
+              path.join(directory, "manifest.json"),
+              replaceTokens(manifestTemplate, tokens),
+              "utf8"
+            );
+
+            fs.writeFileSync(
+              path.join(directory, "sw.js"),
+              replaceTokens(swTemplate, tokens),
+              "utf8"
+            );
+
+            if (index > 0 && index % 5000 === 0) {
+              console.log(
+                `Generated ${index} of ${localities.length} locality pages...`
+              );
+            }
+          }
+
+          console.log(
+            `Successfully generated ${createdFolders.size} Argentina locality pages.`
+          );
+
+      - name: Commit Changes
+        run: |
+          git config user.name "github-actions"
+          git config user.email "github-actions@github.com"
+
+          git add -A
+
+          if git diff --cached --quiet; then
+            echo "No generated changes to commit."
+          else
+            git commit -m "Generate Argentina locality pages"
+            git push
+          fi
