@@ -1,12 +1,10 @@
-
 /* =========================================================
    ARGENTINA LOCALITIES — SEARCH.JS
-   VIDHWAAN VILLAGE BASED GLOBAL TECHNOLOGY COMPANY
+   Vidhwaan Village Based Global Technology Company
 ========================================================= */
 
 "use strict";
 
-/* ELEMENTS */
 const form = document.getElementById("searchForm");
 const input = document.getElementById("searchInput");
 const button = document.getElementById("searchButton");
@@ -14,8 +12,8 @@ const results = document.getElementById("results");
 const status = document.getElementById("statusArea");
 const empty = document.getElementById("emptyState");
 
-/* DATA */
 let localities = [];
+let databaseReady = false;
 
 /* NORMALIZE SEARCH TEXT */
 function normalizeText(value = "") {
@@ -37,62 +35,17 @@ function escapeHTML(value = "") {
   })[character]);
 }
 
-/* LOAD ARGENTINA DATABASE */
-async function loadLocalities() {
-  try {
-    const response = await fetch("./argentina.json", {
-      cache: "no-store"
-    });
-
-    if (!response.ok) {
-      throw new Error(`HTTP ${response.status}`);
-    }
-
-    const data = await response.json();
-
-    if (!Array.isArray(data)) {
-      throw new Error("The JSON root must be an array.");
-    }
-
-    localities = data.filter(item =>
-      item &&
-      item.province &&
-      item.department &&
-      item.locality &&
-      item.localityCode
-    );
-
-    console.log(
-      `Loaded ${localities.length} Argentina localities.`
-    );
-
-    return true;
-  } catch (error) {
-    console.error("Unable to load Argentina JSON:", error);
-
-    status.textContent =
-      "No se pudo cargar la base de datos de localidades de Argentina. Inténtelo nuevamente más tarde.";
-
-    return false;
-  }
-}
-
-/* SLUGIFY
-   Must match the slugify function used by the generation workflow.
-*/
+/* MATCH GENERATED LOCALITY FOLDER NAMING */
 function slugify(value = "") {
   return String(value)
+    .trim()
     .normalize("NFD")
     .replace(/[\u0300-\u036f]/g, "")
     .toLowerCase()
-    .trim()
     .replace(/[^a-z0-9]+/g, "-")
     .replace(/^-+|-+$/g, "");
 }
 
-/* LOCALITY PAGE FOLDER
-   Format: locality-slug-locality-code
-*/
 function folderName(item) {
   return `${slugify(item.locality)}-${slugify(item.localityCode)}`;
 }
@@ -113,11 +66,15 @@ function searchableFields(item) {
     item.localGovernmentCode,
     item.agglomerationCode
   ]
-    .filter(value => value !== null && value !== undefined && value !== "")
+    .filter(value =>
+      value !== undefined &&
+      value !== null &&
+      value !== ""
+    )
     .map(normalizeText);
 }
 
-/* RELEVANCE SCORE */
+/* RELEVANCE RANKING */
 function scoreLocality(item, query) {
   const locality = normalizeText(item.locality);
   const department = normalizeText(item.department);
@@ -125,46 +82,45 @@ function scoreLocality(item, query) {
   const code = normalizeText(item.localityCode);
 
   if (locality === query) return 1000;
-  if (code === query) return 950;
-
+  if (code === query) return 900;
   if (locality.startsWith(query)) return 850;
   if (locality.includes(query)) return 700;
 
   if (department === query) return 600;
   if (department.startsWith(query)) return 500;
+  if (code.startsWith(query)) return 450;
   if (department.includes(query)) return 400;
 
   if (province === query) return 350;
   if (province.startsWith(query)) return 300;
   if (province.includes(query)) return 250;
 
-  if (code.startsWith(query)) return 450;
-
-  if (searchableFields(item).some(field => field.includes(query))) {
+  if (searchableFields(item).some(field =>
+    field.includes(query)
+  )) {
     return 200;
   }
 
   return 0;
 }
 
-/* ACCENT-INSENSITIVE HIGHLIGHTING */
+/* HIGHLIGHT SEARCH MATCH */
 function highlightText(value, query) {
-  const text = String(value || "");
+  const original = String(value ?? "");
   const normalizedQuery = normalizeText(query);
 
   if (!normalizedQuery) {
-    return escapeHTML(text);
+    return escapeHTML(original);
   }
 
-  /*
-   * Build a character-position map so accent removal does not
-   * cause the highlighted section to point at the wrong letters.
-   */
   let normalized = "";
   const positions = [];
 
-  for (let i = 0; i < text.length;) {
-    const character = String.fromCodePoint(text.codePointAt(i));
+  for (let i = 0; i < original.length;) {
+    const character = String.fromCodePoint(
+      original.codePointAt(i)
+    );
+
     const normalizedCharacter = character
       .normalize("NFD")
       .replace(/[\u0300-\u036f]/g, "")
@@ -172,6 +128,7 @@ function highlightText(value, query) {
 
     for (let j = 0; j < normalizedCharacter.length; j++) {
       normalized += normalizedCharacter[j];
+
       positions.push({
         start: i,
         end: i + character.length
@@ -184,44 +141,47 @@ function highlightText(value, query) {
   const index = normalized.indexOf(normalizedQuery);
 
   if (index < 0) {
-    return escapeHTML(text);
+    return escapeHTML(original);
   }
 
   const start = positions[index]?.start;
-  const end = positions[index + normalizedQuery.length - 1]?.end;
+  const end =
+    positions[index + normalizedQuery.length - 1]?.end;
 
   if (start === undefined || end === undefined) {
-    return escapeHTML(text);
+    return escapeHTML(original);
   }
 
   return (
-    escapeHTML(text.slice(0, start)) +
-    "<mark>" + escapeHTML(text.slice(start, end)) + "</mark>" +
-    escapeHTML(text.slice(end))
+    escapeHTML(original.slice(0, start)) +
+    "<mark>" +
+    escapeHTML(original.slice(start, end)) +
+    "</mark>" +
+    escapeHTML(original.slice(end))
   );
 }
 
-/* RESULT CARD — ORIGINAL HTML/CSS CLASSES */
+/* CREATE RESULT CARD */
 function createResult(item, query) {
-  const folder = folderName(item);
-
-  const details = [
-    item.department,
-    item.province
-  ]
-    .filter(Boolean)
-    .map(escapeHTML);
+  const department = escapeHTML(item.department);
+  const province = escapeHTML(item.province);
 
   const agglomeration = item.agglomeration
-    ? `<div class="resultMeta"><strong>Aglomeración:</strong> ${escapeHTML(item.agglomeration)}</div>`
+    ? `
+      <div class="resultDetail">
+        <strong>Aglomeración:</strong>
+        ${escapeHTML(item.agglomeration)}
+      </div>
+    `
     : "";
 
   const government = item.localGovernment
-    ? `<div class="resultMeta"><strong>Gobierno local:</strong> ${escapeHTML(item.localGovernment)}</div>`
-    : "";
-
-  const localityType = item.localityType
-    ? `<div class="resultMeta"><strong>Tipo de localidad:</strong> ${escapeHTML(item.localityType)}</div>`
+    ? `
+      <div class="resultDetail">
+        <strong>Gobierno local:</strong>
+        ${escapeHTML(item.localGovernment)}
+      </div>
+    `
     : "";
 
   return `
@@ -229,21 +189,21 @@ function createResult(item, query) {
       class="resultItem fadeIn"
       tabindex="0"
       role="link"
-      aria-label="${escapeHTML(item.locality)}, ${escapeHTML(item.department)}, ${escapeHTML(item.province)}"
-      data-url="/${encodeURIComponent(folder)}/"
+      aria-label="${escapeHTML(item.locality)}, ${department}, ${province}"
+      data-url="/${encodeURIComponent(folderName(item))}/"
     >
       <h2 class="resultTitle">
         ${highlightText(item.locality, query)}
       </h2>
 
       <div class="resultMeta">
-        ${details.join(" • ")}
+        ${department} • ${province}
       </div>
 
       <p class="resultDescription">
-        Localidad de ${escapeHTML(item.locality)}, departamento
-        ${escapeHTML(item.department)}, provincia de
-        ${escapeHTML(item.province)}, Argentina.
+        Localidad de ${escapeHTML(item.locality)},
+        departamento ${department},
+        provincia de ${province}, Argentina.
       </p>
 
       <div class="resultMeta">
@@ -251,18 +211,18 @@ function createResult(item, query) {
         ${escapeHTML(item.localityCode)}
       </div>
 
-      ${localityType}
       ${agglomeration}
       ${government}
     </article>
   `;
 }
 
-/* RENDER SEARCH RESULTS */
+/* DISPLAY RESULTS */
 function renderResults(found, query) {
+  results.replaceChildren();
+
   if (!found.length) {
     results.hidden = true;
-    results.innerHTML = "";
     empty.hidden = false;
 
     status.textContent =
@@ -277,19 +237,18 @@ function renderResults(found, query) {
   status.textContent =
     `Se encontraron ${found.length} resultados.`;
 
-  results.innerHTML = `
-    <div class="resultCount">Resultados de búsqueda</div>
-    ${found.map(item => createResult(item, query)).join("")}
-  `;
+  results.innerHTML =
+    `<div class="resultCount">Resultados de búsqueda</div>` +
+    found.map(item => createResult(item, query)).join("");
 }
 
-/* SEARCH */
+/* SEARCH LOCALITIES */
 function searchLocalities(value) {
   const query = normalizeText(value);
 
   if (query.length < 2) {
     results.hidden = true;
-    results.innerHTML = "";
+    results.replaceChildren();
     empty.hidden = true;
 
     status.textContent =
@@ -298,10 +257,7 @@ function searchLocalities(value) {
     return;
   }
 
-  if (!localities.length) {
-    results.hidden = true;
-    empty.hidden = true;
-
+  if (!databaseReady) {
     status.textContent =
       "La base de datos todavía no está disponible.";
 
@@ -327,7 +283,7 @@ function searchLocalities(value) {
   renderResults(found, query);
 }
 
-/* OPEN RESULT */
+/* OPEN A LOCALITY */
 function openResult(event) {
   const card = event.target.closest(".resultItem");
 
@@ -335,7 +291,9 @@ function openResult(event) {
     return;
   }
 
-  window.location.href = card.dataset.url;
+  if (card.dataset.url) {
+    window.location.href = card.dataset.url;
+  }
 }
 
 results.addEventListener("click", openResult);
@@ -353,16 +311,101 @@ results.addEventListener("keydown", event => {
   }
 
   event.preventDefault();
-  window.location.href = card.dataset.url;
+
+  if (card.dataset.url) {
+    window.location.href = card.dataset.url;
+  }
 });
 
-/* FORM SUBMISSION */
+/* SEARCH FORM */
 form.addEventListener("submit", event => {
   event.preventDefault();
   searchLocalities(input.value);
 });
 
-/* INITIALIZE */
+/* COOKIE POLICY POPUP */
+const policyLink =
+  document.getElementById("cookiePolicyLink");
+
+const policyDialog =
+  document.getElementById("cookiePolicyDialog");
+
+const policyClose =
+  document.getElementById("cookiePolicyClose");
+
+const policyCloseBottom =
+  document.getElementById("cookiePolicyCloseBottom");
+
+function openPolicy() {
+  if (!policyDialog) return;
+
+  policyDialog.hidden = false;
+  document.body.classList.add("dialogOpen");
+
+  if (policyClose) {
+    policyClose.focus();
+  }
+}
+
+function closePolicy() {
+  if (!policyDialog) return;
+
+  policyDialog.hidden = true;
+  document.body.classList.remove("dialogOpen");
+
+  if (policyLink) {
+    policyLink.focus();
+  }
+}
+
+if (policyLink) {
+  policyLink.addEventListener("click", event => {
+    event.preventDefault();
+    openPolicy();
+  });
+}
+
+if (policyClose) {
+  policyClose.addEventListener("click", closePolicy);
+}
+
+if (policyCloseBottom) {
+  policyCloseBottom.addEventListener(
+    "click",
+    closePolicy
+  );
+}
+
+if (policyDialog) {
+  policyDialog.addEventListener("click", event => {
+    if (event.target === policyDialog) {
+      closePolicy();
+    }
+  });
+}
+
+document.addEventListener("keydown", event => {
+  if (
+    event.key === "Escape" &&
+    policyDialog &&
+    !policyDialog.hidden
+  ) {
+    closePolicy();
+  }
+});
+
+/* RESTORE SEARCH FROM URL */
+function restoreURLSearch() {
+  const query =
+    new URLSearchParams(window.location.search).get("q");
+
+  if (!query) return;
+
+  input.value = query;
+  searchLocalities(query);
+}
+
+/* LOAD ARGENTINA DATABASE */
 async function init() {
   results.hidden = true;
   empty.hidden = true;
@@ -372,32 +415,64 @@ async function init() {
   status.textContent =
     "Cargando la base de datos de Argentina...";
 
-  const loaded = await loadLocalities();
+  try {
+    const response = await fetch("./argentina.json", {
+      cache: "no-store"
+    });
 
-  button.disabled = false;
-  input.disabled = false;
+    if (!response.ok) {
+      throw new Error(`HTTP ${response.status}`);
+    }
 
-  if (!loaded) {
-    return;
+    const data = await response.json();
+
+    if (!Array.isArray(data)) {
+      throw new Error(
+        "The JSON root must be an array."
+      );
+    }
+
+    localities = data.filter(item =>
+      item &&
+      item.province &&
+      item.department &&
+      item.locality &&
+      item.localityCode
+    );
+
+    if (!localities.length) {
+      throw new Error(
+        "No valid locality records were found."
+      );
+    }
+
+    databaseReady = true;
+
+    status.textContent =
+      `Base de datos cargada: ${localities.length.toLocaleString("es-AR")} localidades.`;
+
+    restoreURLSearch();
+
+  } catch (error) {
+    console.error(
+      "Unable to load Argentina JSON:",
+      error
+    );
+
+    status.textContent =
+      "No se pudo cargar la base de datos de localidades de Argentina. Inténtelo de nuevo más tarde.";
+
+  } finally {
+    button.disabled = false;
+    input.disabled = false;
   }
 
-  status.textContent =
-    `Base de datos cargada: ${localities.length.toLocaleString("es-AR")} localidades.`;
-
-  /* Support direct search URLs such as ?q=Buenos+Aires */
-  const query = new URLSearchParams(window.location.search).get("q");
-
-  if (query) {
-    input.value = query;
-    searchLocalities(query);
-  }
-
-  console.log(
+  console.info(
     "%cARGENTINA LOCALITIES",
-    "color:#b89435;font-size:18px;font-weight:bold;"
+    "color:#c9a227;font-size:18px;font-weight:bold;"
   );
 
-  console.log("Powered by VIDHWAAN");
+  console.info("Powered by VIDHWAAN");
 }
 
 init();
